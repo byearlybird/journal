@@ -1,0 +1,16 @@
+{
+	"name": "@journal/services",
+	"module": "index.ts",
+	"type": "module",
+	"dependencies": {
+		"@journal/crdt": "workspace:*",
+		"@journal/fn": "workspace:*",
+		"@journal/schema": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}

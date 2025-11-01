@@ -1,7 +1,7 @@
 import { BookOpenIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { DbProvider } from "@/app/providers/db-provider";
 import { NavBar } from "@/components/layout";
-import { DbProvider } from "@/lib/db/context";
 import { useKeyboardHeightCssVar } from "@/lib/hooks";
 import "@/app/app.css";
 

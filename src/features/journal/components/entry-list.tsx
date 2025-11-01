@@ -1,4 +1,3 @@
-import { CheckCircleIcon } from "@phosphor-icons/react";
 import type { Entry } from "@/lib/db";
 import { formatTime } from "@/lib/utils/dates";
 import { useCommentQuery } from "../resources";
@@ -14,35 +13,17 @@ const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
 				onClick={props.onClick}
 				className="w-full text-left"
 			>
-				<div>
-					<span className="flex justify-between">
-						<time className="text-white/70 text-sm">
-							{formatTime(props.entry.createdAt)}
-						</time>
-						{props.entry.type === "task" && (
-							<span>
-								<CheckCircleIcon
-									weight={
-										props.entry.status === "complete" ? "fill" : "regular"
-									}
-									className="text-white/50"
-								/>
-							</span>
-						)}
-					</span>
-					<p className="mt-0.5 max-w-[65ch] text-base leading-7 line-clamp-4">
-						{props.entry.content}
-					</p>
-				</div>
+				<time className="text-white/70 text-sm">
+					{formatTime(props.entry.createdAt)}
+				</time>
+				<p className="mt-0.5 max-w-[65ch] text-base leading-7 line-clamp-4">
+					{props.entry.content}
+				</p>
 			</button>
 			{comments.length > 0 && (
 				<div className="mt-1">
 					{comments.map((comment) => (
-						<EntryCommentItem
-							key={comment.id}
-							comment={comment}
-							variant="compact"
-						/>
+						<EntryCommentItem key={comment.id} comment={comment} />
 					))}
 				</div>
 			)}

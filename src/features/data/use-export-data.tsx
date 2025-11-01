@@ -1,4 +1,4 @@
-import { useDatabase } from "@/lib/db/context";
+import { db } from "@/lib/db";
 import { downloadJson } from "@/lib/utils/download";
 
 /**
@@ -14,11 +14,8 @@ import { downloadJson } from "@/lib/utils/download";
  * <button onClick={handleExport}>Export data</button>
  */
 export function useExportData(): () => void {
-	const db = useDatabase();
-
 	return () => {
 		const docs = db.toDocuments();
-		const timestamp = new Date().toISOString().replace(/:/g, "_");
-		downloadJson(docs, `journal-export-${timestamp}.json`);
+		downloadJson(docs, "journal-data.json");
 	};
 }

@@ -1,30 +1,22 @@
 import { expect, test } from "bun:test";
 import { parseImportJson, validateImportStructure } from "./parse";
 
-test("parseImportJson - valid JSON with notes", () => {
-	const json =
-		'{"notes":{"type":"notes","latest":"2025-01-01","resources":{}}}';
+test("parseImportJson - valid JSON with entries", () => {
+	const json = '{"entries":{"data":[]}}';
 	const result = parseImportJson(json);
-	expect(result.notes?.type).toBe("notes");
-	expect(result.notes?.latest).toBe("2025-01-01");
-	expect(result.notes?.resources).toEqual({});
+	expect(result).toEqual({ entries: { data: [] } });
 });
 
 test("parseImportJson - valid JSON with comments", () => {
-	const json =
-		'{"comments":{"type":"comments","latest":"2025-01-01","resources":{}}}';
+	const json = '{"comments":{"data":[]}}';
 	const result = parseImportJson(json);
-	expect(result.comments?.type).toBe("comments");
-	expect(result.comments?.latest).toBe("2025-01-01");
-	expect(result.comments?.resources).toEqual({});
+	expect(result).toEqual({ comments: { data: [] } });
 });
 
-test("parseImportJson - valid JSON with both notes and comments", () => {
-	const json =
-		'{"notes":{"type":"notes","latest":"2025-01-01","resources":{}},"comments":{"type":"comments","latest":"2025-01-01","resources":{}}}';
+test("parseImportJson - valid JSON with both entries and comments", () => {
+	const json = '{"entries":{"data":[]},"comments":{"data":[]}}';
 	const result = parseImportJson(json);
-	expect(result.notes?.type).toBe("notes");
-	expect(result.comments?.type).toBe("comments");
+	expect(result).toEqual({ entries: { data: [] }, comments: { data: [] } });
 });
 
 test("parseImportJson - invalid JSON throws error", () => {
@@ -33,25 +25,18 @@ test("parseImportJson - invalid JSON throws error", () => {
 	expect(() => parseImportJson("")).toThrow();
 });
 
-test("validateImportStructure - valid structure with notes", () => {
-	const data = {
-		notes: { type: "notes", latest: "2025-01-01", resources: {} },
-	};
+test("validateImportStructure - valid structure with entries", () => {
+	const data = { entries: { data: [] } };
 	expect(validateImportStructure(data)).toBe(true);
 });
 
 test("validateImportStructure - valid structure with comments", () => {
-	const data = {
-		comments: { type: "comments", latest: "2025-01-01", resources: {} },
-	};
+	const data = { comments: { data: [] } };
 	expect(validateImportStructure(data)).toBe(true);
 });
 
 test("validateImportStructure - valid structure with both", () => {
-	const data = {
-		notes: { type: "notes", latest: "2025-01-01", resources: {} },
-		comments: { type: "comments", latest: "2025-01-01", resources: {} },
-	};
+	const data = { entries: { data: [] }, comments: { data: [] } };
 	expect(validateImportStructure(data)).toBe(true);
 });
 
@@ -70,24 +55,18 @@ test("validateImportStructure - invalid: non-object", () => {
 	expect(validateImportStructure([])).toBe(false);
 });
 
-test("validateImportStructure - invalid: notes without required fields", () => {
-	expect(validateImportStructure({ notes: {} })).toBe(false);
-	expect(validateImportStructure({ notes: { type: "notes" } })).toBe(false);
-	expect(
-		validateImportStructure({ notes: { type: "notes", latest: "2025-01-01" } }),
-	).toBe(false);
-	expect(validateImportStructure({ notes: null })).toBe(false);
-});
-
-test("validateImportStructure - invalid: comments without required fields", () => {
-	expect(validateImportStructure({ comments: {} })).toBe(false);
-	expect(validateImportStructure({ comments: { type: "comments" } })).toBe(
+test("validateImportStructure - invalid: entries without data array", () => {
+	expect(validateImportStructure({ entries: {} })).toBe(false);
+	expect(validateImportStructure({ entries: { data: "not array" } })).toBe(
 		false,
 	);
-	expect(
-		validateImportStructure({
-			comments: { type: "comments", latest: "2025-01-01" },
-		}),
-	).toBe(false);
+	expect(validateImportStructure({ entries: null })).toBe(false);
+});
+
+test("validateImportStructure - invalid: comments without data array", () => {
+	expect(validateImportStructure({ comments: {} })).toBe(false);
+	expect(validateImportStructure({ comments: { data: "not array" } })).toBe(
+		false,
+	);
 	expect(validateImportStructure({ comments: null })).toBe(false);
 });

@@ -1,9 +1,8 @@
-import { useDatabase } from "@/lib/db/context";
+import { db } from "@/lib/db";
 import { pickJsonFile } from "@/lib/utils/file-picker";
 import {
 	extractComments,
-	extractNotes,
-	extractTasks,
+	extractEntries,
 	parseImportJson,
 	validateImportStructure,
 } from "@/lib/utils/import";
@@ -32,8 +31,6 @@ export type ImportResult =
  * };
  */
 export function useImportData(): () => Promise<ImportResult | null> {
-	const db = useDatabase();
-
 	return async () => {
 		const file = await pickJsonFile();
 		if (!file) {
@@ -50,19 +47,13 @@ export function useImportData(): () => Promise<ImportResult | null> {
 				return { success: false, error: "Invalid data format" };
 			}
 
-			// Extract and validate notes, tasks, and comments
-			const notesResult = extractNotes(data);
-			const tasksResult = extractTasks(data);
+			// Extract and validate entries and comments
+			const entriesResult = extractEntries(data);
 			const commentsResult = extractComments(data);
 
-			// Add valid notes to database
-			for (const note of notesResult.valid) {
-				db.notes.add(note);
-			}
-
-			// Add valid tasks to database
-			for (const task of tasksResult.valid) {
-				db.tasks.add(task);
+			// Add valid entries to database
+			for (const entry of entriesResult.valid) {
+				db.entries.add(entry);
 			}
 
 			// Add valid comments to database
@@ -72,11 +63,8 @@ export function useImportData(): () => Promise<ImportResult | null> {
 
 			// Calculate totals
 			const totalImported =
-				notesResult.valid.length +
-				tasksResult.valid.length +
-				commentsResult.valid.length;
-			const totalErrors =
-				notesResult.errors + tasksResult.errors + commentsResult.errors;
+				entriesResult.valid.length + commentsResult.valid.length;
+			const totalErrors = entriesResult.errors + commentsResult.errors;
 
 			return {
 				success: true,

@@ -1,4 +1,4 @@
-import { ChatCircleIcon, CheckCircleIcon } from "@phosphor-icons/react";
+import { ChatCircleIcon } from "@phosphor-icons/react";
 import type { Entry } from "@/lib/db";
 import { formatTime } from "@/lib/utils/dates";
 import { useCommentQuery } from "../resources";
@@ -21,12 +21,6 @@ const EntryPreviewItem = (props: { entry: Entry; onClick: () => void }) => {
 				<time className="text-white/70">
 					{formatTime(props.entry.createdAt)}
 				</time>
-				{props.entry.type === "task" && (
-					<CheckCircleIcon
-						weight={props.entry.status === "complete" ? "fill" : "regular"}
-						className="size-2.5"
-					/>
-				)}
 				{comments.length > 0 && <ChatCircleIcon className="size-2.5" />}
 			</div>
 			<p className="mt-1.5 line-clamp-2 text-ellipsis text-sm text-white/80">

@@ -1,16 +1,16 @@
 import { PenIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
+import { Page } from "@/components/layout";
+import { TextareaDialog } from "@/components/ui";
 import {
-	CommentCreator,
-	EntryCreator,
 	EntryDetailDialog,
 	PastEntries,
 	TodayEntries,
 	TodayHeader,
 } from "@/features/journal";
 import type { Entry } from "@/lib/db";
-import { useDatabase } from "@/lib/db/context";
+import { db } from "@/lib/db";
 import { useDialogStore } from "@/lib/stores/dialog";
 
 const getEntryFromDialogMode = (
@@ -50,7 +50,11 @@ const TodayPage = (props: TodayPageProps) => {
 const JournalRoute = () => {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const dialog = useDialogStore();
-	const db = useDatabase();
+
+	const handleCreateEntry = (content: string) => {
+		db.entries.add({ content });
+		dialog.close();
+	};
 
 	const handleAddComment = (content: string) => {
 		const mode = dialog.mode;
@@ -72,16 +76,6 @@ const JournalRoute = () => {
 
 	const handleCloseDialog = () => {
 		dialog.close();
-	};
-
-	const handleToggleStatus = () => {
-		const mode = dialog.mode;
-		if (mode.type === "view-entry" && mode.entry.type === "task") {
-			const newStatus =
-				mode.entry.status === "complete" ? "incomplete" : "complete";
-			db.tasks.update(mode.entry.id, { status: newStatus });
-			dialog.setViewEntry({ ...mode.entry, status: newStatus });
-		}
 	};
 
 	const handleEntryClick = (entry: Entry) => {
@@ -114,24 +108,35 @@ const JournalRoute = () => {
 			<div className="flex items-center bottom-app-bottom fixed right-4">
 				<button
 					type="button"
-					className="size-11 flex items-center bg-yellow-300/90 outline outline-white/20 shadow backdrop-blur-lg text-black rounded-full justify-center active:scale-110 transition-all"
+					className="size-11 flex items-center bg-yellow-300/90 outline outline-white/20 shadow backdrop-blur-lg text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
 					onClick={() => dialog.setCreateEntry()}
 				>
 					<PenIcon className="size-5" />
 				</button>
 			</div>
-			<CommentCreator
+			<TextareaDialog
+				open={dialog.mode.type === "create-entry"}
+				onOpenChange={(e) => {
+					if (!e.open) dialog.close();
+				}}
+				onSubmit={handleCreateEntry}
+				onCancel={handleCloseDialog}
+			/>
+			<TextareaDialog
 				open={dialog.mode.type === "add-comment"}
-				onOpenChange={(open) => {
+				onOpenChange={(e) => {
 					const mode = dialog.mode;
-					if (!open && mode.type === "add-comment") {
+					if (!e.open && mode.type === "add-comment") {
 						dialog.setViewEntry(mode.entry);
 					}
 				}}
 				onSubmit={handleAddComment}
-				entryContent={
-					dialog.mode.type === "add-comment" ? dialog.mode.entry.content : ""
-				}
+				onCancel={() => {
+					const mode = dialog.mode;
+					if (mode.type === "add-comment") {
+						dialog.setViewEntry(mode.entry);
+					}
+				}}
 			/>
 			<EntryDetailDialog
 				entry={getEntryFromDialogMode(dialog.mode)}
@@ -141,21 +146,6 @@ const JournalRoute = () => {
 				}
 				onClose={handleCloseDialog}
 				onComment={handleCommentButtonClick}
-				onToggleStatus={handleToggleStatus}
-			/>
-			<EntryCreator
-				open={dialog.mode.type === "create-entry"}
-				onOpenChange={(open) => {
-					if (!open) dialog.close();
-				}}
-				onSubmit={(content, type) => {
-					if (type === "note") {
-						db.notes.add({ content });
-					} else {
-						db.tasks.add({ content });
-					}
-					dialog.close();
-				}}
 			/>
 		</>
 	);

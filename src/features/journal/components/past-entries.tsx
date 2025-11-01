@@ -21,10 +21,17 @@ export function PastEntries(props: { onEntryClick: (entry: Entry) => void }) {
 					if (!acc[date]) {
 						acc[date] = [];
 					}
-					acc[date].push(entry);
+					acc[date].push({
+						id: entry.id,
+						content: entry.content,
+						createdAt: entry.createdAt,
+					});
 					return acc;
 				},
-				{} as Record<string, Entry[]>,
+				{} as Record<
+					string,
+					{ id: string; content: string; createdAt: string }[]
+				>,
 			);
 
 		return Object.entries(grouped).map(([date, entries]) => ({

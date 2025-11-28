@@ -23,12 +23,12 @@ export const TextareaDialog = (
 			}}
 		>
 			<Portal>
-				<Dialog.Backdrop className="fixed inset-0 bg-black/70 transition-all" />
+				<Dialog.Backdrop className="fixed inset-0 bg-black/70 transition-all backdrop-blur-xs" />
 				<Dialog.Positioner className="z-50 fixed inset-0 flex items-end justify-center p-2 pb-[calc(var(--spacing-app-bottom-kb)+8px)]">
 					<Dialog.Content className="w-full max-w-2xl flex items-center gap-2 z-50">
 						<Textarea
 							autoFocus
-							className="w-full bg-white/8 backdrop-blur-3xl p-2 rounded-xl shadow border"
+							className="w-full bg-white/10 backdrop-blur-3xl p-2 rounded-xl shadow border"
 							rows={4}
 							value={content}
 							onChange={(e) => setContent(e.currentTarget.value)}

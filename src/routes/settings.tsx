@@ -32,7 +32,7 @@ const SettingsPage = () => {
 
 	return (
 		<Page>
-			<div className="rounded-xl bg-white/8 p-2 flex flex-col divide-y">
+			<div className="rounded-xl bg-white/10 p-2 flex flex-col divide-y">
 				<button
 					type="button"
 					className="p-2 flex items-center gap-3"

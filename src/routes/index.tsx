@@ -28,9 +28,9 @@ type PastEntriesPageProps = {
 
 const PastEntriesPage = (props: PastEntriesPageProps) => {
 	return (
-		<div className="mb-14 mt-4 pl-app-left pr-app-right">
+		<Page className="mb-14 mt-4">
 			<PastEntries onEntryClick={props.onEntryClick} />
-		</div>
+		</Page>
 	);
 };
 
@@ -40,10 +40,10 @@ type TodayPageProps = {
 
 const TodayPage = (props: TodayPageProps) => {
 	return (
-		<div className="gap-2 pl-app-left pr-app-right flex flex-col mb-14">
+		<Page className="gap-2 flex flex-col mb-14">
 			<TodayHeader />
 			<TodayEntries onEntryClick={props.onEntryClick} />
-		</div>
+		</Page>
 	);
 };
 
@@ -96,7 +96,7 @@ const JournalRoute = () => {
 		<>
 			<div
 				ref={scrollContainerRef}
-				className="app-container-kb p-0 horizontal-scroll-snap"
+				className="app-container-kb horizontal-scroll-snap"
 			>
 				<div className="snap-page">
 					<PastEntriesPage onEntryClick={handleEntryClick} />
@@ -105,10 +105,10 @@ const JournalRoute = () => {
 					<TodayPage onEntryClick={handleEntryClick} />
 				</div>
 			</div>
-			<div className="flex items-center bottom-app-bottom fixed right-4">
+			<div className="flex items-center bottom-app-bottom fixed right-4 z-50">
 				<button
 					type="button"
-					className="size-11 flex items-center bg-yellow-300/90 outline outline-white/20 shadow backdrop-blur-lg text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
+					className="size-11 flex items-center bg-amber-300 text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
 					onClick={() => dialog.setCreateEntry()}
 				>
 					<PenIcon className="size-5" />
@@ -145,6 +145,7 @@ const JournalRoute = () => {
 					dialog.mode.type === "add-comment"
 				}
 				onClose={handleCloseDialog}
+				onExitComplete={handleCloseDialog}
 				onComment={handleCommentButtonClick}
 			/>
 		</>

@@ -48,12 +48,17 @@ export const EntryDetailDialog = (props: {
 	entry: Entry | undefined;
 	isOpen: boolean;
 	onClose: () => void;
+	onExitComplete?: () => void;
 	onComment: () => void;
 }) => {
 	const comments = useCommentQuery(props.entry?.id ?? "");
 
 	return (
-		<Drawer.Root open={props.isOpen} onOpenChange={props.onClose}>
+		<Drawer.Root
+			open={props.isOpen}
+			onOpenChange={props.onClose}
+			onExitComplete={props.onExitComplete}
+		>
 			<Drawer.Content>
 				{props.entry && (
 					<Drawer.Toolbar>

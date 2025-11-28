@@ -1,92 +1,37 @@
+import { Dialog as ArkDialog } from "@ark-ui/react/dialog";
+import { Portal as ArkPortal } from "@ark-ui/react/portal";
 import { cx } from "cva";
-import { AnimatePresence, motion } from "motion/react";
-import type { ComponentProps, ReactNode } from "react";
-import { createContext, useContext } from "react";
-import { createPortal } from "react-dom";
+import type { ComponentProps } from "react";
 
-type DrawerContextValue = {
-	onClose: () => void;
-};
+const Root = ArkDialog.Root;
+const Trigger = ArkDialog.Trigger;
+const Close = ArkDialog.CloseTrigger;
+const Title = ArkDialog.Title;
+const Description = ArkDialog.Description;
 
-const DrawerContext = createContext<DrawerContextValue | null>(null);
+type ContentProps = ComponentProps<typeof ArkDialog.Content>;
 
-type RootProps = {
-	open: boolean;
-	onOpenChange: (open: boolean) => void;
-	children: ReactNode;
-};
-
-const Root = (props: RootProps) => {
-	const handleClose = () => props.onOpenChange(false);
-
-	return (
-		<DrawerContext.Provider value={{ onClose: handleClose }}>
-			<AnimatePresence>{props.open && props.children}</AnimatePresence>
-		</DrawerContext.Provider>
-	);
-};
-
-const Backdrop = () => (
-	<motion.div
-		className="fixed inset-0 bg-black/70"
-		initial={{ opacity: 0 }}
-		animate={{ opacity: 1 }}
-		exit={{ opacity: 0 }}
-	/>
+const Content = (props: ContentProps) => (
+	<ArkPortal>
+		<ArkDialog.Backdrop
+			className={cx("fixed inset-0 bg-black/70 backdrop-blur-xs")}
+		/>
+		<ArkDialog.Positioner className="fixed inset-0 flex items-end justify-center">
+			<ArkDialog.Content
+				{...props}
+				className={cx(
+					"flex flex-col w-full h-[calc(90vh-var(--spacing-app-top))] rounded-t-2xl bg-white/5 backdrop-blur-3xl p-6 border border-b-0",
+					"data-[state=open]:animate-[slideUpFromBottom_150ms_ease-out] data-[state=open]:translate-y-0",
+					"data-[state=closed]:animate-[slideDownToBottom_150ms_ease-in]",
+					"translate-y-full",
+					props.className,
+				)}
+			>
+				{props.children}
+			</ArkDialog.Content>
+		</ArkDialog.Positioner>
+	</ArkPortal>
 );
-
-type ContentProps = ComponentProps<"div">;
-
-const Content = (props: ContentProps) => {
-	const context = useContext(DrawerContext);
-	if (!context) {
-		throw new Error("Drawer.Content must be used within Drawer.Root");
-	}
-
-	const handleDragEnd = (
-		_: unknown,
-		{
-			velocity,
-			offset,
-		}: {
-			velocity: { x: number; y: number };
-			offset: { x: number; y: number };
-		},
-	) => {
-		const shouldDismissX =
-			Math.abs(velocity.x) >= 750 || Math.abs(offset.x) >= 150;
-		const shouldDismissY = velocity.y >= 750 || offset.y >= 250;
-
-		if (shouldDismissX || shouldDismissY) {
-			context.onClose();
-		}
-	};
-
-	return createPortal(
-		<>
-			<Backdrop />
-			<div className="fixed bottom-app-bottom left-app-left top-app-top right-app-right flex items-end justify-center">
-				<motion.div
-					className={cx(
-						"flex flex-col w-full h-full rounded-2xl bg-white/5 backdrop-blur-3xl p-5 border",
-						props.className,
-					)}
-					initial={{ y: "100%" }}
-					animate={{ y: 0 }}
-					exit={{ y: "100%" }}
-					transition={{ type: "spring", damping: 25, stiffness: 300 }}
-					drag
-					dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
-					dragElastic={{ top: 0.1, bottom: 0.2, left: 0.2, right: 0.2 }}
-					onDragEnd={handleDragEnd}
-				>
-					{props.children}
-				</motion.div>
-			</div>
-		</>,
-		document.body,
-	);
-};
 
 const Body = (props: ComponentProps<"div">) => (
 	<div
@@ -101,7 +46,7 @@ const Toolbar = (props: ComponentProps<"div">) => (
 	<div
 		{...props}
 		className={cx(
-			"flex-shrink-0 pb-2.5 -mx-2 -mt-2 mb-2 border-b border-dashed",
+			"flex-shrink-0 pb-4 -mx-2 -mt-2 mb-2 border-b border-dashed",
 			props.className,
 		)}
 	>
@@ -111,6 +56,10 @@ const Toolbar = (props: ComponentProps<"div">) => (
 
 export const Drawer = {
 	Root,
+	Trigger,
+	Close,
+	Title,
+	Description,
 	Content,
 	Body,
 	Toolbar,

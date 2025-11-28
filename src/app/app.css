@@ -24,6 +24,14 @@
 	--spacing-app-bottom-kb: calc(var(--spacing-app-bottom) + var(--kb-offset));
 }
 
+/* Full screen PWA shell with safe paddings */
+@utility app-shell {
+	min-height: 100dvh;
+	padding-inline: var(--spacing-app-left) var(--spacing-app-right);
+	padding-top: var(--spacing-app-top);
+	padding-bottom: var(--spacing-app-bottom);
+}
+
 @utility app-container-kb {
 	position: fixed;
 	inset-inline: 0;
@@ -89,7 +97,7 @@ body {
 }
 
 * {
-	@apply border-white/10 divide-white/20 select-none scrollbar-hidden;
+	@apply border-white/10 divide-white/50 select-none scrollbar-hidden;
 }
 
 /* Keyframe animations */
@@ -138,5 +146,25 @@ body {
 	to {
 		opacity: 0;
 		transform: translateY(5rem) scale(0.95);
+	}
+}
+
+@keyframes slideUpFromBottom {
+	from {
+		transform: translateY(100%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideDownToBottom {
+	from {
+		transform: translateY(0);
+	}
+
+	to {
+		transform: translateY(100%);
 	}
 }

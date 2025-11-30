@@ -18,7 +18,7 @@ export const EntryCommentItem = (props: {
 		>
 			<CornerDownRight class="size-4 flex-shrink-0" />
 			<div class="flex flex-col gap-2 pl-1">
-				<p class="max-w-[55ch] text-white/70 text-sm">
+				<p class="max-w-[55ch] text-white/70 text-sm font-serif">
 					{props.comment.content}
 				</p>
 				<Show when={props.timestamp}>

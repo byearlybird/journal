@@ -16,17 +16,15 @@ const EntryPreviewItem = (props: { entry: Entry; onClick: () => void }) => {
 					props.onClick();
 				}
 			}}
-			class="rounded-xl p-3 hover:bg-white/5 transition-colors"
+			class="rounded-lg p-3 hover:bg-white/5 transition-colors"
 		>
-			<div class="flex items-center gap-1.5 text-xs">
-				<time>{formatTime(props.entry.createdAt)}</time>
+			<div class="flex items-center gap-3 text-xs">
+				<time class="text-white/70">{formatTime(props.entry.createdAt)}</time>
 				<Show when={comments().length > 0}>
-					<span>
-						<MessageCircle class="size-4" />
-					</span>
+					<MessageCircle class="size-2.5" />
 				</Show>
 			</div>
-			<p class="mt-2 line-clamp-3 text-ellipsis text-sm">
+			<p class="mt-1.5 line-clamp-3 text-ellipsis text-sm leading-7 font-serif">
 				{props.entry.content}
 			</p>
 		</article>
@@ -39,7 +37,7 @@ type EntryPreviewListProps = {
 };
 
 export const EntryPreviewList = (props: EntryPreviewListProps) => (
-	<div class="space-y-6 divide-y">
+	<div class="space-y-4">
 		<For each={props.data} fallback={<NoEntries />}>
 			{({ date, entries }) => (
 				<EntryDateCard date={date}>
@@ -58,7 +56,7 @@ export const EntryPreviewList = (props: EntryPreviewListProps) => (
 );
 
 const NoEntries = () => (
-	<div class="p-4 text-center text-sm text-white/70 m-auto my-auto self-center bg-white/10 rounded-xl">
+	<div class="text-center text-sm text-white/70 m-auto my-auto self-center p-4">
 		Past entries will appear here
 	</div>
 );

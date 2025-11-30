@@ -12,7 +12,7 @@ type PastEntriesPageProps = {
 
 const PastEntriesPage = (props: PastEntriesPageProps) => {
 	return (
-		<Page>
+		<Page class="mb-14 mt-4">
 			<PastEntries onEntryClick={props.onEntryClick} />
 		</Page>
 	);
@@ -24,7 +24,7 @@ type TodayPageProps = {
 
 const TodayPage = (props: TodayPageProps) => {
 	return (
-		<Page>
+		<Page class="gap-2 flex flex-col mb-14">
 			<TodayHeader />
 			<TodayEntries onEntryClick={props.onEntryClick} />
 		</Page>

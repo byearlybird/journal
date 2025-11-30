@@ -1,6 +1,6 @@
 import { Router } from "@solidjs/router";
 import { routes } from "./routes";
-import "./styles.css";
+import "./app.css";
 import { ErrorBoundary } from "solid-js";
 import { Navigation } from "@/components/layout/navigation";
 import { useKeyboardHeight } from "@/lib/primitives";

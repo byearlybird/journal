@@ -6,9 +6,9 @@ const button = cva({
 	variants: {
 		variant: {
 			"outline-lightgray": "border backdrop-blur bg-white/10",
-			"solid-yellow": "bg-amber-400 text-black",
+			"solid-yellow": "bg-amber-300 text-black",
 			"outline-yellow":
-				"border border-amber-400 text-amber-400 bg-amber-400/10 transition-colors",
+				"border border-amber-300 text-amber-300 bg-amber-300/10 transition-colors",
 		},
 		size: {
 			md: "px-3.5 py-2 [&>svg]:size-4",

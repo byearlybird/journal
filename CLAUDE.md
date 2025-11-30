@@ -47,7 +47,7 @@ Configuration in `vite.config.ts`:
 
 ### Tailwind CSS 4
 
-The project uses Tailwind CSS 4 with custom theme variables defined in `src/styles.css`:
+The project uses Tailwind CSS 4 with custom theme variables defined in `src/app.css`:
 
 ```css
 @import "tailwindcss";

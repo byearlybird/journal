@@ -17,12 +17,12 @@ const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
 				}
 			}}
 			tabindex={0}
-			class="hover:bg-white/5 transition-colors rounded-xl p-4"
+			class="hover:bg-white/15 transition-colors rounded-xl bg-white/10 p-4"
 		>
 			<time class="text-white/70 text-sm">
 				{formatTime(props.entry.createdAt)}
 			</time>
-			<p class="mt-0.5 max-w-[65ch] text-base leading-relaxed">
+			<p class="mt-0.5 max-w-[65ch] text-base leading-8 font-serif">
 				{props.entry.content}
 			</p>
 			<Show when={comments().length > 0}>
@@ -41,7 +41,7 @@ export const EntryList = (props: {
 	onEntryClick: (entry: Entry) => void;
 }) => {
 	return (
-		<div class="rounded-xl bg-white/10 p-1.5">
+		<div class="space-y-4">
 			<For each={props.entries} fallback={<NoEntries />}>
 				{(entry) => (
 					<EntryItem entry={entry} onClick={() => props.onEntryClick(entry)} />

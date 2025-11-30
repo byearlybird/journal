@@ -42,7 +42,7 @@ export const JournalPage: ParentComponent = (props) => {
 			<div class="flex items-center bottom-[var(--safe-bottom)] fixed right-4">
 				<button
 					type="button"
-					class="size-11 flex items-center bg-amber-400 text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
+					class="size-11 flex items-center bg-amber-300 text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
 					onClick={() => dialog.setCreateEntry()}
 				>
 					<Pen class="size-5" />

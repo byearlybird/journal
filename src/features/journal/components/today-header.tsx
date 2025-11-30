@@ -5,11 +5,13 @@ export const TodayHeader = () => {
 	const today = createDateNow();
 
 	return (
-		<span class="flex items-baseline gap-2 py-2 mx-0.5 px-3 bg-white/10 backdrop-blur-sm sticky top-[var(--safe-top)] rounded-xl mb-2">
+		<span class="flex items-baseline gap-2 sticky top-[var(--safe-top)] border-b border-dashed pl-[var(--safe-left)] pr-[var(--safe-right)] py-2 bg-black/70 backdrop-blur">
 			<span class="font-semibold text-xl">
 				{formatMonthDate(today().toISOString())}
 			</span>
-			<span class="text-sm">{formatDay(today().toISOString())}</span>
+			<span class="text-sm text-white/70">
+				{formatDay(today().toISOString())}
+			</span>
 		</span>
 	);
 };

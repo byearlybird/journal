@@ -29,7 +29,7 @@ export const NavItem = (props: NavItemProps) => {
 		<A
 			href={props.to}
 			class={cx(
-				"transition-all transition-discrete data-[status=active]:shadow data-[status=active]:outline-1 outline-white/20 data-[status=active]:text-amber-400 data-[status=active]:bg-white/10 flex items-center gap-1.5 rounded-full [&>svg]:size-4 [&:not([data-status=active])>[data-part=label]]:hidden py-2.5 px-3.5 min-w-11 min-h-11 active:scale-110",
+				"transition-all transition-discrete data-[status=active]:shadow data-[status=active]:outline-1 outline-white/20 data-[status=active]:text-amber-300 data-[status=active]:bg-white/10 flex items-center gap-1.5 rounded-full [&>svg]:size-4 [&:not([data-status=active])>[data-part=label]]:hidden py-2.5 px-3.5 min-w-11 min-h-11 active:scale-110",
 			)}
 			data-status={isActive() ? "active" : "inactive"}
 		>

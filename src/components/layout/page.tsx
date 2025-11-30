@@ -8,7 +8,7 @@ export const Page = <T extends ValidComponent = "div">(props: PageProps<T>) => {
 		<div
 			{...props}
 			class={cx(
-				"pl-[calc(var(--safe-left)+0.5rem)] pr-[calc(var(--safe-right)+0.5rem)] pt-[var(--safe-top)] pb-[var(--safe-bottom)]",
+				"pl-[var(--safe-left)] pr-[var(--safe-right)] pt-[var(--safe-top)] pb-[var(--safe-bottom)]",
 				props.class,
 			)}
 		/>

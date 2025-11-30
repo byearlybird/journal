@@ -6,15 +6,13 @@ import { EntryList } from "./entry-list";
 
 export function TodayEntries(props: { onEntryClick: (entry: Entry) => void }) {
 	const today = createDateNow();
-	const entries = createEntriesQuery(today());
+	const entries = createEntriesQuery(today().toISOString());
 
 	return (
 		<Show
 			when={entries().length > 0}
 			fallback={
-				<p class="text-center p-10 text-lg text-white/70">
-					No entries yet today
-				</p>
+				<p class="text-center p-10 text-white/70">No entries yet today</p>
 			}
 		>
 			<EntryList entries={entries()} onEntryClick={props.onEntryClick} />

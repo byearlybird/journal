@@ -70,7 +70,7 @@ export const EntryDetailDialog = (props: {
 						{(entry) => (
 							<>
 								<Timestamp createdAt={entry().createdAt} />
-								<div>{entry().content}</div>
+								<div class="font-serif my-1.5 leading-8">{entry().content}</div>
 								<Comments
 									comments={comments()}
 									entryCreatedAt={entry().createdAt}

@@ -4,11 +4,12 @@
 	--font-sans:
 		"Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
 		"Helvetica Neue", Arial, "Noto Sans", sans-serif;
-	--font-serif: "Crimson Pro", Georgia, "Times New Roman", Times, serif;
+	--font-serif: "Lora", Georgia, "Times New Roman", Times, serif;
 }
 
 body,
-html {
+html,
+#app {
 	@apply text-white/90 bg-black;
 
 	margin: 0;
@@ -34,8 +35,8 @@ html {
 }
 
 :root {
+	--safe-top: env(safe-area-inset-top);
 	--safe-bottom: max(env(safe-area-inset-bottom), 0.5rem);
-	--safe-top: max(env(safe-area-inset-top), 0.5rem);
 	--safe-left: max(env(safe-area-inset-left), 0.5rem);
 	--safe-right: max(env(safe-area-inset-right), 0.5rem);
 }

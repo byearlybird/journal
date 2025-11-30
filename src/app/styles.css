@@ -7,6 +7,39 @@
 	--font-serif: "Crimson Pro", Georgia, "Times New Roman", Times, serif;
 }
 
+body,
+html {
+	@apply text-white/90 bg-black;
+
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
+	/* ^^ app controls its own scrolling */
+}
+
+* {
+	@apply border-white/10 divide-white/50 select-none;
+
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	-ms-overflow-style: none;
+	/* IE and Edge */
+	scrollbar-width: none;
+	/* Firefox */
+}
+
+:root {
+	--safe-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+	--safe-top: max(env(safe-area-inset-top), 0.5rem);
+	--safe-left: max(env(safe-area-inset-left), 0.5rem);
+	--safe-right: max(env(safe-area-inset-right), 0.5rem);
+}
+
 /* Keyframe animations */
 @keyframes fadeIn {
 	from {
@@ -74,30 +107,4 @@
 	to {
 		transform: translateY(100%);
 	}
-}
-
-body {
-	@apply text-white/90 bg-black;
-}
-
-* {
-	@apply border-white/10 divide-white/50 select-none;
-
-	/* Hide scrollbar for Chrome, Safari and Opera */
-	::-webkit-scrollbar {
-		display: none;
-	}
-
-	/* Hide scrollbar for IE, Edge and Firefox */
-	-ms-overflow-style: none;
-	/* IE and Edge */
-	scrollbar-width: none;
-	/* Firefox */
-}
-
-:root {
-	--safe-bottom: max(env(safe-area-inset-bottom), 0.5rem);
-	--safe-top: max(env(safe-area-inset-top), 0.5rem);
-	--safe-left: max(env(safe-area-inset-left), 0.5rem);
-	--safe-right: max(env(safe-area-inset-right), 0.5rem);
 }

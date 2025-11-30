@@ -1,7 +1,8 @@
 import { Router } from "@solidjs/router";
-import { AppRoutes } from "./routes";
+import { routes } from "./routes";
 import "./styles.css";
 import { ErrorBoundary } from "solid-js";
+import { Navigation } from "@/components/layout/navigation";
 import { useKeyboardHeight } from "@/lib/primitives";
 import { DbProvider } from "./providers/db-provider";
 
@@ -11,9 +12,7 @@ export const App = () => {
 	return (
 		<ErrorBoundary fallback={<h1>Oops!</h1>}>
 			<DbProvider>
-				<Router>
-					<AppRoutes />
-				</Router>
+				<Router root={Navigation}>{routes}</Router>
 			</DbProvider>
 		</ErrorBoundary>
 	);

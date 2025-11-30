@@ -52,3 +52,5 @@ export const SettingsPage = () => {
 		</Page>
 	);
 };
+
+export default SettingsPage;

@@ -17,6 +17,8 @@
     "@solid-primitives/date": "^2.1.4",
     "@solidjs/router": "^0.15.4",
     "@tailwindcss/vite": "^4.1.17",
+    "@zag-js/carousel": "^1.30.0",
+    "@zag-js/solid": "^1.30.0",
     "cva": "^1.0.0-beta.4",
     "date-fns": "^4.1.0",
     "lucide-solid": "^0.555.0",

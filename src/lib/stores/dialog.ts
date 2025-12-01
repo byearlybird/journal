@@ -1,4 +1,5 @@
-import { createStore } from "solid-js/store";
+import { useStore } from "@tanstack/solid-store";
+import { Store } from "@tanstack/store";
 import type { Entry } from "@/lib/db";
 
 type DialogMode =
@@ -11,18 +12,34 @@ type DialogStore = {
 	mode: DialogMode;
 };
 
-const [dialogStore, setDialogStore] = createStore<DialogStore>({
+const dialogStore = new Store<DialogStore>({
 	mode: { type: "none" },
 });
 
 export const useDialogStore = () => {
+	const mode = useStore(dialogStore, (state) => state.mode);
+
 	return {
-		mode: () => dialogStore.mode,
-		setCreateEntry: () => setDialogStore({ mode: { type: "create-entry" } }),
+		mode,
+		setCreateEntry: () =>
+			dialogStore.setState((state) => ({
+				...state,
+				mode: { type: "create-entry" },
+			})),
 		setViewEntry: (entry: Entry) =>
-			setDialogStore({ mode: { type: "view-entry", entry } }),
+			dialogStore.setState((state) => ({
+				...state,
+				mode: { type: "view-entry", entry },
+			})),
 		setAddComment: (entry: Entry) =>
-			setDialogStore({ mode: { type: "add-comment", entry } }),
-		close: () => setDialogStore({ mode: { type: "none" } }),
+			dialogStore.setState((state) => ({
+				...state,
+				mode: { type: "add-comment", entry },
+			})),
+		close: () =>
+			dialogStore.setState((state) => ({
+				...state,
+				mode: { type: "none" },
+			})),
 	};
 };

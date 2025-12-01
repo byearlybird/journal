@@ -1,6 +1,4 @@
-import * as carousel from "@zag-js/carousel";
-import { normalizeProps, useMachine } from "@zag-js/solid";
-import { createMemo, createUniqueId } from "solid-js";
+import { Carousel } from "@ark-ui/solid";
 import { Page } from "@/components/layout";
 import { PastEntries, TodayEntries, TodayHeader } from "@/features/journal";
 import type { Entry } from "@/lib/db";
@@ -32,35 +30,31 @@ const TodayPage = (props: TodayPageProps) => {
 };
 
 export const JournalPage = () => {
-	const dialog = useDialogStore();
+        const dialog = useDialogStore();
 
-	const service = useMachine(carousel.machine, {
-		id: createUniqueId(),
-		slideCount: 2,
-		defaultPage: 1,
-		orientation: "horizontal",
-		spacing: "0px",
-		loop: false,
-	});
+        const handleEntryClick = (entry: Entry) => {
+                dialog.setViewEntry(entry);
+        };
 
-	const api = createMemo(() => carousel.connect(service, normalizeProps));
-
-	const handleEntryClick = (entry: Entry) => {
-		dialog.setViewEntry(entry);
-	};
-
-	return (
-		<div {...api().getRootProps()} class="fixed inset-0">
-			<div {...api().getItemGroupProps()} class="flex h-full">
-				<div {...api().getItemProps({ index: 0 })}>
-					<PastEntriesPage onEntryClick={handleEntryClick} />
-				</div>
-				<div {...api().getItemProps({ index: 1 })}>
-					<TodayPage onEntryClick={handleEntryClick} />
-				</div>
-			</div>
-		</div>
-	);
+        return (
+                <Carousel.Root
+                        class="fixed inset-0"
+                        slideCount={2}
+                        defaultPage={1}
+                        orientation="horizontal"
+                        spacing="0px"
+                        loop={false}
+                >
+                        <Carousel.ItemGroup class="flex h-full">
+                                <Carousel.Item index={0}>
+                                        <PastEntriesPage onEntryClick={handleEntryClick} />
+                                </Carousel.Item>
+                                <Carousel.Item index={1}>
+                                        <TodayPage onEntryClick={handleEntryClick} />
+                                </Carousel.Item>
+                        </Carousel.ItemGroup>
+                </Carousel.Root>
+        );
 };
 
 export default JournalPage;

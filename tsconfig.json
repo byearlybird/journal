@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
         // General
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
+    "jsx": "react-jsx",
 
     // Environment setup & latest features
     "lib": [

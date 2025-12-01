@@ -1,4 +1,4 @@
-import { Download, Upload } from "lucide-solid";
+import { Download, Upload } from "lucide-react";
 import { Page } from "@/components/layout";
 import { useExportData, useImportData } from "@/features/data";
 
@@ -31,21 +31,21 @@ export const SettingsPage = () => {
 
 	return (
 		<Page>
-			<div class="pt-[var(--safe-top)] rounded-xl bg-white/10 p-2 flex flex-col divide-y">
+			<div className="pt-[var(--safe-top)] rounded-xl bg-white/10 p-2 flex flex-col divide-y">
 				<button
 					type="button"
-					class="p-2 flex items-center gap-3"
+					className="p-2 flex items-center gap-3"
 					onClick={handleExport}
 				>
-					<Download class="size-4" />
+					<Download className="size-4" />
 					Export data
 				</button>
 				<button
 					type="button"
-					class="p-2 flex items-center gap-3"
+					className="p-2 flex items-center gap-3"
 					onClick={handleImport}
 				>
-					<Upload class="size-4" />
+					<Upload className="size-4" />
 					Import data
 				</button>
 			</div>

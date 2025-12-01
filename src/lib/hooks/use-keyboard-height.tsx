@@ -1,4 +1,4 @@
-import { createEffect, onCleanup } from "solid-js";
+import { useEffect } from "react";
 
 /**
  * Hook that sets up floating input height detection using the Visual Viewport API.
@@ -11,7 +11,7 @@ import { createEffect, onCleanup } from "solid-js";
  * Defaults to 66vh for desktop/non-keyboard scenarios.
  */
 export const useKeyboardHeight = () => {
-	createEffect(() => {
+	useEffect(() => {
 		if (!window.visualViewport) {
 			// Fallback: if Visual Viewport API is not supported, use default height
 			document.documentElement.style.setProperty(
@@ -42,11 +42,11 @@ export const useKeyboardHeight = () => {
 		window.visualViewport.addEventListener("resize", updateKeyboardHeight);
 		window.visualViewport.addEventListener("scroll", updateKeyboardHeight);
 
-		onCleanup(() => {
+		return () => {
 			if (!window.visualViewport) return;
 
 			window.visualViewport.removeEventListener("resize", updateKeyboardHeight);
 			window.visualViewport.removeEventListener("scroll", updateKeyboardHeight);
-		});
-	});
+		};
+	}, []); // Empty deps - run once on mount
 };

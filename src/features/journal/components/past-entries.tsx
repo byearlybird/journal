@@ -1,20 +1,19 @@
 import { isSameDay } from "date-fns";
-import { createMemo } from "solid-js";
+import { useMemo } from "react";
 import type { Entry } from "@/lib/db";
-import { createDateNow } from "@/lib/primitives";
-import { createEntriesQuery } from "../resources";
+import { useDateNow } from "@/lib/hooks";
+import { useEntriesQuery } from "../resources";
 import { EntryPreviewList } from "./entry-preview-list";
 
 export function PastEntries(props: { onEntryClick: (entry: Entry) => void }) {
-	const today = createDateNow();
-	const allEntries = createEntriesQuery();
+	const today = useDateNow();
+	const allEntries = useEntriesQuery();
 
-	const pastEntries = createMemo(() => {
-		const entries = allEntries();
-		if (!entries) return [];
+	const pastEntries = useMemo(() => {
+		if (!allEntries) return [];
 
-		const grouped = entries
-			.filter((e) => !isSameDay(today(), e.createdAt))
+		const grouped = allEntries
+			.filter((e) => !isSameDay(today, e.createdAt))
 			.reduce(
 				(acc, entry) => {
 					// biome-ignore lint/style/noNonNullAssertion: <always defined>
@@ -39,9 +38,9 @@ export function PastEntries(props: { onEntryClick: (entry: Entry) => void }) {
 			date,
 			entries,
 		}));
-	});
+	}, [allEntries, today]);
 
 	return (
-		<EntryPreviewList data={pastEntries()} onEntryClick={props.onEntryClick} />
+		<EntryPreviewList data={pastEntries} onEntryClick={props.onEntryClick} />
 	);
 }

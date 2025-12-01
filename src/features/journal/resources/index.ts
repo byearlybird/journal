@@ -1,2 +1,2 @@
-export { createCommentQuery } from "./comment-query";
-export { createEntriesQuery } from "./entries-query";
+export { useCommentQuery } from "./comment-query";
+export { useEntriesQuery } from "./entries-query";

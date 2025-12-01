@@ -18,7 +18,7 @@
 			"recommended": true
 		},
 		"domains": {
-			"solid": "recommended"
+			"react": "recommended"
 		}
 	},
 	"javascript": {

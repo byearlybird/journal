@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "cva";
-import type { ComponentProps } from "solid-js";
+import type { ComponentProps } from "react";
 
 const button = cva({
 	base: "rounded-full shrink-0 shadow text-sm active:scale-105 disabled:active:scale-100 transition-all disabled:opacity-50",
@@ -24,5 +24,5 @@ const button = cva({
 type ButtonProps = ComponentProps<"button"> & VariantProps<typeof button>;
 
 export const Button = (props: ButtonProps) => (
-	<button type="button" {...props} class={button(props)} />
+	<button type="button" {...props} className={button(props)} />
 );

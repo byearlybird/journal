@@ -145,7 +145,6 @@ const JournalRoute = () => {
 					dialog.mode.type === "add-comment"
 				}
 				onClose={handleCloseDialog}
-				onExitComplete={handleCloseDialog}
 				onComment={handleCommentButtonClick}
 			/>
 		</>

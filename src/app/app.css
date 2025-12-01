@@ -24,14 +24,6 @@
 	--spacing-app-bottom-kb: calc(var(--spacing-app-bottom) + var(--kb-offset));
 }
 
-/* Full screen PWA shell with safe paddings */
-@utility app-shell {
-	min-height: 100dvh;
-	padding-inline: var(--spacing-app-left) var(--spacing-app-right);
-	padding-top: var(--spacing-app-top);
-	padding-bottom: var(--spacing-app-bottom);
-}
-
 @utility app-container-kb {
 	position: fixed;
 	inset-inline: 0;

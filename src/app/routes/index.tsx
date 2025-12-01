@@ -28,9 +28,9 @@ type PastEntriesPageProps = {
 
 const PastEntriesPage = (props: PastEntriesPageProps) => {
 	return (
-		<Page className="mb-14 mt-4">
+		<div className="mb-14 mt-4 pl-app-left pr-app-right">
 			<PastEntries onEntryClick={props.onEntryClick} />
-		</Page>
+		</div>
 	);
 };
 
@@ -40,10 +40,10 @@ type TodayPageProps = {
 
 const TodayPage = (props: TodayPageProps) => {
 	return (
-		<Page className="gap-2 flex flex-col mb-14">
+		<div className="gap-2 pl-app-left pr-app-right flex flex-col mb-14">
 			<TodayHeader />
 			<TodayEntries onEntryClick={props.onEntryClick} />
-		</Page>
+		</div>
 	);
 };
 
@@ -96,7 +96,7 @@ const JournalRoute = () => {
 		<>
 			<div
 				ref={scrollContainerRef}
-				className="app-container-kb horizontal-scroll-snap"
+				className="app-container-kb p-0 horizontal-scroll-snap"
 			>
 				<div className="snap-page">
 					<PastEntriesPage onEntryClick={handleEntryClick} />

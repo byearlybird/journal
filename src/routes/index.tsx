@@ -1,6 +1,6 @@
-import { Carousel } from "@ark-ui/react";
 import { PenIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { Page } from "@/components/layout";
 import { TextareaDialog } from "@/components/ui";
 import {
@@ -48,6 +48,7 @@ const TodayPage = (props: TodayPageProps) => {
 };
 
 const JournalRoute = () => {
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const dialog = useDialogStore();
 
 	const handleCreateEntry = (content: string) => {
@@ -81,26 +82,30 @@ const JournalRoute = () => {
 		dialog.setViewEntry(entry);
 	};
 
+	// Scroll to Today page on mount
+	useEffect(() => {
+		if (scrollContainerRef.current) {
+			scrollContainerRef.current.scrollTo({
+				left: scrollContainerRef.current.clientWidth,
+				behavior: "instant",
+			});
+		}
+	}, []);
+
 	return (
 		<>
-			<Carousel.Root
-				className="fixed inset-0"
-				slideCount={2}
-				defaultPage={1}
-				orientation="horizontal"
-				spacing="0px"
-				loop={false}
+			<div
+				ref={scrollContainerRef}
+				className="app-container-kb horizontal-scroll-snap"
 			>
-				<Carousel.ItemGroup className="flex h-full">
-					<Carousel.Item index={0}>
-						<PastEntriesPage onEntryClick={handleEntryClick} />
-					</Carousel.Item>
-					<Carousel.Item index={1}>
-						<TodayPage onEntryClick={handleEntryClick} />
-					</Carousel.Item>
-				</Carousel.ItemGroup>
-			</Carousel.Root>
-			<div className="flex items-center bottom-app-bottom fixed right-4">
+				<div className="snap-page">
+					<PastEntriesPage onEntryClick={handleEntryClick} />
+				</div>
+				<div className="snap-page">
+					<TodayPage onEntryClick={handleEntryClick} />
+				</div>
+			</div>
+			<div className="flex items-center bottom-app-bottom fixed right-4 z-50">
 				<button
 					type="button"
 					className="size-11 flex items-center bg-amber-300 text-black rounded-full justify-center active:scale-110 transition-all ms-auto"

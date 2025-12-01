@@ -23,7 +23,7 @@ export const TextareaDialog = (
 			}}
 		>
 			<Portal>
-				<Dialog.Backdrop className="fixed inset-0 bg-black/70 transition-all backdrop-blur-xs" />
+				<Dialog.Backdrop className="fixed inset-0 bg-black/70 transition-all" />
 				<Dialog.Positioner className="z-50 fixed inset-0 flex items-end justify-center p-2 pb-[calc(var(--spacing-app-bottom-kb)+8px)]">
 					<Dialog.Content className="w-full max-w-2xl flex items-center gap-2 z-50">
 						<Textarea

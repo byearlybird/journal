@@ -59,7 +59,7 @@ export const EntryDetailDialog = (props: {
 			onOpenChange={props.onClose}
 			onExitComplete={props.onExitComplete}
 		>
-			<Drawer.Content>
+			<Drawer.Content onDismiss={() => props.onClose()}>
 				{props.entry && (
 					<Drawer.Toolbar>
 						<Actions onClose={props.onClose} onComment={props.onComment} />

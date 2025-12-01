@@ -8,7 +8,8 @@
 }
 
 body,
-html {
+html,
+#app {
 	@apply text-white/90 bg-black;
 
 	margin: 0;

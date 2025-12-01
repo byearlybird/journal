@@ -24,7 +24,7 @@ const EntryPreviewItem = (props: { entry: Entry; onClick: () => void }) => {
 					<MessageCircle class="size-2.5" />
 				</Show>
 			</div>
-			<p class="mt-1.5 line-clamp-3 text-ellipsis text-sm leading-7 font-serif">
+			<p class="mt-1.5 line-clamp-2 text-ellipsis text-sm leading-7 font-serif">
 				{props.entry.content}
 			</p>
 		</article>

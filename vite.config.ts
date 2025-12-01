@@ -6,10 +6,10 @@ import { VitePWA } from "vite-plugin-pwa";
 import solid from "vite-plugin-solid";
 
 export default defineConfig({
-        plugins: [
-                TanStackRouterVite(),
-                solid(),
-                tailwindcss(),
+	plugins: [
+		TanStackRouterVite(),
+		solid(),
+		tailwindcss(),
 		VitePWA({
 			registerType: "autoUpdate",
 

@@ -5,7 +5,7 @@ export const TodayHeader = () => {
 	const today = useDateNow();
 
 	return (
-		<span className="flex items-baseline gap-2 sticky top-[var(--safe-top)] border-b border-dashed pl-[var(--safe-left)] pr-[var(--safe-right)] py-2 bg-black/70 backdrop-blur">
+		<span className="flex items-baseline gap-2 sticky top-app-top border-b border-dashed pl-app-left pr-app-right py-2 bg-black/70 backdrop-blur">
 			<span className="font-bold text-lg">
 				{formatMonthDate(today.toISOString())}
 			</span>

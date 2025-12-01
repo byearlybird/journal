@@ -100,7 +100,7 @@ const JournalRoute = () => {
 					</Carousel.Item>
 				</Carousel.ItemGroup>
 			</Carousel.Root>
-			<div className="flex items-center bottom-[var(--safe-bottom)] fixed right-4">
+			<div className="flex items-center bottom-app-bottom fixed right-4">
 				<button
 					type="button"
 					className="size-11 flex items-center bg-amber-300 text-black rounded-full justify-center active:scale-110 transition-all ms-auto"

@@ -8,7 +8,7 @@ export const Page = (props: PageProps) => {
 		<div
 			{...props}
 			className={cx(
-				"pl-[var(--safe-left)] pr-[var(--safe-right)] pt-[var(--safe-top)] pb-[var(--safe-bottom)]",
+				"pl-app-left pr-app-right pb-app-bottom pt-app-top",
 				props.className,
 			)}
 		/>

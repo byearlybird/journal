@@ -20,7 +20,7 @@ const Content = (props: ContentProps) => (
 			<ArkDialog.Content
 				{...props}
 				className={cx(
-					"flex flex-col w-full h-[calc(90vh-var(--safe-top))] rounded-t-2xl bg-white/5 backdrop-blur-3xl p-6 border border-b-0",
+					"flex flex-col w-full h-[calc(90vh-var(--spacing-app-top))] rounded-t-2xl bg-white/5 backdrop-blur-3xl p-6 border border-b-0",
 					"data-[state=open]:animate-[slideUpFromBottom_150ms_ease-out] data-[state=open]:translate-y-0",
 					"data-[state=closed]:animate-[slideDownToBottom_150ms_ease-in]",
 					"translate-y-full",

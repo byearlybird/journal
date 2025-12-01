@@ -23,7 +23,7 @@ const EntryPreviewItem = (props: { entry: Entry; onClick: () => void }) => {
 				</time>
 				{comments.length > 0 && <ChatCircleIcon className="size-2.5" />}
 			</div>
-			<p className="mt-1.5 line-clamp-2 text-ellipsis text-sm leading-7 font-serif">
+			<p className="mt-1.5 line-clamp-2 text-ellipsis text-sm text-white/80">
 				{props.entry.content}
 			</p>
 		</article>

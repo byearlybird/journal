@@ -16,7 +16,7 @@ const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
 				<time className="text-white/70 text-sm">
 					{formatTime(props.entry.createdAt)}
 				</time>
-				<p className="mt-0.5 max-w-[65ch] text-base leading-8 font-serif">
+				<p className="mt-0.5 max-w-[65ch] text-base leading-7 line-clamp-4">
 					{props.entry.content}
 				</p>
 			</button>

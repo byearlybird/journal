@@ -12,6 +12,8 @@ export const TextareaDialog = (
 ) => {
 	const [content, setContent] = useState("");
 
+	const handleSubmit = () => props.onSubmit(content);
+
 	return (
 		<Dialog.Root
 			{...props}
@@ -33,18 +35,16 @@ export const TextareaDialog = (
 						/>
 						<div className="flex flex-col gap-2">
 							<Button
-								type="button"
 								variant="outline-lightgray"
 								className="min-w-11 min-h-11 mt-auto shadow"
-								onClick={() => props.onCancel()}
+								onClick={props.onCancel}
 							>
 								<XIcon />
 							</Button>
 							<Button
-								type="button"
 								variant="solid-yellow"
 								className="min-w-11 min-h-11 mt-auto shadow"
-								onClick={() => props.onSubmit(content)}
+								onClick={handleSubmit}
 							>
 								<PaperPlaneIcon />
 							</Button>

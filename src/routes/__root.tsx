@@ -1,6 +1,7 @@
+import { BookOpenIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { DbProvider } from "@/app/providers/db-provider";
-import { Navigation } from "@/components/layout/navigation";
+import { NavBar } from "@/components/layout";
 import { useKeyboardHeight } from "@/lib/hooks";
 import "@/app/app.css";
 
@@ -9,9 +10,15 @@ const RootComponent = () => {
 
 	return (
 		<DbProvider>
-			<Navigation>
-				<Outlet />
-			</Navigation>
+			<Outlet />
+			<NavBar.Root>
+				<NavBar.Item to="/" label="Journal">
+					<BookOpenIcon />
+				</NavBar.Item>
+				<NavBar.Item to="/settings" label="Settings">
+					<SlidersHorizontalIcon />
+				</NavBar.Item>
+			</NavBar.Root>
 		</DbProvider>
 	);
 };

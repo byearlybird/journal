@@ -1,12 +1,9 @@
-import { cva, type VariantProps } from "cva";
+import { cx } from "cva";
 import type { ComponentProps } from "react";
 
-const textarea = cva({
-	base: "resize-none outline-none",
-});
-
-type TextareaProps = ComponentProps<"textarea"> & VariantProps<typeof textarea>;
-
-export const Textarea = (props: TextareaProps) => (
-	<textarea {...props} className={textarea({ class: props.className })} />
+export const Textarea = (props: ComponentProps<"textarea">) => (
+	<textarea
+		{...props}
+		className={cx("resize-none outline-none", props.className)}
+	/>
 );

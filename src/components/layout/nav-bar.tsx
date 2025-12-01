@@ -2,26 +2,26 @@ import { Link } from "@tanstack/react-router";
 import { cx } from "cva";
 import type { ComponentProps, ReactNode } from "react";
 
-export const NavBar = (props: ComponentProps<"nav">) => {
+const Root = (props: ComponentProps<"nav">) => {
 	return (
 		<nav
 			{...props}
 			className={cx(
 				"flex items-center bottom-[var(--safe-bottom)] fixed left-[var(--safe-left)] right-[var(--safe-right)]",
-				"backdrop-blur flex items-center justify-between bg-white/20 rounded-full p-0.5 transition-all w-fit",
+				"backdrop-blur justify-between bg-white/20 rounded-full p-0.5 transition-all w-fit",
 				props.className,
 			)}
 		/>
 	);
 };
 
-type NavItemProps = {
+type ItemProps = {
 	to: string;
 	label: string;
 	children: ReactNode;
 };
 
-export const NavItem = (props: NavItemProps) => {
+const Item = (props: ItemProps) => {
 	return (
 		<Link
 			to={props.to}
@@ -38,4 +38,9 @@ export const NavItem = (props: NavItemProps) => {
 			</span>
 		</Link>
 	);
+};
+
+export const NavBar = {
+	Root,
+	Item,
 };

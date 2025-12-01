@@ -7,8 +7,8 @@ const Root = (props: ComponentProps<"nav">) => {
 		<nav
 			{...props}
 			className={cx(
-				"flex items-center bottom-app-bottom left-app-left right-app-right fixed z-50",
-				"backdrop-blur justify-between bg-white/20 rounded-full transition-all w-fit",
+				"flex items-center bottom-app-bottom left-app-left right-app-right fixed",
+				"backdrop-blur-3xl border justify-between bg-white/8 rounded-full transition-all w-fit",
 				props.className,
 			)}
 		/>
@@ -29,7 +29,7 @@ const Item = (props: ItemProps) => {
 			activeProps={{ "data-status": "active" }}
 			inactiveProps={{ "data-status": "inactive" }}
 			className={cx(
-				"transition-all transition-discrete data-[status=active]:shadow data-[status=active]:outline-1 outline-white/20 data-[status=active]:text-amber-300 data-[status=active]:bg-white/10 flex items-center gap-1.5 rounded-full [&>svg]:size-4 [&:not([data-status=active])>[data-part=label]]:hidden py-2.5 px-3.5 min-w-11 min-h-11 active:scale-110",
+				"transition-all transition-discrete data-[status=active]:shadow data-[status=active]:outline-1 outline-white/20 data-[status=active]:text-yellow-300/90 data-[status=active]:bg-white/8 flex items-center gap-1.5 rounded-full [&>svg]:size-4 [&:not([data-status=active])>[data-part=label]]:hidden py-2.5 px-3.5 min-w-11 min-h-11 active:scale-110",
 			)}
 		>
 			{props.children}

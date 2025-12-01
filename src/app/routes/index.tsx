@@ -105,10 +105,10 @@ const JournalRoute = () => {
 					<TodayPage onEntryClick={handleEntryClick} />
 				</div>
 			</div>
-			<div className="flex items-center bottom-app-bottom fixed right-4 z-50">
+			<div className="flex items-center bottom-app-bottom fixed right-4">
 				<button
 					type="button"
-					className="size-11 flex items-center bg-amber-300 text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
+					className="size-11 flex items-center bg-yellow-300/90 outline outline-white/20 shadow backdrop-blur-lg text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
 					onClick={() => dialog.setCreateEntry()}
 				>
 					<PenIcon className="size-5" />

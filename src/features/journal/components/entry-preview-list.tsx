@@ -15,7 +15,7 @@ const EntryPreviewItem = (props: { entry: Entry; onClick: () => void }) => {
 					props.onClick();
 				}
 			}}
-			className="rounded-lg p-3 hover:bg-white/5 transition-colors"
+			className="rounded-lg p-3 hover:bg-white/2 transition-colors"
 		>
 			<div className="flex items-center gap-3 text-xs">
 				<time className="text-white/70">

@@ -7,7 +7,9 @@ import solid from "vite-plugin-solid";
 
 export default defineConfig({
 	plugins: [
-		TanStackRouterVite(),
+		TanStackRouterVite({
+			target: "solid",
+		}),
 		solid(),
 		tailwindcss(),
 		VitePWA({

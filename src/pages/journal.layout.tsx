@@ -1,4 +1,4 @@
-import { Pen } from "lucide-react";
+import { PenIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { TextareaDialog } from "@/components/ui";
 import { EntryDetailDialog } from "@/features/journal";
@@ -45,7 +45,7 @@ export const JournalLayout = (props: { children: ReactNode }) => {
 					className="size-11 flex items-center bg-amber-300 text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
 					onClick={() => dialog.setCreateEntry()}
 				>
-					<Pen className="size-5" />
+					<PenIcon className="size-5" />
 				</button>
 			</div>
 			<TextareaDialog

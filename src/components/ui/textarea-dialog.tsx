@@ -1,6 +1,6 @@
 import { Dialog } from "@ark-ui/react/dialog";
 import { Portal } from "@ark-ui/react/portal";
-import { Send, X } from "lucide-react";
+import { PaperPlaneIcon, XIcon } from "@phosphor-icons/react";
 import { type ComponentProps, useState } from "react";
 import { Button, Textarea } from "@/components/ui";
 
@@ -38,7 +38,7 @@ export const TextareaDialog = (
 								className="min-w-11 min-h-11 mt-auto shadow"
 								onClick={() => props.onCancel()}
 							>
-								<X />
+								<XIcon />
 							</Button>
 							<Button
 								type="button"
@@ -46,7 +46,7 @@ export const TextareaDialog = (
 								className="min-w-11 min-h-11 mt-auto shadow"
 								onClick={() => props.onSubmit(content)}
 							>
-								<Send />
+								<PaperPlaneIcon />
 							</Button>
 						</div>
 					</Dialog.Content>

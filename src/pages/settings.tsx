@@ -1,4 +1,4 @@
-import { Download, Upload } from "lucide-react";
+import { DownloadIcon, UploadIcon } from "@phosphor-icons/react";
 import { Page } from "@/components/layout";
 import { useExportData, useImportData } from "@/features/data";
 
@@ -37,7 +37,7 @@ export const SettingsPage = () => {
 					className="p-2 flex items-center gap-3"
 					onClick={handleExport}
 				>
-					<Download className="size-4" />
+					<DownloadIcon className="size-4" />
 					Export data
 				</button>
 				<button
@@ -45,7 +45,7 @@ export const SettingsPage = () => {
 					className="p-2 flex items-center gap-3"
 					onClick={handleImport}
 				>
-					<Upload className="size-4" />
+					<UploadIcon className="size-4" />
 					Import data
 				</button>
 			</div>

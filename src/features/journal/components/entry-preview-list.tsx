@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+import { ChatCircleIcon } from "@phosphor-icons/react";
 import type { Entry } from "@/lib/db";
 import { formatTime } from "@/lib/utils/dates";
 import { useCommentQuery } from "../resources";
@@ -21,7 +21,7 @@ const EntryPreviewItem = (props: { entry: Entry; onClick: () => void }) => {
 				<time className="text-white/70">
 					{formatTime(props.entry.createdAt)}
 				</time>
-				{comments.length > 0 && <MessageCircle className="size-2.5" />}
+				{comments.length > 0 && <ChatCircleIcon className="size-2.5" />}
 			</div>
 			<p className="mt-1.5 line-clamp-2 text-ellipsis text-sm leading-7 font-serif">
 				{props.entry.content}

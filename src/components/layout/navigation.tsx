@@ -1,4 +1,4 @@
-import { BookOpen, SlidersHorizontal } from "lucide-react";
+import { BookOpenIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { NavBar, NavItem } from "./nav-bar";
 
@@ -8,10 +8,10 @@ export const Navigation = (props: { children: ReactNode }) => {
 			{props.children}
 			<NavBar>
 				<NavItem to="/" label="Journal">
-					<BookOpen />
+					<BookOpenIcon />
 				</NavItem>
 				<NavItem to="/settings" label="Settings">
-					<SlidersHorizontal />
+					<SlidersHorizontalIcon />
 				</NavItem>
 			</NavBar>
 		</>

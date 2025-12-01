@@ -1,4 +1,4 @@
-import { MessageCircle, X } from "lucide-react";
+import { ChatCircleIcon, XIcon } from "@phosphor-icons/react";
 import { Button, Drawer } from "@/components/ui";
 import type { Comment, Entry } from "@/lib/db";
 import { formatDateTime } from "@/lib/utils/dates";
@@ -35,10 +35,10 @@ const Actions = (props: { onClose: () => void; onComment: () => void }) => {
 				variant="outline-lightgray"
 				size="md-icon"
 			>
-				<X />
+				<XIcon />
 			</Button>
 			<Button variant="outline-yellow" size="md-icon" onClick={props.onComment}>
-				<MessageCircle />
+				<ChatCircleIcon />
 			</Button>
 		</div>
 	);

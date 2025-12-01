@@ -1,5 +1,5 @@
+import { ArrowElbowDownRightIcon } from "@phosphor-icons/react";
 import { cx } from "cva";
-import { CornerDownRight } from "lucide-react";
 import type { Comment } from "@/lib/db";
 import { formatDistance } from "@/lib/utils/dates";
 
@@ -15,7 +15,7 @@ export const EntryCommentItem = (props: {
 				props.className,
 			)}
 		>
-			<CornerDownRight className="size-4 flex-shrink-0" />
+			<ArrowElbowDownRightIcon className="size-4 flex-shrink-0" />
 			<div className="flex flex-col gap-2 pl-1">
 				<p className="max-w-[55ch] text-white/70 text-sm font-serif">
 					{props.comment.content}

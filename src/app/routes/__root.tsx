@@ -2,11 +2,11 @@ import { BookOpenIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { DbProvider } from "@/app/providers/db-provider";
 import { NavBar } from "@/components/layout";
-import { useKeyboardHeight } from "@/lib/hooks";
+import { useKeyboardHeightCssVar } from "@/lib/hooks";
 import "@/app/app.css";
 
 const RootComponent = () => {
-	useKeyboardHeight();
+	useKeyboardHeightCssVar("floating-input-height", "66vh");
 
 	return (
 		<DbProvider>

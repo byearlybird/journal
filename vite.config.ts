@@ -1,11 +1,15 @@
 import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import solid from "vite-plugin-solid";
 
 export default defineConfig({
 	plugins: [
+		TanStackRouterVite({
+			target: "solid",
+		}),
 		solid(),
 		tailwindcss(),
 		VitePWA({

@@ -1,4 +1,4 @@
-import { A, useLocation } from "@solidjs/router";
+import { Link } from "@tanstack/solid-router";
 import { cx } from "cva";
 import type { ComponentProps, JSX } from "solid-js";
 
@@ -22,21 +22,20 @@ type NavItemProps = {
 };
 
 export const NavItem = (props: NavItemProps) => {
-	const location = useLocation();
-	const isActive = () => location.pathname === props.to;
-
 	return (
-		<A
-			href={props.to}
+		<Link
+			to={props.to}
+			activeOptions={{ exact: true }}
+			activeProps={{ "data-status": "active" }}
+			inactiveProps={{ "data-status": "inactive" }}
 			class={cx(
 				"transition-all transition-discrete data-[status=active]:shadow data-[status=active]:outline-1 outline-white/20 data-[status=active]:text-amber-300 data-[status=active]:bg-white/10 flex items-center gap-1.5 rounded-full [&>svg]:size-4 [&:not([data-status=active])>[data-part=label]]:hidden py-2.5 px-3.5 min-w-11 min-h-11 active:scale-110",
 			)}
-			data-status={isActive() ? "active" : "inactive"}
 		>
 			{props.children}
 			<span data-part="label" class="transition-discrete">
 				{props.label}
 			</span>
-		</A>
+		</Link>
 	);
 };

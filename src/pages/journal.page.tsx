@@ -30,31 +30,31 @@ const TodayPage = (props: TodayPageProps) => {
 };
 
 export const JournalPage = () => {
-        const dialog = useDialogStore();
+	const dialog = useDialogStore();
 
-        const handleEntryClick = (entry: Entry) => {
-                dialog.setViewEntry(entry);
-        };
+	const handleEntryClick = (entry: Entry) => {
+		dialog.setViewEntry(entry);
+	};
 
-        return (
-                <Carousel.Root
-                        class="fixed inset-0"
-                        slideCount={2}
-                        defaultPage={1}
-                        orientation="horizontal"
-                        spacing="0px"
-                        loop={false}
-                >
-                        <Carousel.ItemGroup class="flex h-full">
-                                <Carousel.Item index={0}>
-                                        <PastEntriesPage onEntryClick={handleEntryClick} />
-                                </Carousel.Item>
-                                <Carousel.Item index={1}>
-                                        <TodayPage onEntryClick={handleEntryClick} />
-                                </Carousel.Item>
-                        </Carousel.ItemGroup>
-                </Carousel.Root>
-        );
+	return (
+		<Carousel.Root
+			class="fixed inset-0"
+			slideCount={2}
+			defaultPage={1}
+			orientation="horizontal"
+			spacing="0px"
+			loop={false}
+		>
+			<Carousel.ItemGroup class="flex h-full">
+				<Carousel.Item index={0}>
+					<PastEntriesPage onEntryClick={handleEntryClick} />
+				</Carousel.Item>
+				<Carousel.Item index={1}>
+					<TodayPage onEntryClick={handleEntryClick} />
+				</Carousel.Item>
+			</Carousel.ItemGroup>
+		</Carousel.Root>
+	);
 };
 
 export default JournalPage;

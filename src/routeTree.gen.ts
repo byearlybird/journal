@@ -49,7 +49,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
 }
 
-declare module '@tanstack/solid-router' {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/settings': {
       id: '/settings'

@@ -1,4 +1,4 @@
-import { useStore } from "@tanstack/solid-store";
+import { useStore } from "@tanstack/react-store";
 import { Store } from "@tanstack/store";
 import type { Entry } from "@/lib/db";
 

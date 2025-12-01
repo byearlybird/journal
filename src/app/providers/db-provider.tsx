@@ -1,10 +1,16 @@
-import { createSignal, type ParentComponent, Show } from "solid-js";
+import { type ReactNode, useEffect, useState } from "react";
 import { db } from "@/lib/db";
 
-export const DbProvider: ParentComponent = (props) => {
-	const [dbReady, setDbReady] = createSignal(false);
+type DbProviderProps = {
+	children: ReactNode;
+};
 
-	db.init().then(() => setDbReady(true));
+export const DbProvider = ({ children }: DbProviderProps) => {
+	const [dbReady, setDbReady] = useState(false);
 
-	return <Show when={dbReady()}>{props.children}</Show>;
+	useEffect(() => {
+		db.init().then(() => setDbReady(true));
+	}, []);
+
+	return dbReady ? children : null;
 };

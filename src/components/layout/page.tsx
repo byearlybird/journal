@@ -1,15 +1,15 @@
 import { cx } from "cva";
-import type { ComponentProps, ValidComponent } from "solid-js";
+import type { ComponentProps } from "react";
 
-type PageProps<T extends ValidComponent = "div"> = ComponentProps<T>;
+type PageProps = ComponentProps<"div">;
 
-export const Page = <T extends ValidComponent = "div">(props: PageProps<T>) => {
+export const Page = (props: PageProps) => {
 	return (
 		<div
 			{...props}
-			class={cx(
+			className={cx(
 				"pl-[var(--safe-left)] pr-[var(--safe-right)] pt-[var(--safe-top)] pb-[var(--safe-bottom)]",
-				props.class,
+				props.className,
 			)}
 		/>
 	);

@@ -1,37 +1,32 @@
-import { For, Show } from "solid-js";
 import type { Entry } from "@/lib/db";
 import { formatTime } from "@/lib/utils/dates";
-import { createCommentQuery } from "../resources";
+import { useCommentQuery } from "../resources";
 import { EntryCommentItem } from "./entry-comment-item";
 
 const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
-	const comments = createCommentQuery(() => props.entry.id);
+	const comments = useCommentQuery(props.entry.id);
 
 	return (
-		<article
-			onClick={props.onClick}
-			onKeyDown={(e) => {
-				if ((e.key === "Enter" || e.key === " ") && props.onClick) {
-					e.preventDefault();
-					props.onClick();
-				}
-			}}
-			tabindex={0}
-			class="hover:bg-white/15 transition-colors rounded-xl bg-white/10 p-4"
-		>
-			<time class="text-white/70 text-sm">
-				{formatTime(props.entry.createdAt)}
-			</time>
-			<p class="mt-0.5 max-w-[65ch] text-base leading-8 font-serif">
-				{props.entry.content}
-			</p>
-			<Show when={comments().length > 0}>
-				<div class="mt-1">
-					<For each={comments()}>
-						{(comment) => <EntryCommentItem comment={comment} />}
-					</For>
+		<article className="hover:bg-white/15 transition-colors rounded-xl bg-white/10 p-4">
+			<button
+				type="button"
+				onClick={props.onClick}
+				className="w-full text-left"
+			>
+				<time className="text-white/70 text-sm">
+					{formatTime(props.entry.createdAt)}
+				</time>
+				<p className="mt-0.5 max-w-[65ch] text-base leading-8 font-serif">
+					{props.entry.content}
+				</p>
+			</button>
+			{comments.length > 0 && (
+				<div className="mt-1">
+					{comments.map((comment) => (
+						<EntryCommentItem key={comment.id} comment={comment} />
+					))}
 				</div>
-			</Show>
+			)}
 		</article>
 	);
 };
@@ -41,18 +36,24 @@ export const EntryList = (props: {
 	onEntryClick: (entry: Entry) => void;
 }) => {
 	return (
-		<div class="space-y-4">
-			<For each={props.entries} fallback={<NoEntries />}>
-				{(entry) => (
-					<EntryItem entry={entry} onClick={() => props.onEntryClick(entry)} />
-				)}
-			</For>
+		<div className="space-y-4">
+			{props.entries.length > 0 ? (
+				props.entries.map((entry) => (
+					<EntryItem
+						key={entry.id}
+						entry={entry}
+						onClick={() => props.onEntryClick(entry)}
+					/>
+				))
+			) : (
+				<NoEntries />
+			)}
 		</div>
 	);
 };
 
 const NoEntries = () => (
-	<div class="p-4 text-center text-sm text-white/70 m-auto my-auto self-center">
+	<div className="p-4 text-center text-sm text-white/70 m-auto my-auto self-center">
 		No entries yet
 	</div>
 );

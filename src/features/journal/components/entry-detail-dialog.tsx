@@ -1,35 +1,35 @@
-import { MessageCircle, X } from "lucide-solid";
-import { For, Show } from "solid-js";
+import { MessageCircle, X } from "lucide-react";
 import { Button, Drawer } from "@/components/ui";
 import type { Comment, Entry } from "@/lib/db";
 import { formatDateTime } from "@/lib/utils/dates";
-import { createCommentQuery } from "../resources";
+import { useCommentQuery } from "../resources";
 import { EntryCommentItem } from "./entry-comment-item";
 
 const Timestamp = (props: { createdAt: string }) => (
-	<time class="text-white/70 text-sm mb-2">
+	<time className="text-white/70 text-sm mb-2">
 		{formatDateTime(props.createdAt)}
 	</time>
 );
 
 const Comments = (props: { comments: Comment[]; entryCreatedAt: string }) => (
-	<Show when={props.comments.length > 0}>
-		<div class="mt-4">
-			<For each={props.comments}>
-				{(comment) => (
+	<>
+		{props.comments.length > 0 && (
+			<div className="mt-4">
+				{props.comments.map((comment) => (
 					<EntryCommentItem
+						key={comment.id}
 						comment={comment}
 						timestamp={props.entryCreatedAt}
 					/>
-				)}
-			</For>
-		</div>
-	</Show>
+				))}
+			</div>
+		)}
+	</>
 );
 
 const Actions = (props: { onClose: () => void; onComment: () => void }) => {
 	return (
-		<div class="justify-between flex items-center w-full">
+		<div className="justify-between flex items-center w-full">
 			<Button
 				onClick={props.onClose}
 				variant="outline-lightgray"
@@ -51,7 +51,7 @@ export const EntryDetailDialog = (props: {
 	onExitComplete?: () => void;
 	onComment: () => void;
 }) => {
-	const comments = createCommentQuery(() => props.entry?.id ?? "");
+	const comments = useCommentQuery(props.entry?.id ?? "");
 
 	return (
 		<Drawer.Root
@@ -60,24 +60,24 @@ export const EntryDetailDialog = (props: {
 			onExitComplete={props.onExitComplete}
 		>
 			<Drawer.Content>
-				<Show when={props.entry}>
+				{props.entry && (
 					<Drawer.Toolbar>
 						<Actions onClose={props.onClose} onComment={props.onComment} />
 					</Drawer.Toolbar>
-				</Show>
+				)}
 				<Drawer.Body>
-					<Show when={props.entry}>
-						{(entry) => (
-							<>
-								<Timestamp createdAt={entry().createdAt} />
-								<div class="font-serif my-1.5 leading-8">{entry().content}</div>
-								<Comments
-									comments={comments()}
-									entryCreatedAt={entry().createdAt}
-								/>
-							</>
-						)}
-					</Show>
+					{props.entry && (
+						<>
+							<Timestamp createdAt={props.entry.createdAt} />
+							<div className="font-serif my-1.5 leading-8">
+								{props.entry.content}
+							</div>
+							<Comments
+								comments={comments}
+								entryCreatedAt={props.entry.createdAt}
+							/>
+						</>
+					)}
 				</Drawer.Body>
 			</Drawer.Content>
 		</Drawer.Root>

@@ -1,8 +1,8 @@
-import { BookOpen, SlidersHorizontal } from "lucide-solid";
-import type { ParentComponent } from "solid-js";
+import { BookOpen, SlidersHorizontal } from "lucide-react";
+import type { ReactNode } from "react";
 import { NavBar, NavItem } from "./nav-bar";
 
-export const Navigation: ParentComponent = (props) => {
+export const Navigation = (props: { children: ReactNode }) => {
 	return (
 		<>
 			{props.children}

@@ -1,4 +1,4 @@
-import { Carousel } from "@ark-ui/solid";
+import { Carousel } from "@ark-ui/react";
 import { Page } from "@/components/layout";
 import { PastEntries, TodayEntries, TodayHeader } from "@/features/journal";
 import type { Entry } from "@/lib/db";
@@ -10,7 +10,7 @@ type PastEntriesPageProps = {
 
 const PastEntriesPage = (props: PastEntriesPageProps) => {
 	return (
-		<Page class="mb-14 mt-4">
+		<Page className="mb-14 mt-4">
 			<PastEntries onEntryClick={props.onEntryClick} />
 		</Page>
 	);
@@ -22,7 +22,7 @@ type TodayPageProps = {
 
 const TodayPage = (props: TodayPageProps) => {
 	return (
-		<Page class="gap-2 flex flex-col mb-14">
+		<Page className="gap-2 flex flex-col mb-14">
 			<TodayHeader />
 			<TodayEntries onEntryClick={props.onEntryClick} />
 		</Page>
@@ -38,14 +38,14 @@ export const JournalPage = () => {
 
 	return (
 		<Carousel.Root
-			class="fixed inset-0"
+			className="fixed inset-0"
 			slideCount={2}
 			defaultPage={1}
 			orientation="horizontal"
 			spacing="0px"
 			loop={false}
 		>
-			<Carousel.ItemGroup class="flex h-full">
+			<Carousel.ItemGroup className="flex h-full">
 				<Carousel.Item index={0}>
 					<PastEntriesPage onEntryClick={handleEntryClick} />
 				</Carousel.Item>

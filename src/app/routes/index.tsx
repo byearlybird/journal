@@ -1,9 +1,9 @@
 import { PenIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { Page } from "@/components/layout";
 import { TextareaDialog } from "@/components/ui";
 import {
+	EntryCreator,
 	EntryDetailDialog,
 	PastEntries,
 	TodayEntries,
@@ -50,11 +50,6 @@ const TodayPage = (props: TodayPageProps) => {
 const JournalRoute = () => {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const dialog = useDialogStore();
-
-	const handleCreateEntry = (content: string) => {
-		db.entries.add({ content });
-		dialog.close();
-	};
 
 	const handleAddComment = (content: string) => {
 		const mode = dialog.mode;
@@ -108,20 +103,12 @@ const JournalRoute = () => {
 			<div className="flex items-center bottom-app-bottom fixed right-4">
 				<button
 					type="button"
-					className="size-11 flex items-center bg-yellow-300/90 outline outline-white/20 shadow backdrop-blur-lg text-black rounded-full justify-center active:scale-110 transition-all ms-auto"
+					className="size-11 flex items-center bg-yellow-300/90 outline outline-white/20 shadow backdrop-blur-lg text-black rounded-full justify-center active:scale-110 transition-all"
 					onClick={() => dialog.setCreateEntry()}
 				>
 					<PenIcon className="size-5" />
 				</button>
 			</div>
-			<TextareaDialog
-				open={dialog.mode.type === "create-entry"}
-				onOpenChange={(e) => {
-					if (!e.open) dialog.close();
-				}}
-				onSubmit={handleCreateEntry}
-				onCancel={handleCloseDialog}
-			/>
 			<TextareaDialog
 				open={dialog.mode.type === "add-comment"}
 				onOpenChange={(e) => {
@@ -146,6 +133,16 @@ const JournalRoute = () => {
 				}
 				onClose={handleCloseDialog}
 				onComment={handleCommentButtonClick}
+			/>
+			<EntryCreator
+				open={dialog.mode.type === "create-entry"}
+				onOpenChange={(open) => {
+					if (!open) dialog.close();
+				}}
+				onSubmit={(content) => {
+					db.entries.add({ content });
+					dialog.close();
+				}}
 			/>
 		</>
 	);

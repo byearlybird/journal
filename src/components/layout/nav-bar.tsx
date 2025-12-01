@@ -25,6 +25,7 @@ const Item = (props: ItemProps) => {
 	return (
 		<Link
 			to={props.to}
+			viewTransition
 			activeOptions={{ exact: true }}
 			activeProps={{ "data-status": "active" }}
 			inactiveProps={{ "data-status": "inactive" }}

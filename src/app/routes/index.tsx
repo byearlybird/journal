@@ -1,8 +1,8 @@
 import { PenIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { TextareaDialog } from "@/components/ui";
 import {
+	CommentCreator,
 	EntryCreator,
 	EntryDetailDialog,
 	PastEntries,
@@ -119,21 +119,18 @@ const JournalRoute = () => {
 					<PenIcon className="size-5" />
 				</button>
 			</div>
-			<TextareaDialog
+			<CommentCreator
 				open={dialog.mode.type === "add-comment"}
-				onOpenChange={(e) => {
+				onOpenChange={(open) => {
 					const mode = dialog.mode;
-					if (!e.open && mode.type === "add-comment") {
+					if (!open && mode.type === "add-comment") {
 						dialog.setViewEntry(mode.entry);
 					}
 				}}
 				onSubmit={handleAddComment}
-				onCancel={() => {
-					const mode = dialog.mode;
-					if (mode.type === "add-comment") {
-						dialog.setViewEntry(mode.entry);
-					}
-				}}
+				entryContent={
+					dialog.mode.type === "add-comment" ? dialog.mode.entry.content : ""
+				}
 			/>
 			<EntryDetailDialog
 				entry={getEntryFromDialogMode(dialog.mode)}

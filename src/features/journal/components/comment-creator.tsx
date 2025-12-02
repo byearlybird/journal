@@ -1,22 +1,19 @@
-import { PaperPlaneIcon, XIcon } from "@phosphor-icons/react";
+import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Button, Drawer, Textarea } from "@/components/ui";
 import { useKeyboardHeight } from "@/lib/hooks";
-import { EntryTypeToggle } from "./entry-type-toggle";
 
-type EntryType = "note" | "task";
-
-type EntryCreatorProps = {
+type CommentCreatorProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	onSubmit: (content: string, type: EntryType) => void;
+	onSubmit: (content: string) => void;
+	entryContent: string;
 };
 
-export const EntryCreator = (props: EntryCreatorProps) => {
+export const CommentCreator = (props: CommentCreatorProps) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [content, setContent] = useState("");
-	const [type, setType] = useState<EntryType>("note");
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	useKeyboardHeight(setKeyboardHeight, []);
 
@@ -25,25 +22,27 @@ export const EntryCreator = (props: EntryCreatorProps) => {
 			// Delay to allow drawer animation to complete
 			const timer = setTimeout(() => {
 				textareaRef.current?.focus();
-			}, 350);
+			}, 305);
 			return () => clearTimeout(timer);
 		}
 		// Reset state when drawer closes
 		setContent("");
-		setType("note");
 	}, [props.open]);
 
 	const handleSubmit = () => {
-		props.onSubmit(content, type);
+		props.onSubmit(content);
 	};
 
 	return (
 		<Drawer.Root open={props.open} onOpenChange={props.onOpenChange}>
 			<Drawer.Content>
+				<p className="line-clamp-4 text-xs text-white/60 mb-3">
+					{props.entryContent}
+				</p>
 				<Textarea
 					ref={textareaRef}
 					className="bg-white/4 rounded-xl p-2 flex-1"
-					placeholder="What's on your mind?"
+					placeholder="Add a comment..."
 					value={content}
 					onChange={(e) => setContent(e.currentTarget.value)}
 				/>
@@ -54,20 +53,20 @@ export const EntryCreator = (props: EntryCreatorProps) => {
 				>
 					<Button
 						variant="outline-lightgray"
-						size="md-icon"
+						className="flex-1"
 						onClick={() => props.onOpenChange(false)}
 					>
-						{/* Cancel */}
+						Cancel
 						<XIcon />
 					</Button>
-					<EntryTypeToggle value={type} onValueChange={setType} />
 					<Button
 						variant="solid-yellow"
+						className="flex-1"
 						disabled={content.length === 0}
 						onClick={handleSubmit}
 					>
 						Save
-						<PaperPlaneIcon />
+						<CheckIcon />
 					</Button>
 				</motion.div>
 			</Drawer.Content>

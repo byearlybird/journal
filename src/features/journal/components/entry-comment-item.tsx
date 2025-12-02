@@ -7,6 +7,7 @@ export const EntryCommentItem = (props: {
 	comment: Comment;
 	className?: string;
 	timestamp?: string;
+	variant?: "default" | "compact";
 }) => {
 	return (
 		<div
@@ -17,7 +18,12 @@ export const EntryCommentItem = (props: {
 		>
 			<ArrowElbowDownRightIcon className="size-4 flex-shrink-0" />
 			<div className="flex flex-col gap-2 pl-1">
-				<p className="max-w-[55ch] text-white/70 text-sm font-serif">
+				<p
+					className={cx(
+						"max-w-[55ch] text-white/70 text-sm",
+						props.variant === "compact" ? "line-clamp-1" : "font-serif",
+					)}
+				>
 					{props.comment.content}
 				</p>
 				{props.timestamp && (

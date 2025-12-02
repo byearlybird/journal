@@ -16,6 +16,7 @@ import { downloadJson } from "@/lib/utils/download";
 export function useExportData(): () => void {
 	return () => {
 		const docs = db.toDocuments();
-		downloadJson(docs, "journal-data.json");
+		const timestamp = new Date().toISOString().replace(/:/g, "_");
+		downloadJson(docs, `journal-export-${timestamp}.json`);
 	};
 }

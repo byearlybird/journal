@@ -1,18 +1,22 @@
 import { createDatabase } from "@byearlybird/starling";
 import { idbPlugin } from "@byearlybird/starling/plugin-idb";
-import { CommentSchema, EntrySchema } from "./schema";
+import { commentSchema, noteSchema, taskSchema } from "./schema";
 
 export const db = createDatabase({
 	name: "journal",
 	version: 1,
 	schema: {
-		entries: {
-			schema: EntrySchema,
-			getId: (entry) => entry.id,
+		notes: {
+			schema: noteSchema,
+			getId: (note) => note.id,
 		},
 		comments: {
-			schema: CommentSchema,
+			schema: commentSchema,
 			getId: (comment) => comment.id,
+		},
+		tasks: {
+			schema: taskSchema,
+			getId: (task) => task.id,
 		},
 	},
 }).use(idbPlugin());

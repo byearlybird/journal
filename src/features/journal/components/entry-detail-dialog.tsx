@@ -1,4 +1,4 @@
-import { ChatCircleIcon, XIcon } from "@phosphor-icons/react";
+import { ChatCircleIcon, CheckCircleIcon, XIcon } from "@phosphor-icons/react";
 import { Button, Drawer } from "@/components/ui";
 import type { Comment, Entry } from "@/lib/db";
 import { formatDateTime } from "@/lib/utils/dates";
@@ -27,7 +27,12 @@ const Comments = (props: { comments: Comment[]; entryCreatedAt: string }) => (
 	</>
 );
 
-const Actions = (props: { onClose: () => void; onComment: () => void }) => {
+const Actions = (props: {
+	entry: Entry | undefined;
+	onClose: () => void;
+	onComment: () => void;
+	onToggleStatus: () => void;
+}) => {
 	return (
 		<div className="justify-between flex items-center w-full">
 			<Button
@@ -37,9 +42,30 @@ const Actions = (props: { onClose: () => void; onComment: () => void }) => {
 			>
 				<XIcon />
 			</Button>
-			<Button variant="outline-yellow" size="md-icon" onClick={props.onComment}>
-				<ChatCircleIcon />
-			</Button>
+			<div className="flex gap-2">
+				{props.entry?.type === "task" && (
+					<Button
+						variant={
+							props.entry.status === "complete"
+								? "outline-lightgray"
+								: "outline-yellow"
+						}
+						size="md-icon"
+						onClick={props.onToggleStatus}
+					>
+						<CheckCircleIcon
+							weight={props.entry.status === "complete" ? "fill" : "regular"}
+						/>
+					</Button>
+				)}
+				<Button
+					variant="outline-yellow"
+					size="md-icon"
+					onClick={props.onComment}
+				>
+					<ChatCircleIcon />
+				</Button>
+			</div>
 		</div>
 	);
 };
@@ -49,6 +75,7 @@ export const EntryDetailDialog = (props: {
 	isOpen: boolean;
 	onClose: () => void;
 	onComment: () => void;
+	onToggleStatus: () => void;
 }) => {
 	const comments = useCommentQuery(props.entry?.id ?? "");
 
@@ -57,7 +84,12 @@ export const EntryDetailDialog = (props: {
 			<Drawer.Content>
 				{props.entry && (
 					<Drawer.Toolbar>
-						<Actions onClose={props.onClose} onComment={props.onComment} />
+						<Actions
+							entry={props.entry}
+							onClose={props.onClose}
+							onComment={props.onComment}
+							onToggleStatus={props.onToggleStatus}
+						/>
 					</Drawer.Toolbar>
 				)}
 				<Drawer.Body>

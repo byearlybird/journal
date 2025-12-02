@@ -2,8 +2,11 @@
  * Type representing the JSON:API format from Starling ORM export
  */
 export type ImportData = {
-	entries?: { data: Array<{ attributes: unknown }> };
+	notes?: { data: Array<{ attributes: unknown }> };
+	tasks?: { data: Array<{ attributes: unknown }> };
 	comments?: { data: Array<{ attributes: unknown }> };
+	// Backward compatibility with legacy exports
+	entries?: { data: Array<{ attributes: unknown }> };
 };
 
 /**
@@ -23,6 +26,16 @@ export function parseImportJson(jsonString: string): ImportData {
 }
 
 /**
+ * Validates that a collection has the expected JSON:API structure
+ */
+function isValidCollection(value: unknown): boolean {
+	if (value === undefined) return true;
+	if (typeof value !== "object" || value === null) return false;
+	if (!("data" in value)) return false;
+	return Array.isArray((value as Record<string, unknown>).data);
+}
+
+/**
  * Validates that the parsed data has the expected JSON:API structure
  * @param data - The data to validate
  * @returns True if data matches ImportData structure
@@ -34,29 +47,10 @@ export function validateImportStructure(data: unknown): data is ImportData {
 
 	const obj = data as Record<string, unknown>;
 
-	// Check if entries exists and has correct structure
-	if (obj.entries !== undefined) {
-		if (
-			typeof obj.entries !== "object" ||
-			obj.entries === null ||
-			!("data" in obj.entries) ||
-			!Array.isArray((obj.entries as Record<string, unknown>).data)
-		) {
-			return false;
-		}
-	}
-
-	// Check if comments exists and has correct structure
-	if (obj.comments !== undefined) {
-		if (
-			typeof obj.comments !== "object" ||
-			obj.comments === null ||
-			!("data" in obj.comments) ||
-			!Array.isArray((obj.comments as Record<string, unknown>).data)
-		) {
-			return false;
-		}
-	}
-
-	return true;
+	return (
+		isValidCollection(obj.notes) &&
+		isValidCollection(obj.tasks) &&
+		isValidCollection(obj.comments) &&
+		isValidCollection(obj.entries)
+	);
 }

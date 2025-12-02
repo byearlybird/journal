@@ -1,4 +1,5 @@
 import { CheckCircleIcon, NoteIcon } from "@phosphor-icons/react";
+import { cx } from "cva";
 
 type EntryType = "note" | "task";
 
@@ -7,8 +8,9 @@ type EntryTypeToggleProps = {
 	onValueChange: (value: EntryType) => void;
 };
 
-const itemClass =
-	"flex items-center justify-center gap-2 px-3.5 py-2 [&>svg]:size-4 rounded-full transition-all transition-discrete active:scale-110 data-[status=active]:w-4/5 data-[status=active]:border data-[status=active]:border-yellow-300/90 data-[status=active]:text-yellow-300/90 data-[status=active]:bg-yellow-300/10 data-[status=inactive]:w-1/5 [&:not([data-status=active])>[data-part=label]]:hidden";
+const itemClass = cx(
+	"flex items-center justify-center gap-2 px-3.5 py-2 [&>svg]:size-4 rounded-full transition-all transition-discrete active:scale-110 data-[status=active]:w-4/5 data-[status=active]:border data-[status=active]:border-yellow-300/90 data-[status=active]:text-yellow-300/90 data-[status=active]:bg-yellow-300/10 data-[status=inactive]:w-1/5 [&:not([data-status=active])>[data-part=label]]:hidden",
+);
 
 export const EntryTypeToggle = (props: EntryTypeToggleProps) => {
 	return (
@@ -20,7 +22,7 @@ export const EntryTypeToggle = (props: EntryTypeToggleProps) => {
 				onClick={() => props.onValueChange("note")}
 			>
 				<span data-part="label">Note</span>
-				<NoteIcon />
+				<NoteIcon className="min-w-4 size-4" />
 			</button>
 			<button
 				type="button"
@@ -29,7 +31,7 @@ export const EntryTypeToggle = (props: EntryTypeToggleProps) => {
 				onClick={() => props.onValueChange("task")}
 			>
 				<span data-part="label">Task</span>
-				<CheckCircleIcon />
+				<CheckCircleIcon className="min-w-4 size-4" />
 			</button>
 		</div>
 	);

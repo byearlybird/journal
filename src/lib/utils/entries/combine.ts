@@ -1,18 +1,20 @@
-import type { Comment, Entry } from "@/lib/db";
+import type { Comment, Entry, Note, Task } from "@/lib/db";
 
-type EntryWithComments = Entry & { comments: Comment[] };
+export type EntryWithComments = Entry & { comments: Comment[] };
 
 /**
- * Combines entries with their associated comments.
+ * Combines entries (notes and tasks) with their associated comments.
  * Groups comments by entryId and attaches them to their respective entries.
  * Comments are sorted by createdAt descending (newest first).
  *
- * @param entries Array of entries
+ * @param notes Array of notes
+ * @param tasks Array of tasks
  * @param allComments Array of all comments
- * @returns Array of entries with their comments attached
+ * @returns Array of entries with their comments attached, sorted by createdAt descending
  */
 export const combineEntriesWithComments = (
-	entries: Entry[],
+	notes: Note[],
+	tasks: Task[],
 	allComments: Comment[],
 ): EntryWithComments[] => {
 	// Group comments by entryId
@@ -21,9 +23,21 @@ export const combineEntriesWithComments = (
 		return acc.set(comment.entryId, [...existing, comment]);
 	}, new Map<string, Comment[]>());
 
-	// Combine entries with their sorted comments
-	return entries.map((entry) => ({
-		...entry,
-		comments: commentsByEntry.get(entry.id) ?? [],
+	// Combine notes and tasks with their comments
+	const notesWithComments: EntryWithComments[] = notes.map((note) => ({
+		...note,
+		type: "note" as const,
+		comments: commentsByEntry.get(note.id) ?? [],
 	}));
+
+	const tasksWithComments: EntryWithComments[] = tasks.map((task) => ({
+		...task,
+		type: "task" as const,
+		comments: commentsByEntry.get(task.id) ?? [],
+	}));
+
+	// Merge and sort by createdAt descending
+	return [...notesWithComments, ...tasksWithComments].sort(
+		(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+	);
 };

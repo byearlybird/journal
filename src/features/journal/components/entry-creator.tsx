@@ -1,17 +1,22 @@
+import { PaperPlaneIcon, XIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Button, Drawer, Textarea } from "@/components/ui";
 import { useKeyboardHeight } from "@/lib/hooks";
+import { EntryTypeToggle } from "./entry-type-toggle";
+
+type EntryType = "note" | "task";
 
 type EntryCreatorProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	onSubmit: (content: string) => void;
+	onSubmit: (content: string, type: EntryType) => void;
 };
 
 export const EntryCreator = (props: EntryCreatorProps) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [content, setContent] = useState("");
+	const [type, setType] = useState<EntryType>("note");
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	useKeyboardHeight(setKeyboardHeight, []);
 
@@ -23,12 +28,13 @@ export const EntryCreator = (props: EntryCreatorProps) => {
 			}, 300);
 			return () => clearTimeout(timer);
 		}
-		// Clear content when drawer closes
+		// Reset state when drawer closes
 		setContent("");
+		setType("note");
 	}, [props.open]);
 
 	const handleSubmit = () => {
-		props.onSubmit(content);
+		props.onSubmit(content, type);
 	};
 
 	return (
@@ -48,13 +54,20 @@ export const EntryCreator = (props: EntryCreatorProps) => {
 				>
 					<Button
 						variant="outline-lightgray"
-						className="flex-1"
+						size="md-icon"
 						onClick={() => props.onOpenChange(false)}
 					>
-						Cancel
+						{/* Cancel */}
+						<XIcon />
 					</Button>
-					<Button variant="solid-yellow" className="flex-1" onClick={handleSubmit}>
+					<EntryTypeToggle value={type} onValueChange={setType} />
+					<Button
+						variant="solid-yellow"
+						disabled={content.length === 0}
+						onClick={handleSubmit}
+					>
 						Save
+						<PaperPlaneIcon />
 					</Button>
 				</motion.div>
 			</Drawer.Content>

@@ -73,6 +73,16 @@ const JournalRoute = () => {
 		dialog.close();
 	};
 
+	const handleToggleStatus = () => {
+		const mode = dialog.mode;
+		if (mode.type === "view-entry" && mode.entry.type === "task") {
+			const newStatus =
+				mode.entry.status === "complete" ? "incomplete" : "complete";
+			db.tasks.update(mode.entry.id, { status: newStatus });
+			dialog.setViewEntry({ ...mode.entry, status: newStatus });
+		}
+	};
+
 	const handleEntryClick = (entry: Entry) => {
 		dialog.setViewEntry(entry);
 	};
@@ -133,14 +143,19 @@ const JournalRoute = () => {
 				}
 				onClose={handleCloseDialog}
 				onComment={handleCommentButtonClick}
+				onToggleStatus={handleToggleStatus}
 			/>
 			<EntryCreator
 				open={dialog.mode.type === "create-entry"}
 				onOpenChange={(open) => {
 					if (!open) dialog.close();
 				}}
-				onSubmit={(content) => {
-					db.entries.add({ content });
+				onSubmit={(content, type) => {
+					if (type === "note") {
+						db.notes.add({ content });
+					} else {
+						db.tasks.add({ content });
+					}
 					dialog.close();
 				}}
 			/>

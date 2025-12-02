@@ -1,18 +1,33 @@
 import { z } from "zod";
 
-export const CommentSchema = z.object({
+const baseSchema = z.object({
 	id: z.uuid().default(() => crypto.randomUUID()),
-	entryId: z.uuid(),
-	content: z.string(),
 	createdAt: z.iso.datetime().default(() => new Date().toISOString()),
 });
 
-export type Comment = z.infer<typeof CommentSchema>;
-
-export const EntrySchema = z.object({
-	id: z.uuid().default(() => crypto.randomUUID()),
+export const noteSchema = baseSchema.extend({
 	content: z.string(),
-	createdAt: z.iso.datetime().default(() => new Date().toISOString()),
 });
 
-export type Entry = z.infer<typeof EntrySchema>;
+export const taskSchema = baseSchema.extend({
+	content: z.string(),
+	status: z
+		.literal(["incomplete", "complete", "deferred"])
+		.default("incomplete"),
+});
+
+export const commentSchema = baseSchema.extend({
+	entryId: z.uuid(), // could be a task or a note
+	content: z.string(),
+});
+
+export type Note = z.infer<typeof noteSchema>;
+
+export type Task = z.infer<typeof taskSchema>;
+
+export type Comment = z.infer<typeof commentSchema>;
+
+// Discriminated union for entries (notes and tasks)
+export type Entry = (Note & { type: "note" }) | (Task & { type: "task" });
+
+export type EntryType = Entry["type"];

@@ -1,5 +1,10 @@
 import { expect, test } from "bun:test";
-import { extractAttributes, extractComments, extractEntries } from "./extract";
+import {
+	extractAttributes,
+	extractComments,
+	extractNotes,
+	extractTasks,
+} from "./extract";
 
 test("extractAttributes - extracts from JSON:API format", () => {
 	const doc = {
@@ -26,14 +31,14 @@ test("extractAttributes - returns empty array for empty data", () => {
 	expect(attrs).toEqual([]);
 });
 
-test("extractEntries - validates and extracts valid entries", () => {
+test("extractNotes - validates and extracts valid notes", () => {
 	const data = {
-		entries: {
+		notes: {
 			data: [
 				{
 					attributes: {
 						id: crypto.randomUUID(),
-						content: "Valid entry",
+						content: "Valid note",
 						createdAt: new Date().toISOString(),
 					},
 				},
@@ -41,20 +46,41 @@ test("extractEntries - validates and extracts valid entries", () => {
 		},
 	};
 
-	const result = extractEntries(data);
+	const result = extractNotes(data);
 	expect(result.valid).toHaveLength(1);
-	expect(result.valid[0]?.content).toBe("Valid entry");
+	expect(result.valid[0]?.content).toBe("Valid note");
 	expect(result.errors).toBe(0);
 });
 
-test("extractEntries - handles invalid entries", () => {
+test("extractNotes - supports legacy 'entries' key for backward compatibility", () => {
 	const data = {
 		entries: {
 			data: [
 				{
 					attributes: {
 						id: crypto.randomUUID(),
-						content: "Valid entry",
+						content: "Legacy entry",
+						createdAt: new Date().toISOString(),
+					},
+				},
+			],
+		},
+	};
+
+	const result = extractNotes(data);
+	expect(result.valid).toHaveLength(1);
+	expect(result.valid[0]?.content).toBe("Legacy entry");
+	expect(result.errors).toBe(0);
+});
+
+test("extractNotes - handles invalid notes", () => {
+	const data = {
+		notes: {
+			data: [
+				{
+					attributes: {
+						id: crypto.randomUUID(),
+						content: "Valid note",
 						createdAt: new Date().toISOString(),
 					},
 				},
@@ -67,14 +93,70 @@ test("extractEntries - handles invalid entries", () => {
 		},
 	};
 
-	const result = extractEntries(data);
+	const result = extractNotes(data);
 	expect(result.valid).toHaveLength(1);
 	expect(result.errors).toBe(1);
 });
 
-test("extractEntries - returns empty when no entries", () => {
+test("extractNotes - returns empty when no notes", () => {
 	const data = {};
-	const result = extractEntries(data);
+	const result = extractNotes(data);
+	expect(result.valid).toEqual([]);
+	expect(result.errors).toBe(0);
+});
+
+test("extractTasks - validates and extracts valid tasks", () => {
+	const data = {
+		tasks: {
+			data: [
+				{
+					attributes: {
+						id: crypto.randomUUID(),
+						content: "Valid task",
+						status: "incomplete",
+						createdAt: new Date().toISOString(),
+					},
+				},
+			],
+		},
+	};
+
+	const result = extractTasks(data);
+	expect(result.valid).toHaveLength(1);
+	expect(result.valid[0]?.content).toBe("Valid task");
+	expect(result.valid[0]?.status).toBe("incomplete");
+	expect(result.errors).toBe(0);
+});
+
+test("extractTasks - handles invalid tasks", () => {
+	const data = {
+		tasks: {
+			data: [
+				{
+					attributes: {
+						id: crypto.randomUUID(),
+						content: "Valid task",
+						status: "complete",
+						createdAt: new Date().toISOString(),
+					},
+				},
+				{
+					attributes: {
+						invalid: "data",
+					},
+				},
+			],
+		},
+	};
+
+	const result = extractTasks(data);
+	expect(result.valid).toHaveLength(1);
+	expect(result.errors).toBe(1);
+});
+
+test("extractTasks - returns empty when no tasks", () => {
+	const data = {};
+	const result = extractTasks(data);
 	expect(result.valid).toEqual([]);
 	expect(result.errors).toBe(0);
 });

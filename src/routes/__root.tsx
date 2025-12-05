@@ -1,34 +1,26 @@
-import { BookOpenIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { DbProvider } from "@/app/providers/db-provider";
-import { NavBar } from "@/components/layout";
-import { useKeyboardHeight } from "@/lib/hooks";
-import "@/app/app.css";
+import { ClerkProvider } from "@clerk/clerk-react";
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { StoreProvider } from "../store";
 
-const RootComponent = () => {
-	useKeyboardHeight();
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as
+	| string
+	| undefined;
 
-	return (
-		<DbProvider>
-			<Outlet />
-			<NavBar.Root>
-				<NavBar.Item to="/" label="Journal">
-					<BookOpenIcon />
-				</NavBar.Item>
-				<NavBar.Item to="/settings" label="Settings">
-					<SlidersHorizontalIcon />
-				</NavBar.Item>
-			</NavBar.Root>
-		</DbProvider>
-	);
-};
+if (!PUBLISHABLE_KEY) {
+	throw new Error("Add your Clerk Publishable Key to the .env file");
+}
 
 export const Route = createRootRoute({
 	component: RootComponent,
-	errorComponent: ({ error }) => (
-		<div>
-			<h1>Oops!</h1>
-			<pre>{error.message}</pre>
-		</div>
-	),
 });
+
+function RootComponent() {
+	return (
+		<ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+			<StoreProvider>
+				<Outlet />
+			</StoreProvider>
+		</ClerkProvider>
+	);
+}
+

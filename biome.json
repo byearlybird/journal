@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.7/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -16,27 +16,11 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true
-		},
-		"domains": {
-			"react": "recommended"
 		}
 	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
-		}
-	},
-	"css": {
-		"linter": {
-			"enabled": true
-		},
-		"parser": {
-			"tailwindDirectives": true
-		}
-	},
-	"json": {
-		"formatter": {
-			"enabled": false
 		}
 	},
 	"assist": {

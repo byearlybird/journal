@@ -14,6 +14,7 @@ All data is stored client-side in IndexedDB with no server-side persistence, ens
 bun dev          # Start Vite development server at localhost:5173
 bun run build    # Build for production with Vite (outputs to /dist)
 bun start        # Run Vite preview server for production build
+bun test         # Run all tests with Bun test runner
 bun check        # Lint and format code with Biome
 ```
 
@@ -22,12 +23,14 @@ bun check        # Lint and format code with Biome
 - **Package Manager**: Bun (for package management and script execution)
 - **Dev Server & Build**: Vite (Rolldown variant) with React plugin
 - **Frontend**: React 19 + TypeScript
-- **Routing**: Wouter (lightweight client-side router)
+- **Routing**: TanStack Router with auto code-splitting
 - **Database**: Starling ORM with IndexedDB plugin
 - **UI Components**: Ark UI (accessible primitives)
 - **Styling**: Tailwind CSS 4 with custom theme
 - **Validation**: Zod schemas
 - **Code Quality**: Biome (linting & formatting)
+- **Testing**: Bun test runner
+- **PWA**: vite-plugin-pwa for Progressive Web App capabilities
 
 ## Build System
 
@@ -41,9 +44,11 @@ The project uses **Vite** (Rolldown variant) for development and production buil
 ### Vite Configuration
 
 Configuration in `vite.config.ts`:
+- **TanStack Router Plugin**: Auto code-splitting, routes in `./src/app/routes`
 - **React Plugin**: `@vitejs/plugin-react` for Fast Refresh
 - **Path Alias**: `@/*` maps to `./src/*` for cleaner imports
 - **Tailwind CSS 4**: Automatically processed via PostCSS
+- **PWA Plugin**: Progressive Web App with service worker, auto-update, offline support
 
 ### Tailwind CSS 4
 
@@ -68,49 +73,86 @@ The application uses **Starling** ORM with the IndexedDB plugin for client-side 
 
 ### Schema
 
-Two core entities defined with Zod in `src/schemas/`:
+Three core entities defined with Zod in `src/lib/db/schema.ts`:
 
-**Entry** (`src/schemas/entry.ts`):
+**Note** (`noteSchema`):
 - `id`: UUID (auto-generated)
 - `content`: String
 - `createdAt`: ISO 8601 timestamp (auto-set)
 
-**Comment** (`src/schemas/comment.ts`):
+**Task** (`taskSchema`):
 - `id`: UUID (auto-generated)
-- `entryId`: UUID (references Entry)
+- `content`: String
+- `status`: Literal ["incomplete", "complete", "deferred"] (default: "incomplete")
+- `createdAt`: ISO 8601 timestamp (auto-set)
+
+**Comment** (`commentSchema`):
+- `id`: UUID (auto-generated)
+- `entryId`: UUID (references Note or Task)
 - `content`: String
 - `createdAt`: ISO 8601 timestamp (auto-set)
+
+**Entry Type**: Discriminated union combining Note and Task:
+```ts
+type Entry = (Note & { type: "note" }) | (Task & { type: "task" });
+```
 
 ### Database Setup
 
-Database initialization in `src/database/db.ts`:
+Database initialization in `src/lib/db/db.ts`:
 ```ts
 export const db = createDatabase({
   name: "journal",
+  version: 1,
   schema: {
-    entries: { schema: EntrySchema, getId: (entry) => entry.id },
-    comments: { schema: CommentSchema, getId: (comment) => comment.id },
+    notes: { schema: noteSchema, getId: (note) => note.id },
+    tasks: { schema: taskSchema, getId: (task) => task.id },
+    comments: { schema: commentSchema, getId: (comment) => comment.id },
   },
-}).use(idbPlugin({ version: 1, useBroadcastChannel: true }));
+}).use(idbPlugin());
 ```
 
-**Cross-tab sync**: Enabled via `useBroadcastChannel: true` - changes in one browser tab automatically sync to other tabs.
+**Database Provider**: The `DbProvider` component in `src/app/providers/db-provider.tsx` initializes the database asynchronously before rendering children. Wrap your app root with this provider.
 
-### Custom Hooks
+### Custom Hooks & Utilities
 
-- **`useEntries()`** - Fetches all entries with their associated comments, maintains reactive state
-- **`useComments(entryId)`** - Manages comments for a specific entry
-- **`useCurrentDate()`** - Tracks current date, updates at midnight
-- **`useKeyboardHeight()`** - Detects mobile virtual keyboard height, sets CSS variables for safe areas
+**Query Hook** (`src/lib/hooks/use-query.tsx`):
+- **`useQuery<T>(queryFn, deps)`** - Creates reactive queries that auto-update when data changes. Returns results synchronously (never undefined). Handles subscription lifecycle automatically.
+
+**Resource Hooks** (`src/features/journal/resources/`):
+- **`useEntriesQuery(date?)`** - Fetches entries (notes + tasks) with comments. Optional ISO date filter. Returns combined Entry[] with comments attached.
+
+**Utility Hooks** (`src/lib/hooks/`):
+- **`useDateNow()`** - Tracks current date, updates at midnight
+- **`useKeyboardHeightCssVar()`** - Detects mobile virtual keyboard height, sets CSS variables for safe areas
+
+## Routing
+
+The application uses **TanStack Router** with file-based routing:
+
+- **Routes Directory**: `src/app/routes/`
+- **Root Route**: `__root.tsx` - Wraps all routes with `DbProvider`, renders `Outlet` for child routes
+- **Generated Route Tree**: `src/routeTree.gen.ts` - Auto-generated by `@tanstack/router-plugin`
+- **Auto Code-Splitting**: Enabled via router plugin configuration
+- **View Transitions**: Supported via `viewTransition` prop on Link components
+
+Example route structure:
+```
+src/app/routes/
+  __root.tsx      # Root layout with DbProvider
+  index.tsx       # Home route (/)
+  settings.tsx    # Settings route (/settings)
+```
 
 ## Component Organization
 
-Components follow a hierarchical structure:
+Components follow a feature-based structure:
 
-- **`/src/components/shared/entries/`** - Entry-specific components (list, item, dialogs, comments)
-- **`/src/components/shared/shared/`** - Generic UI components (button, dialog, popover, menu, tooltip)
-- **`/src/components/shared/layouts/`** - Layout components
-- **`/src/components/`** (root) - Page-level composition components (nav-bar, today-entries, past-entries)
+- **`/src/components/layout/`** - Layout components (nav-bar, page)
+- **`/src/components/ui/`** - Generic UI components (button, drawer, textarea)
+- **`/src/features/journal/components/`** - Journal-specific components (entry creators, lists, detail dialogs, comments)
+- **`/src/features/data/`** - Data import/export functionality
+- **`/src/app/routes/`** - TanStack Router route components
 
 All components use the compound component pattern (see Design Patterns section).
 
@@ -274,3 +316,35 @@ function processData(input: unknown) {
   }
 }
 ```
+
+## Testing
+
+The project uses **Bun's built-in test runner** for testing:
+
+**Running Tests:**
+```bash
+bun test                    # Run all tests
+bun test path/to/file.test.ts   # Run specific test file
+```
+
+**Test Structure:**
+- Test files use `.test.ts` or `.test.tsx` extension
+- Import test utilities from `bun:test`: `import { test, expect } from "bun:test"`
+- Tests are located alongside source files (e.g., `extract.ts` → `extract.test.ts`)
+
+**Example Test:**
+```ts
+import { expect, test } from "bun:test";
+
+test("extractNotes - validates and extracts valid notes", () => {
+  const data = { notes: { data: [...] } };
+  const result = extractNotes(data);
+  expect(result.valid).toHaveLength(1);
+});
+```
+
+**Current Test Coverage:**
+- Data import utilities (`src/lib/utils/import/*.test.ts`)
+  - `extract.test.ts` - JSON:API data extraction
+  - `parse.test.ts` - File parsing
+  - `validate.test.ts` - Schema validation

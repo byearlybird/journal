@@ -12,6 +12,7 @@
     "check": "biome check . --write"
   },
   "dependencies": {
+    "@byearlybird/crypto": "^0.0.2",
     "@byearlybird/starling": "0.11.1",
     "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/vite": "^4.1.17",

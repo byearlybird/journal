@@ -5,6 +5,7 @@
     "": {
       "name": "journal",
       "dependencies": {
+        "@byearlybird/crypto": "^0.0.2",
         "@byearlybird/starling": "0.11.1",
         "@phosphor-icons/react": "^2.1.10",
         "@tailwindcss/vite": "^4.1.17",
@@ -246,6 +247,8 @@
     "@biomejs/cli-win32-arm64": ["@biomejs/cli-win32-arm64@2.3.7", "", { "os": "win32", "cpu": "arm64" }, "sha512-aJAE8eCNyRpcfx2JJAtsPtISnELJ0H4xVVSwnxm13bzI8RwbXMyVtxy2r5DV1xT3WiSP+7LxORcApWw0LM8HiA=="],
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.3.7", "", { "os": "win32", "cpu": "x64" }, "sha512-pulzUshqv9Ed//MiE8MOUeeEkbkSHVDVY5Cz5wVAnH1DUqliCQG3j6s1POaITTFqFfo7AVIx2sWdKpx/GS+Nqw=="],
+
+    "@byearlybird/crypto": ["@byearlybird/crypto@0.0.2", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-q/pNMojEytjREoO4ekuZsDTI3tJ7McRq6UG71ZV1jpNsbzJQN4Oxs6Udds1m5SZJ+CN1blWF2A5leUTko2/F6A=="],
 
     "@byearlybird/starling": ["@byearlybird/starling@0.11.1", "", {}, "sha512-zAH/J0edNHZYse/vKwQzPOjRd8pppd7dQEaL4zNeio+Ijne6FsS112rW8xeeoOX1oSCoFiR8XbA47B2zTyVdQg=="],
 

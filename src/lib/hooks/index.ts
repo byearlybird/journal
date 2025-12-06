@@ -3,4 +3,3 @@ export {
 	useKeyboardHeight,
 	useKeyboardHeightCssVar,
 } from "./use-keyboard-height";
-export { useQuery } from "./use-query";

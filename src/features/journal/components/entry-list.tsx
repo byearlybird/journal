@@ -38,7 +38,11 @@ const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
 			{comments.length > 0 && (
 				<div className="mt-1">
 					{comments.map((comment) => (
-						<EntryCommentItem key={comment.id} comment={comment} variant="compact" />
+						<EntryCommentItem
+							key={comment.id}
+							comment={comment}
+							variant="compact"
+						/>
 					))}
 				</div>
 			)}

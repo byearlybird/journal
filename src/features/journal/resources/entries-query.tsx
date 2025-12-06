@@ -1,5 +1,5 @@
 import { isSameDay } from "date-fns";
-import { useQuery } from "@/lib/hooks/use-query";
+import { useQuery } from "@/lib/db/context";
 import { combineEntriesWithComments } from "@/lib/utils/entries";
 
 /**

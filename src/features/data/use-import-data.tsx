@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { useDatabase } from "@/lib/db/context";
 import { pickJsonFile } from "@/lib/utils/file-picker";
 import {
 	extractComments,
@@ -32,6 +32,8 @@ export type ImportResult =
  * };
  */
 export function useImportData(): () => Promise<ImportResult | null> {
+	const db = useDatabase();
+
 	return async () => {
 		const file = await pickJsonFile();
 		if (!file) {

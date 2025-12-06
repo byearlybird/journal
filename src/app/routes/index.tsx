@@ -10,7 +10,7 @@ import {
 	TodayHeader,
 } from "@/features/journal";
 import type { Entry } from "@/lib/db";
-import { db } from "@/lib/db";
+import { useDatabase } from "@/lib/db/context";
 import { useDialogStore } from "@/lib/stores/dialog";
 
 const getEntryFromDialogMode = (
@@ -50,6 +50,7 @@ const TodayPage = (props: TodayPageProps) => {
 const JournalRoute = () => {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const dialog = useDialogStore();
+	const db = useDatabase();
 
 	const handleAddComment = (content: string) => {
 		const mode = dialog.mode;

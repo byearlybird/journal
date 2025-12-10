@@ -12,7 +12,7 @@
     "check": "biome check . --write"
   },
   "dependencies": {
-    "@byearlybird/starling": "0.11.1",
+    "@byearlybird/starling": "^0.12.0",
     "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/react-router": "^1.95.0",

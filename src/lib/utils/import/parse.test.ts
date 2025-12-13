@@ -1,22 +1,30 @@
 import { expect, test } from "bun:test";
 import { parseImportJson, validateImportStructure } from "./parse";
 
-test("parseImportJson - valid JSON with entries", () => {
-	const json = '{"entries":{"data":[]}}';
+test("parseImportJson - valid JSON with notes", () => {
+	const json =
+		'{"notes":{"type":"notes","latest":"2025-01-01","resources":{}}}';
 	const result = parseImportJson(json);
-	expect(result).toEqual({ entries: { data: [] } });
+	expect(result.notes?.type).toBe("notes");
+	expect(result.notes?.latest).toBe("2025-01-01");
+	expect(result.notes?.resources).toEqual({});
 });
 
 test("parseImportJson - valid JSON with comments", () => {
-	const json = '{"comments":{"data":[]}}';
+	const json =
+		'{"comments":{"type":"comments","latest":"2025-01-01","resources":{}}}';
 	const result = parseImportJson(json);
-	expect(result).toEqual({ comments: { data: [] } });
+	expect(result.comments?.type).toBe("comments");
+	expect(result.comments?.latest).toBe("2025-01-01");
+	expect(result.comments?.resources).toEqual({});
 });
 
-test("parseImportJson - valid JSON with both entries and comments", () => {
-	const json = '{"entries":{"data":[]},"comments":{"data":[]}}';
+test("parseImportJson - valid JSON with both notes and comments", () => {
+	const json =
+		'{"notes":{"type":"notes","latest":"2025-01-01","resources":{}},"comments":{"type":"comments","latest":"2025-01-01","resources":{}}}';
 	const result = parseImportJson(json);
-	expect(result).toEqual({ entries: { data: [] }, comments: { data: [] } });
+	expect(result.notes?.type).toBe("notes");
+	expect(result.comments?.type).toBe("comments");
 });
 
 test("parseImportJson - invalid JSON throws error", () => {
@@ -25,18 +33,25 @@ test("parseImportJson - invalid JSON throws error", () => {
 	expect(() => parseImportJson("")).toThrow();
 });
 
-test("validateImportStructure - valid structure with entries", () => {
-	const data = { entries: { data: [] } };
+test("validateImportStructure - valid structure with notes", () => {
+	const data = {
+		notes: { type: "notes", latest: "2025-01-01", resources: {} },
+	};
 	expect(validateImportStructure(data)).toBe(true);
 });
 
 test("validateImportStructure - valid structure with comments", () => {
-	const data = { comments: { data: [] } };
+	const data = {
+		comments: { type: "comments", latest: "2025-01-01", resources: {} },
+	};
 	expect(validateImportStructure(data)).toBe(true);
 });
 
 test("validateImportStructure - valid structure with both", () => {
-	const data = { entries: { data: [] }, comments: { data: [] } };
+	const data = {
+		notes: { type: "notes", latest: "2025-01-01", resources: {} },
+		comments: { type: "comments", latest: "2025-01-01", resources: {} },
+	};
 	expect(validateImportStructure(data)).toBe(true);
 });
 
@@ -55,18 +70,24 @@ test("validateImportStructure - invalid: non-object", () => {
 	expect(validateImportStructure([])).toBe(false);
 });
 
-test("validateImportStructure - invalid: entries without data array", () => {
-	expect(validateImportStructure({ entries: {} })).toBe(false);
-	expect(validateImportStructure({ entries: { data: "not array" } })).toBe(
-		false,
-	);
-	expect(validateImportStructure({ entries: null })).toBe(false);
+test("validateImportStructure - invalid: notes without required fields", () => {
+	expect(validateImportStructure({ notes: {} })).toBe(false);
+	expect(validateImportStructure({ notes: { type: "notes" } })).toBe(false);
+	expect(
+		validateImportStructure({ notes: { type: "notes", latest: "2025-01-01" } }),
+	).toBe(false);
+	expect(validateImportStructure({ notes: null })).toBe(false);
 });
 
-test("validateImportStructure - invalid: comments without data array", () => {
+test("validateImportStructure - invalid: comments without required fields", () => {
 	expect(validateImportStructure({ comments: {} })).toBe(false);
-	expect(validateImportStructure({ comments: { data: "not array" } })).toBe(
+	expect(validateImportStructure({ comments: { type: "comments" } })).toBe(
 		false,
 	);
+	expect(
+		validateImportStructure({
+			comments: { type: "comments", latest: "2025-01-01" },
+		}),
+	).toBe(false);
 	expect(validateImportStructure({ comments: null })).toBe(false);
 });

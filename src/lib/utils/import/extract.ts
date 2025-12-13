@@ -1,3 +1,4 @@
+import type { AnyObject, StarlingDocument } from "@byearlybird/starling";
 import type { Comment, Note, Task } from "@/lib/db";
 import { commentSchema, noteSchema, taskSchema } from "@/lib/db";
 import type { ImportData } from "./parse";
@@ -5,17 +6,20 @@ import { validateItem } from "./validate";
 
 /**
  * Extracts attributes array from Starling document format
- * @param document - The Starling document with JSON:API format
+ * Filters out soft-deleted resources (where deletedAt is not null)
+ * @param document - The StarlingDocument with resources
  * @returns Array of attributes, or empty array if document is undefined
  */
-export function extractAttributes<T>(
-	document: { data: Array<{ attributes: T }> } | undefined,
+export function extractAttributes<T extends AnyObject>(
+	document: StarlingDocument<T> | undefined,
 ): T[] {
-	if (!document?.data) {
+	if (!document?.resources) {
 		return [];
 	}
 
-	return document.data.map((item) => item.attributes);
+	return Object.values(document.resources)
+		.filter((resource) => resource.meta.deletedAt === null)
+		.map((resource) => resource.attributes);
 }
 
 /**

@@ -1,12 +1,15 @@
+import type { StarlingDocument } from "@byearlybird/starling";
+import type { Comment, Note, Task } from "@/lib/db";
+
 /**
- * Type representing the JSON:API format from Starling ORM export
+ * Type representing export data from Starling ORM's toDocuments() method
  */
 export type ImportData = {
-	notes?: { data: Array<{ attributes: unknown }> };
-	tasks?: { data: Array<{ attributes: unknown }> };
-	comments?: { data: Array<{ attributes: unknown }> };
-	// Backward compatibility with legacy exports
-	entries?: { data: Array<{ attributes: unknown }> };
+	notes?: StarlingDocument<Note>;
+	tasks?: StarlingDocument<Task>;
+	comments?: StarlingDocument<Comment>;
+	// Backward compatibility with legacy exports that used 'entries' instead of 'notes'
+	entries?: StarlingDocument<Note>;
 };
 
 /**
@@ -26,17 +29,22 @@ export function parseImportJson(jsonString: string): ImportData {
 }
 
 /**
- * Validates that a collection has the expected JSON:API structure
+ * Validates that a collection has the expected StarlingDocument structure
  */
 function isValidCollection(value: unknown): boolean {
 	if (value === undefined) return true;
 	if (typeof value !== "object" || value === null) return false;
-	if (!("data" in value)) return false;
-	return Array.isArray((value as Record<string, unknown>).data);
+	const obj = value as Record<string, unknown>;
+	return (
+		typeof obj.type === "string" &&
+		typeof obj.latest === "string" &&
+		typeof obj.resources === "object" &&
+		obj.resources !== null
+	);
 }
 
 /**
- * Validates that the parsed data has the expected JSON:API structure
+ * Validates that the parsed data has the expected StarlingDocument structure
  * @param data - The data to validate
  * @returns True if data matches ImportData structure
  */

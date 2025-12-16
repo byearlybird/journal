@@ -1,4 +1,5 @@
 import { CheckCircleIcon } from "@phosphor-icons/react";
+import { Card } from "@/components/ui/card";
 import type { Entry } from "@/lib/db";
 import { formatTime } from "@/lib/utils/dates";
 import { useCommentQuery } from "../resources";
@@ -8,7 +9,7 @@ const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
 	const comments = useCommentQuery(props.entry.id);
 
 	return (
-		<article className="hover:bg-white/10 transition-colors rounded-xl bg-white/8 p-4">
+		<Card as="article" size="md">
 			<button
 				type="button"
 				onClick={props.onClick}
@@ -46,7 +47,7 @@ const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
 					))}
 				</div>
 			)}
-		</article>
+		</Card>
 	);
 };
 

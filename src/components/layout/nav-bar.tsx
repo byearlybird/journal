@@ -1,14 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { cx } from "cva";
 import type { ComponentProps, ReactNode } from "react";
+import { Card } from "@/components/ui/card";
 
 const Root = (props: ComponentProps<"nav">) => {
 	return (
-		<nav
+		<Card
+			as="nav"
 			{...props}
 			className={cx(
 				"flex items-center bottom-app-bottom left-app-left right-app-right fixed",
-				"backdrop-blur-3xl border justify-between bg-white/8 rounded-full transition-all w-fit",
+				"backdrop-blur-3xl border justify-between rounded-full transition-all w-fit",
 				props.className,
 			)}
 		/>

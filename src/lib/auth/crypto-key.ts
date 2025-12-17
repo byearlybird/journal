@@ -107,7 +107,7 @@ export async function decryptMasterKey(
 		"raw",
 		keyData.buffer,
 		{ name: "AES-GCM" },
-		false,
+		true, // extractable: true so it can be exported for storage
 		["encrypt", "decrypt"],
 	);
 }

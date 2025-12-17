@@ -1,38 +1,37 @@
-import type { AuthResponse, SignInCredentials } from "./types";
+import type { AppRoutes } from "@byearlybird/cloud";
+import type {
+	AuthResponse,
+	SignInCredentials,
+	SignUpCredentials,
+} from "./types";
+import { hc } from "hono/client";
 
-/**
- * Stubbed sign-in function that returns mock data
- * TODO: Replace with actual API call
- */
+const client = hc<AppRoutes>("http://localhost:3000");
+
 export async function signIn(
 	credentials: SignInCredentials,
 ): Promise<AuthResponse> {
-	// Simulate API delay
-	await new Promise((resolve) => setTimeout(resolve, 500));
+	const response = await client.auth.signin.$post({
+		json: credentials,
+	});
 
-	// Mock response - replace with actual API call
-	// const response = await fetch(`${API_BASE_URL}/auth/signin`, {
-	//   method: 'POST',
-	//   headers: { 'Content-Type': 'application/json' },
-	//   body: JSON.stringify(credentials),
-	// });
-	// if (!response.ok) throw new Error('Sign in failed');
-	// return response.json();
+	if (!response.ok) {
+		throw new Error("Sign in failed");
+	}
 
-	const mockUser = {
-		id: "user_123",
-		email: credentials.email,
-		encryptedMasterKey: "encrypted_key_placeholder",
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString(),
-	};
+	return (await response.json()) as AuthResponse;
+}
 
-	const mockAccessToken = "mock_access_token_placeholder";
-	const mockRefreshToken = "mock_refresh_token_placeholder";
+export async function signUp(
+	credentials: SignUpCredentials,
+): Promise<AuthResponse> {
+	const response = await client.auth.signup.$post({
+		json: credentials,
+	});
 
-	return {
-		user: mockUser,
-		accessToken: mockAccessToken,
-		refreshToken: mockRefreshToken,
-	};
+	if (!response.ok) {
+		throw new Error("Sign up failed");
+	}
+
+	return (await response.json()) as AuthResponse;
 }

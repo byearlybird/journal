@@ -15,12 +15,21 @@ import { formatDateTime } from "@/lib/utils/dates/format";
 
 const SettingsPage = () => {
 	const [isSignInDrawerOpen, setIsSignInDrawerOpen] = useState(false);
+	const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isSigningIn, setIsSigningIn] = useState(false);
 	const [signInError, setSignInError] = useState<string | null>(null);
 	const [isSyncing, setIsSyncing] = useState(false);
-	const { isAuthenticated, user, signIn, signOut, lastSyncedAt, updateLastSyncedAt } = useAuth();
+	const {
+		isAuthenticated,
+		user,
+		signIn,
+		signUp,
+		signOut,
+		lastSyncedAt,
+		updateLastSyncedAt,
+	} = useAuth();
 	const handleExport = useExportData();
 	const importData = useImportData();
 	const { sync, canSync } = useSyncData();
@@ -31,6 +40,7 @@ const SettingsPage = () => {
 			setEmail("");
 			setPassword("");
 			setSignInError(null);
+			setAuthMode("signin");
 		}
 	}, [isSignInDrawerOpen]);
 
@@ -57,18 +67,24 @@ const SettingsPage = () => {
 		}
 	};
 
-	const handleSignInSubmit = async () => {
+	const handleAuthSubmit = async () => {
 		if (!email || !password) return;
 
 		setIsSigningIn(true);
 		setSignInError(null);
 
 		try {
-			await signIn({ email, password });
+			if (authMode === "signin") {
+				await signIn({ email, password });
+			} else {
+				await signUp({ email, password, encryptedMasterKey: "" });
+			}
 			setIsSignInDrawerOpen(false);
 		} catch (error) {
 			setSignInError(
-				error instanceof Error ? error.message : "Failed to sign in",
+				error instanceof Error
+					? error.message
+					: `Failed to ${authMode === "signin" ? "sign in" : "sign up"}`,
 			);
 		} finally {
 			setIsSigningIn(false);
@@ -91,9 +107,7 @@ const SettingsPage = () => {
 			await sync();
 			updateLastSyncedAt();
 		} catch (error) {
-			alert(
-				error instanceof Error ? error.message : "Failed to sync data",
-			);
+			alert(error instanceof Error ? error.message : "Failed to sync data");
 		} finally {
 			setIsSyncing(false);
 		}
@@ -141,9 +155,7 @@ const SettingsPage = () => {
 						</div>
 					)}
 					{!lastSyncedAt && (
-						<div className="p-2 text-sm text-white/60">
-							Last synced: Never
-						</div>
+						<div className="p-2 text-sm text-white/60">Last synced: Never</div>
 					)}
 				</div>
 			)}
@@ -172,6 +184,38 @@ const SettingsPage = () => {
 				<Drawer.Content>
 					<Drawer.Body>
 						<div className="flex flex-col gap-4">
+							<div className="flex gap-2 mb-2">
+								<button
+									type="button"
+									onClick={() => {
+										setAuthMode("signin");
+										setSignInError(null);
+									}}
+									className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+										authMode === "signin"
+											? "bg-yellow-500 text-black"
+											: "bg-white/8 text-white/60 hover:bg-white/12"
+									}`}
+									disabled={isSigningIn}
+								>
+									Sign in
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setAuthMode("signup");
+										setSignInError(null);
+									}}
+									className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+										authMode === "signup"
+											? "bg-yellow-500 text-black"
+											: "bg-white/8 text-white/60 hover:bg-white/12"
+									}`}
+									disabled={isSigningIn}
+								>
+									Sign up
+								</button>
+							</div>
 							<Input
 								type="email"
 								placeholder="Email"
@@ -192,9 +236,15 @@ const SettingsPage = () => {
 							<Button
 								variant="solid-yellow"
 								disabled={!email || !password || isSigningIn}
-								onClick={handleSignInSubmit}
+								onClick={handleAuthSubmit}
 							>
-								{isSigningIn ? "Signing in..." : "Sign in"}
+								{isSigningIn
+									? authMode === "signin"
+										? "Signing in..."
+										: "Signing up..."
+									: authMode === "signin"
+										? "Sign in"
+										: "Sign up"}
 							</Button>
 						</div>
 					</Drawer.Body>

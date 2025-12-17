@@ -1,4 +1,4 @@
-export { signIn } from "./api";
+export { signIn, signUp } from "./api";
 export { AuthProvider, useAuth } from "./context";
 export {
 	decryptMasterKey,
@@ -6,4 +6,4 @@ export {
 	getCryptoKey,
 	storeCryptoKey,
 } from "./crypto-key";
-export type { AuthResponse, SignInCredentials, User } from "./types";
+export type { AuthResponse, SignInCredentials, SignUpCredentials, User } from "./types";

@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { signIn as apiSignIn } from "./api";
+import { signIn as apiSignIn, signUp as apiSignUp } from "./api";
 import {
 	decryptMasterKey,
 	deleteCryptoKey,
 	getCryptoKey,
 	storeCryptoKey,
 } from "./crypto-key";
-import type { SignInCredentials, User } from "./types";
+import type { SignInCredentials, SignUpCredentials, User } from "./types";
 
 const AUTH_ACCESS_TOKEN_KEY = "journal_auth_access_token";
 const AUTH_REFRESH_TOKEN_KEY = "journal_auth_refresh_token";
@@ -24,6 +24,7 @@ type AuthState = {
 
 type AuthContextValue = AuthState & {
 	signIn: (credentials: SignInCredentials) => Promise<void>;
+	signUp: (credentials: SignUpCredentials) => Promise<void>;
 	signOut: () => Promise<void>;
 	updateLastSyncedAt: () => void;
 	isLoading: boolean;
@@ -48,7 +49,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				const storedAccessToken = localStorage.getItem(AUTH_ACCESS_TOKEN_KEY);
 				const storedRefreshToken = localStorage.getItem(AUTH_REFRESH_TOKEN_KEY);
 				const storedUserJson = localStorage.getItem(AUTH_USER_KEY);
-				const storedLastSyncedAt = localStorage.getItem(AUTH_LAST_SYNCED_AT_KEY);
+				const storedLastSyncedAt = localStorage.getItem(
+					AUTH_LAST_SYNCED_AT_KEY,
+				);
 
 				if (storedAccessToken && storedRefreshToken && storedUserJson) {
 					const storedUser = JSON.parse(storedUserJson) as User;
@@ -119,6 +122,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
+	const handleSignUp = async (credentials: SignUpCredentials) => {
+		try {
+			// Call API
+			const response = await apiSignUp(credentials);
+
+			// Decrypt the master key
+			const decryptedKey = await decryptMasterKey(
+				response.user.encryptedMasterKey,
+				credentials.password,
+			);
+
+			// Store in localStorage
+			localStorage.setItem(AUTH_ACCESS_TOKEN_KEY, response.accessToken);
+			localStorage.setItem(AUTH_REFRESH_TOKEN_KEY, response.refreshToken);
+			localStorage.setItem(AUTH_USER_KEY, JSON.stringify(response.user));
+
+			// Store crypto key in IndexedDB
+			await storeCryptoKey(decryptedKey);
+
+			// Update state
+			setState({
+				user: response.user,
+				accessToken: response.accessToken,
+				refreshToken: response.refreshToken,
+				isAuthenticated: true,
+				lastSyncedAt: localStorage.getItem(AUTH_LAST_SYNCED_AT_KEY),
+			});
+		} catch (error) {
+			console.error("Sign up failed:", error);
+			throw error;
+		}
+	};
+
 	const handleSignOut = async () => {
 		try {
 			// Clear localStorage
@@ -156,6 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const value: AuthContextValue = {
 		...state,
 		signIn: handleSignIn,
+		signUp: handleSignUp,
 		signOut: handleSignOut,
 		updateLastSyncedAt,
 		isLoading,

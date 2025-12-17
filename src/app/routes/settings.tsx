@@ -1,4 +1,5 @@
 import {
+	ArrowsClockwise,
 	DownloadIcon,
 	SignInIcon,
 	SignOutIcon,
@@ -8,8 +9,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Page } from "@/components/layout";
 import { Button, Drawer, Input } from "@/components/ui";
-import { useExportData, useImportData } from "@/features/data";
+import { useExportData, useImportData, useSyncData } from "@/features/data";
 import { useAuth } from "@/lib/auth/context";
+import { formatDateTime } from "@/lib/utils/dates/format";
 
 const SettingsPage = () => {
 	const [isSignInDrawerOpen, setIsSignInDrawerOpen] = useState(false);
@@ -17,9 +19,11 @@ const SettingsPage = () => {
 	const [password, setPassword] = useState("");
 	const [isSigningIn, setIsSigningIn] = useState(false);
 	const [signInError, setSignInError] = useState<string | null>(null);
-	const { isAuthenticated, user, signIn, signOut } = useAuth();
+	const [isSyncing, setIsSyncing] = useState(false);
+	const { isAuthenticated, user, signIn, signOut, lastSyncedAt, updateLastSyncedAt } = useAuth();
 	const handleExport = useExportData();
 	const importData = useImportData();
+	const { sync, canSync } = useSyncData();
 
 	useEffect(() => {
 		if (!isSignInDrawerOpen) {
@@ -79,6 +83,22 @@ const SettingsPage = () => {
 		}
 	};
 
+	const handleSync = async () => {
+		if (!canSync) return;
+
+		setIsSyncing(true);
+		try {
+			await sync();
+			updateLastSyncedAt();
+		} catch (error) {
+			alert(
+				error instanceof Error ? error.message : "Failed to sync data",
+			);
+		} finally {
+			setIsSyncing(false);
+		}
+	};
+
 	return (
 		<Page className="flex flex-col gap-4">
 			<div className="rounded-xl bg-white/8 p-2 flex flex-col divide-y">
@@ -104,6 +124,29 @@ const SettingsPage = () => {
 					</button>
 				)}
 			</div>
+			{isAuthenticated && (
+				<div className="rounded-xl bg-white/8 p-2 flex flex-col divide-y">
+					<button
+						type="button"
+						className="p-2 flex items-center gap-3"
+						onClick={handleSync}
+						disabled={isSyncing || !canSync}
+					>
+						<ArrowsClockwise className="size-4" />
+						{isSyncing ? "Syncing..." : "Sync"}
+					</button>
+					{lastSyncedAt && (
+						<div className="p-2 text-sm text-white/60">
+							Last synced: {formatDateTime(lastSyncedAt)}
+						</div>
+					)}
+					{!lastSyncedAt && (
+						<div className="p-2 text-sm text-white/60">
+							Last synced: Never
+						</div>
+					)}
+				</div>
+			)}
 			<div className="rounded-xl bg-white/8 p-2 flex flex-col divide-y">
 				<button
 					type="button"

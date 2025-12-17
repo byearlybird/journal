@@ -12,17 +12,20 @@ import type { SignInCredentials, User } from "./types";
 const AUTH_ACCESS_TOKEN_KEY = "journal_auth_access_token";
 const AUTH_REFRESH_TOKEN_KEY = "journal_auth_refresh_token";
 const AUTH_USER_KEY = "journal_auth_user";
+const AUTH_LAST_SYNCED_AT_KEY = "journal_auth_last_synced_at";
 
 type AuthState = {
 	user: User | null;
 	accessToken: string | null;
 	refreshToken: string | null;
 	isAuthenticated: boolean;
+	lastSyncedAt: string | null;
 };
 
 type AuthContextValue = AuthState & {
 	signIn: (credentials: SignInCredentials) => Promise<void>;
 	signOut: () => Promise<void>;
+	updateLastSyncedAt: () => void;
 	isLoading: boolean;
 };
 
@@ -34,6 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		accessToken: null,
 		refreshToken: null,
 		isAuthenticated: false,
+		lastSyncedAt: null,
 	});
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -44,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				const storedAccessToken = localStorage.getItem(AUTH_ACCESS_TOKEN_KEY);
 				const storedRefreshToken = localStorage.getItem(AUTH_REFRESH_TOKEN_KEY);
 				const storedUserJson = localStorage.getItem(AUTH_USER_KEY);
+				const storedLastSyncedAt = localStorage.getItem(AUTH_LAST_SYNCED_AT_KEY);
 
 				if (storedAccessToken && storedRefreshToken && storedUserJson) {
 					const storedUser = JSON.parse(storedUserJson) as User;
@@ -56,12 +61,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 							accessToken: storedAccessToken,
 							refreshToken: storedRefreshToken,
 							isAuthenticated: true,
+							lastSyncedAt: storedLastSyncedAt,
 						});
 					} else {
 						// Crypto key missing, clear session
 						localStorage.removeItem(AUTH_ACCESS_TOKEN_KEY);
 						localStorage.removeItem(AUTH_REFRESH_TOKEN_KEY);
 						localStorage.removeItem(AUTH_USER_KEY);
+						localStorage.removeItem(AUTH_LAST_SYNCED_AT_KEY);
 					}
 				}
 			} catch (error) {
@@ -70,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				localStorage.removeItem(AUTH_ACCESS_TOKEN_KEY);
 				localStorage.removeItem(AUTH_REFRESH_TOKEN_KEY);
 				localStorage.removeItem(AUTH_USER_KEY);
+				localStorage.removeItem(AUTH_LAST_SYNCED_AT_KEY);
 			} finally {
 				setIsLoading(false);
 			}
@@ -103,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				accessToken: response.accessToken,
 				refreshToken: response.refreshToken,
 				isAuthenticated: true,
+				lastSyncedAt: localStorage.getItem(AUTH_LAST_SYNCED_AT_KEY),
 			});
 		} catch (error) {
 			console.error("Sign in failed:", error);
@@ -116,6 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			localStorage.removeItem(AUTH_ACCESS_TOKEN_KEY);
 			localStorage.removeItem(AUTH_REFRESH_TOKEN_KEY);
 			localStorage.removeItem(AUTH_USER_KEY);
+			localStorage.removeItem(AUTH_LAST_SYNCED_AT_KEY);
 
 			// Clear crypto key from IndexedDB
 			await deleteCryptoKey();
@@ -126,6 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				accessToken: null,
 				refreshToken: null,
 				isAuthenticated: false,
+				lastSyncedAt: null,
 			});
 		} catch (error) {
 			console.error("Sign out failed:", error);
@@ -133,10 +144,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
+	const updateLastSyncedAt = () => {
+		const now = new Date().toISOString();
+		localStorage.setItem(AUTH_LAST_SYNCED_AT_KEY, now);
+		setState((prev) => ({
+			...prev,
+			lastSyncedAt: now,
+		}));
+	};
+
 	const value: AuthContextValue = {
 		...state,
 		signIn: handleSignIn,
 		signOut: handleSignOut,
+		updateLastSyncedAt,
 		isLoading,
 	};
 

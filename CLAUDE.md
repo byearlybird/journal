@@ -25,7 +25,6 @@ bun check        # Lint and format code with Biome
 - **Frontend**: React 19 + TypeScript
 - **Routing**: TanStack Router with auto code-splitting
 - **Database**: Starling ORM with IndexedDB plugin
-- **UI Components**: Ark UI (accessible primitives)
 - **Styling**: Tailwind CSS 4 with custom theme
 - **Validation**: Zod schemas
 - **Code Quality**: Biome (linting & formatting)

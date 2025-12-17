@@ -32,6 +32,7 @@ const Backdrop = () => (
 		initial={{ opacity: 0 }}
 		animate={{ opacity: 1 }}
 		exit={{ opacity: 0 }}
+		data-part="backdrop"
 	/>
 );
 
@@ -65,7 +66,10 @@ const Content = (props: ContentProps) => {
 	return createPortal(
 		<>
 			<Backdrop />
-			<div className="fixed bottom-app-bottom left-app-left top-app-top right-app-right flex items-end justify-center">
+			<div
+				className="fixed bottom-app-bottom left-app-left top-app-top right-app-right flex items-end justify-center"
+				data-part="container"
+			>
 				<motion.div
 					className={cx(
 						"flex flex-col w-full h-full rounded-2xl bg-white/5 backdrop-blur-3xl p-5 border",
@@ -79,6 +83,7 @@ const Content = (props: ContentProps) => {
 					dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
 					dragElastic={{ top: 0.1, bottom: 0.2, left: 0.2, right: 0.2 }}
 					onDragEnd={handleDragEnd}
+					data-part="panel"
 				>
 					{props.children}
 				</motion.div>

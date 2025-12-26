@@ -8,7 +8,7 @@ const Root = (props: ComponentProps<"nav">) => {
 			{...props}
 			className={cx(
 				"flex items-center bottom-app-bottom left-app-left right-app-right fixed",
-				"backdrop-blur-3xl border justify-between bg-white/8 rounded-full transition-all w-fit",
+				"backdrop-blur-xl border justify-between bg-white/8 rounded-full transition-all w-fit",
 				props.className,
 			)}
 		/>

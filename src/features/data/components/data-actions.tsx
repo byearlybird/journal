@@ -1,9 +1,7 @@
 import { DownloadIcon, UploadIcon } from "@phosphor-icons/react";
-import { createFileRoute } from "@tanstack/react-router";
-import { Page } from "@/components/layout";
 import { useExportData, useImportData } from "@/features/data";
 
-const SettingsPage = () => {
+export const DataActions = () => {
 	const handleExport = useExportData();
 	const importData = useImportData();
 
@@ -31,29 +29,24 @@ const SettingsPage = () => {
 	};
 
 	return (
-		<Page>
-			<div className="rounded-lg bg-white/8 p-2 flex flex-col divide-y">
-				<button
-					type="button"
-					className="p-2 flex items-center gap-3"
-					onClick={handleExport}
-				>
-					<DownloadIcon className="size-4" />
-					Export data
-				</button>
-				<button
-					type="button"
-					className="p-2 flex items-center gap-3"
-					onClick={handleImport}
-				>
-					<UploadIcon className="size-4" />
-					Import data
-				</button>
-			</div>
-		</Page>
+		<div className="rounded-lg bg-white/8 p-2 flex flex-col divide-y">
+			<button
+				type="button"
+				className="p-2 flex items-center gap-3"
+				onClick={handleExport}
+			>
+				<DownloadIcon className="size-4" />
+				Export data
+			</button>
+			<button
+				type="button"
+				className="p-2 flex items-center gap-3"
+				onClick={handleImport}
+			>
+				<UploadIcon className="size-4" />
+				Import data
+			</button>
+		</div>
 	);
 };
 
-export const Route = createFileRoute("/settings")({
-	component: SettingsPage,
-});

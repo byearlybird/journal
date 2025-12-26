@@ -41,7 +41,7 @@ export const CommentCreator = (props: CommentCreatorProps) => {
 				</p>
 				<Textarea
 					ref={textareaRef}
-					className="bg-white/4 rounded-xl p-2 flex-1"
+					className="bg-white/4 rounded-lg p-2 flex-1"
 					placeholder="Add a comment..."
 					value={content}
 					onChange={(e) => setContent(e.currentTarget.value)}

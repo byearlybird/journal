@@ -8,7 +8,7 @@ const EntryItem = (props: { entry: Entry; onClick: () => void }) => {
 	const comments = useCommentQuery(props.entry.id);
 
 	return (
-		<article className="hover:bg-white/10 transition-colors rounded-xl bg-white/8 p-4">
+		<article className="hover:bg-white/10 transition-colors rounded-lg bg-white/8 p-4">
 			<button
 				type="button"
 				onClick={props.onClick}

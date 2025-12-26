@@ -42,7 +42,7 @@ export const EntryCreator = (props: EntryCreatorProps) => {
 			<Drawer.Content>
 				<Textarea
 					ref={textareaRef}
-					className="bg-white/4 rounded-xl p-2 flex-1"
+					className="bg-white/4 rounded-lg p-2 flex-1"
 					placeholder="What's on your mind?"
 					value={content}
 					onChange={(e) => setContent(e.currentTarget.value)}

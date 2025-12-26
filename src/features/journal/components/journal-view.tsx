@@ -1,53 +1,18 @@
-import { PenIcon } from "@phosphor-icons/react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import {
 	CommentCreator,
 	EntryCreator,
 	EntryDetailDialog,
-	PastEntries,
-	TodayEntries,
-	TodayHeader,
 } from "@/features/journal";
-import type { Entry } from "@/lib/db";
+import { PastEntriesPage } from "./past-entries-page";
+import { TodayPage } from "./today-page";
+import { CreateEntryFab } from "./create-entry-fab";
+import { getEntryFromDialogMode } from "../utils/dialog-helpers";
 import { useDatabase } from "@/lib/db/context";
 import { useDialogStore } from "@/lib/stores/dialog";
+import type { Entry } from "@/lib/db";
 
-const getEntryFromDialogMode = (
-	mode: ReturnType<typeof useDialogStore>["mode"],
-) => {
-	if (mode.type === "view-entry" || mode.type === "add-comment") {
-		return mode.entry;
-	}
-	return undefined;
-};
-
-type PastEntriesPageProps = {
-	onEntryClick: (entry: Entry) => void;
-};
-
-const PastEntriesPage = (props: PastEntriesPageProps) => {
-	return (
-		<div className="mb-14 mt-4 pl-app-left pr-app-right">
-			<PastEntries onEntryClick={props.onEntryClick} />
-		</div>
-	);
-};
-
-type TodayPageProps = {
-	onEntryClick: (entry: Entry) => void;
-};
-
-const TodayPage = (props: TodayPageProps) => {
-	return (
-		<div className="gap-2 pl-app-left pr-app-right flex flex-col mb-14">
-			<TodayHeader />
-			<TodayEntries onEntryClick={props.onEntryClick} />
-		</div>
-	);
-};
-
-const JournalRoute = () => {
+export const JournalView = () => {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const dialog = useDialogStore();
 	const db = useDatabase();
@@ -111,15 +76,7 @@ const JournalRoute = () => {
 					<TodayPage onEntryClick={handleEntryClick} />
 				</div>
 			</div>
-			<div className="flex items-center bottom-app-bottom fixed right-4">
-				<button
-					type="button"
-					className="size-11 flex items-center bg-yellow-300/90 outline outline-white/20 shadow backdrop-blur-xl text-black rounded-full justify-center active:scale-110 transition-all"
-					onClick={() => dialog.setCreateEntry()}
-				>
-					<PenIcon className="size-5" />
-				</button>
-			</div>
+			<CreateEntryFab onClick={() => dialog.setCreateEntry()} />
 			<CommentCreator
 				open={dialog.mode.type === "add-comment"}
 				onOpenChange={(open) => {
@@ -161,6 +118,3 @@ const JournalRoute = () => {
 	);
 };
 
-export const Route = createFileRoute("/")({
-	component: JournalRoute,
-});

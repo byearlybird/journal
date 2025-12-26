@@ -68,7 +68,7 @@ const Content = (props: ContentProps) => {
 			<div className="fixed bottom-app-bottom left-app-left top-app-top right-app-right flex items-end justify-center">
 				<motion.div
 					className={cx(
-						"flex flex-col w-full h-full rounded-2xl bg-white/5 backdrop-blur-3xl p-5 border",
+						"flex flex-col w-full h-full rounded-lg bg-white/5 backdrop-blur-xl p-5 border",
 						props.className,
 					)}
 					initial={{ y: "100%" }}

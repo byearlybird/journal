@@ -7,16 +7,23 @@ import {
 	SignedOut,
 	SignInButton,
 	UserButton,
+	useAuth,
 } from "@clerk/clerk-react";
 
 function App() {
 	const [content, setContent] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const { getToken } = useAuth();
 
 	const loadContent = async () => {
 		setIsLoading(true);
 		try {
-			const res = await fetch("/api/");
+			const token = await getToken();
+			const res = await fetch("/api/", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
 			const data = (await res.json()) as { content: string };
 			setContent(data.content || "");
 		} catch (error) {
@@ -29,8 +36,12 @@ function App() {
 	const saveContent = async () => {
 		setIsLoading(true);
 		try {
+			const token = await getToken();
 			await fetch("/api/", {
 				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
 				body: content,
 			});
 		} catch (error) {

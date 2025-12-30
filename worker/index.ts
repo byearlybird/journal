@@ -1,13 +1,30 @@
 import { WorkerEntrypoint } from "cloudflare:workers";
+import { createClerkClient } from "@clerk/backend";
 
 interface Env {
 	journal_bucket: R2Bucket;
+	CLERK_SECRET_KEY: string;
+	VITE_CLERK_PUBLISHABLE_KEY: string;
 }
 
 const KEY = "journal-entry";
 
 export default class extends WorkerEntrypoint<Env> {
 	async fetch(request: Request) {
+		const clerkClient = createClerkClient({
+			secretKey: this.env.CLERK_SECRET_KEY,
+			publishableKey: this.env.VITE_CLERK_PUBLISHABLE_KEY,
+		});
+
+		const { isAuthenticated } = await clerkClient.authenticateRequest(request);
+
+		if (!isAuthenticated) {
+			return new Response(JSON.stringify({ error: "Unauthorized" }), {
+				status: 401,
+				headers: { "Content-Type": "application/json" },
+			});
+		}
+
 		switch (request.method) {
 			case "GET": {
 				const object = await this.env.journal_bucket.get(KEY);

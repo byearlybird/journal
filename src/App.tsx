@@ -2,6 +2,12 @@ import { useState } from "react";
 import viteLogo from "/vite.svg";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
+import {
+	SignedIn,
+	SignedOut,
+	SignInButton,
+	UserButton,
+} from "@clerk/clerk-react";
 
 function App() {
 	const [content, setContent] = useState("");
@@ -36,6 +42,14 @@ function App() {
 
 	return (
 		<>
+			<header>
+				<SignedOut>
+					<SignInButton>Sign In</SignInButton>
+				</SignedOut>
+				<SignedIn>
+					<UserButton>User</UserButton>
+				</SignedIn>
+			</header>
 			<div>
 				<a href="https://vite.dev" target="_blank" rel="noopener">
 					<img src={viteLogo} className="logo" alt="Vite logo" />

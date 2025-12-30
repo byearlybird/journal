@@ -5,5 +5,11 @@
 	"assets": {
 		"not_found_handling": "single-page-application"
 	},
-	"main": "./worker/index.ts"
+	"main": "./worker/index.ts",
+	"r2_buckets": [
+		{
+			"bucket_name": "journal-bucket",
+			"binding": "journal_bucket"
+		}
+	]
 }

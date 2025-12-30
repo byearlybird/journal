@@ -4,8 +4,35 @@ import reactLogo from "./assets/react.svg";
 import "./App.css";
 
 function App() {
-	const [count, setCount] = useState(0);
-	const [name, setName] = useState("unknown");
+	const [content, setContent] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+
+	const loadContent = async () => {
+		setIsLoading(true);
+		try {
+			const res = await fetch("/api/");
+			const data = (await res.json()) as { content: string };
+			setContent(data.content || "");
+		} catch (error) {
+			console.error("Failed to load:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const saveContent = async () => {
+		setIsLoading(true);
+		try {
+			await fetch("/api/", {
+				method: "PUT",
+				body: content,
+			});
+		} catch (error) {
+			console.error("Failed to save:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	return (
 		<>
@@ -17,33 +44,24 @@ function App() {
 					<img src={reactLogo} className="logo react" alt="React logo" />
 				</a>
 			</div>
-			<h1>Vite + React</h1>
+			<h1>Journal</h1>
 			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
+				<textarea
+					value={content}
+					onChange={(e) => setContent(e.target.value)}
+					placeholder="Write your journal entry..."
+					rows={10}
+					style={{ width: "100%", marginBottom: "1rem" }}
+				/>
+				<div style={{ display: "flex", gap: "0.5rem" }}>
+					<button onClick={loadContent} disabled={isLoading}>
+						Load
+					</button>
+					<button onClick={saveContent} disabled={isLoading}>
+						Save
+					</button>
+				</div>
 			</div>
-			<div className="card">
-				<button
-					onClick={() => {
-						fetch("/api/")
-							.then((res) => res.json() as Promise<{ name: string }>)
-							.then((data) => setName(data.name));
-					}}
-					aria-label="get name"
-				>
-					Name from API is: {name}
-				</button>
-				<p>
-					Edit <code>api/index.ts</code> to change the name
-				</p>
-			</div>
-			<p className="read-the-docs">
-				Click on the Vite and React logos to learn more
-			</p>
 		</>
 	);
 }

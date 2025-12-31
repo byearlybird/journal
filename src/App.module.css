@@ -1,37 +1,7 @@
-.logo {
-	height: var(--size-24);
-	padding: var(--size-6);
-	will-change: filter;
-	transition: filter 300ms;
-}
-
-.logo:hover {
-	filter: drop-shadow(0 0 var(--size-8) #646cffaa);
-}
-
-.logoReact:hover {
-	filter: drop-shadow(0 0 var(--size-8) #61dafbaa);
-}
-
-@keyframes logoSpin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.logoReact {
-		animation: logoSpin infinite 20s linear;
-	}
-}
-
-.card {
-	padding: var(--size-8);
-}
-
-.readTheDocs {
-	color: var(--color-grey-500);
+.helloWorld {
+	text-align: center;
+	font-size: 4rem;
+	font-weight: bold;
+	margin: 0 auto;
+	width: 100%;
 }

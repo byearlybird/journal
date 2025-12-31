@@ -1,16 +1,16 @@
 .logo {
-	height: 6em;
-	padding: 1.5em;
+	height: var(--size-24);
+	padding: var(--size-6);
 	will-change: filter;
 	transition: filter 300ms;
 }
 
 .logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
+	filter: drop-shadow(0 0 var(--size-8) #646cffaa);
 }
 
 .logoReact:hover {
-	filter: drop-shadow(0 0 2em #61dafbaa);
+	filter: drop-shadow(0 0 var(--size-8) #61dafbaa);
 }
 
 @keyframes logoSpin {
@@ -29,10 +29,9 @@
 }
 
 .card {
-	padding: 2em;
+	padding: var(--size-8);
 }
 
 .readTheDocs {
-	color: #888;
+	color: var(--color-grey-500);
 }
-

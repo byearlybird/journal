@@ -1,7 +1,6 @@
 #root {
-	max-width: 1280px;
+	max-width: var(--width-xl);
 	margin: 0 auto;
-	padding: 2rem;
+	padding: var(--size-8);
 	text-align: center;
 }
-

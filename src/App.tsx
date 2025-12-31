@@ -79,10 +79,10 @@ function App() {
 					style={{ width: "100%", marginBottom: "1rem" }}
 				/>
 				<div style={{ display: "flex", gap: "0.5rem" }}>
-					<button onClick={loadContent} disabled={isLoading}>
+					<button type="button" onClick={loadContent} disabled={isLoading}>
 						Load
 					</button>
-					<button onClick={saveContent} disabled={isLoading}>
+					<button type="button" onClick={saveContent} disabled={isLoading}>
 						Save
 					</button>
 				</div>

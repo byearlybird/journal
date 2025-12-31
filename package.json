@@ -24,6 +24,7 @@
 		"@vitejs/plugin-react": "^5.1.1",
 		"typescript": "~5.9.3",
 		"vite": "npm:rolldown-vite@7.2.5",
+		"vite-plugin-typed-css-modules": "^0.5.1",
 		"wrangler": "^4.54.0"
 	},
 	"overrides": {

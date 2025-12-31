@@ -1,7 +1,7 @@
 import { useState } from "react";
 import viteLogo from "/vite.svg";
 import reactLogo from "./assets/react.svg";
-import "./App.css";
+import styles from "./App.module.css";
 import {
 	SignedIn,
 	SignedOut,
@@ -63,14 +63,18 @@ function App() {
 			</header>
 			<div>
 				<a href="https://vite.dev" target="_blank" rel="noopener">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
+					<img src={viteLogo} className={styles.logo} alt="Vite logo" />
 				</a>
 				<a href="https://react.dev" target="_blank" rel="noopener">
-					<img src={reactLogo} className="logo react" alt="React logo" />
+					<img
+						src={reactLogo}
+						className={`${styles.logo} ${styles.logoReact}`}
+						alt="React logo"
+					/>
 				</a>
 			</div>
 			<h1>Journal</h1>
-			<div className="card">
+			<div className={styles.card}>
 				<textarea
 					value={content}
 					onChange={(e) => setContent(e.target.value)}

@@ -1,13 +1,12 @@
+import { $router } from "@app/router";
 import {
 	SignInButton,
 	SignOutButton,
 	useAuth,
 	useUser,
 } from "@clerk/clerk-react";
-import { useStore } from "@nanostores/react";
-import { useEffect, useState } from "react";
-import { store } from "../lib/store";
-import { useNotes } from "../lib/store/hooks";
+import { store } from "@lib/store";
+import { useNotes } from "@lib/store/hooks";
 import {
 	clearCryptoKey,
 	decrypt,
@@ -15,8 +14,9 @@ import {
 	encrypt,
 	getCryptoKey,
 	saveCryptoKey,
-} from "../lib/sync";
-import { $router } from "./router";
+} from "@lib/sync";
+import { useStore } from "@nanostores/react";
+import { useEffect, useState } from "react";
 
 function App() {
 	const page = useStore($router);

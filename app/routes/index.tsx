@@ -1,40 +1,20 @@
-import { $router } from "@app/router";
+import {
+	clearCryptoKey,
+	getCryptoKey,
+	setCryptoKey as setCryptoKeyPersistence,
+} from "@app/persistence";
+import { store } from "@app/store";
+import { useNotes } from "@app/store/queries";
 import {
 	SignInButton,
 	SignOutButton,
 	useAuth,
 	useUser,
 } from "@clerk/clerk-react";
-import { store } from "@app/store";
-import { useNotes } from "@app/store/hooks";
-import {
-	clearCryptoKey,
-	getCryptoKey,
-	setCryptoKey as setCryptoKeyPersistence,
-} from "@app/persistence";
 import { decrypt, deriveKey, encrypt } from "@lib/crypto";
-import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
 
-function App() {
-	const page = useStore($router);
-
-	if (!page) {
-		return (
-			<div className="mx-auto max-w-3xl p-4 text-white">
-				404 - Page not found
-			</div>
-		);
-	}
-
-	if (page.route === "home") {
-		return <HomePage />;
-	}
-
-	return null;
-}
-
-function HomePage() {
+export function HomePage() {
 	const { isSignedIn } = useAuth();
 	const { user } = useUser();
 	const notes = useNotes();
@@ -222,5 +202,3 @@ function HomePage() {
 		</div>
 	);
 }
-
-export default App;

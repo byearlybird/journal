@@ -1,20 +1,14 @@
 import { useState } from "react";
 import styles from "./App.module.css";
-
-interface Note {
-	id: number;
-	content: string;
-}
+import { store, useNotes } from "./store";
 
 function App() {
-	const [notes, setNotes] = useState<Note[]>([]);
+	const notes = useNotes();
 	const [inputValue, setInputValue] = useState("");
-	const [nextId, setNextId] = useState(1);
 
 	const handleAdd = () => {
 		if (inputValue.trim()) {
-			setNotes([...notes, { id: nextId, content: inputValue.trim() }]);
-			setNextId(nextId + 1);
+			store.notes.add({ content: inputValue.trim() });
 			setInputValue("");
 		}
 	};

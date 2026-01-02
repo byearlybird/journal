@@ -119,7 +119,6 @@ function App() {
 		try {
 			const snapshot = store.$snapshot.get();
 			const encrypted = await encrypt(JSON.stringify(snapshot), cryptoKey);
-			console.log("encrypted", encrypted);
 			await fetch("/api/journal", {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },

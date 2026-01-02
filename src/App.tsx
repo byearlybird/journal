@@ -1,5 +1,4 @@
 import { useState } from "react";
-import styles from "./App.module.css";
 import { useNotes, useStoreContext } from "./store";
 
 function App() {
@@ -23,31 +22,46 @@ function App() {
 	};
 
 	return (
-		<div className={styles.container}>
-			<div className={styles.actions}>
-				<button type="button" onClick={handlePull} className={styles.button}>
+		<div className="mx-auto max-w-3xl p-4">
+			<div className="mb-4 flex gap-4">
+				<button
+					type="button"
+					onClick={handlePull}
+					className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
+				>
 					Pull
 				</button>
-				<button type="button" onClick={handlePush} className={styles.button}>
+				<button
+					type="button"
+					onClick={handlePush}
+					className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
+				>
 					Push
 				</button>
 			</div>
 
-			<div className={styles.inputSection}>
+			<div className="mb-8 flex flex-col gap-2">
 				<textarea
 					value={inputValue}
 					onChange={(e) => setInputValue(e.target.value)}
-					className={styles.textarea}
+					className="min-h-[100px] resize-y border border-white bg-transparent p-2 font-sans text-white placeholder:text-white/50"
 					placeholder="This an un-saved entry"
 				/>
-				<button type="button" onClick={handleAdd} className={styles.button}>
+				<button
+					type="button"
+					onClick={handleAdd}
+					className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
+				>
 					Add
 				</button>
 			</div>
 
-			<div className={styles.notesList}>
+			<div className="flex flex-col gap-4">
 				{notes.map((note) => (
-					<div key={note.id} className={styles.note}>
+					<div
+						key={note.id}
+						className="whitespace-pre-wrap break-words border border-white bg-transparent p-4 text-white"
+					>
 						{note.content}
 					</div>
 				))}

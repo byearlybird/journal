@@ -7,7 +7,11 @@ import {
 } from "@clerk/clerk-react";
 import { store } from "@app/store";
 import { useNotes } from "@app/store/hooks";
-import { clearCryptoKey, getCryptoKey, setCryptoKey } from "@app/persistence";
+import {
+	clearCryptoKey,
+	getCryptoKey,
+	setCryptoKey as setCryptoKeyPersistence,
+} from "@app/persistence";
 import { decrypt, deriveKey, encrypt } from "@lib/crypto";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
@@ -71,7 +75,7 @@ function HomePage() {
 				const key = await deriveKey(passphrase, user.id);
 				if (cancelled) return;
 
-				await setCryptoKey(key);
+				await setCryptoKeyPersistence(key);
 				setCryptoKey(key);
 			} catch (err) {
 				console.error("Failed to derive key:", err);

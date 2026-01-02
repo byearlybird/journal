@@ -5,10 +5,11 @@
     "": {
       "name": "journal",
       "dependencies": {
-        "@byearlybird/starling": "0.13.0",
+        "@byearlybird/starling": "^0.13.2",
         "@clerk/backend": "^2.29.0",
         "@clerk/clerk-react": "^5.59.2",
         "@nanostores/react": "^1.0.0",
+        "idb-keyval": "^6.2.2",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "zod": "^4.3.4",
@@ -88,7 +89,7 @@
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.3.10", "", { "os": "win32", "cpu": "x64" }, "sha512-pHEFgq7dUEsKnqG9mx9bXihxGI49X+ar+UBrEIj3Wqj3UCZp1rNgV+OoyjFgcXsjCWpuEAF4VJdkZr3TrWdCbQ=="],
 
-    "@byearlybird/starling": ["@byearlybird/starling@0.13.0", "", { "dependencies": { "@standard-schema/spec": "^1.1.0", "nanostores": "^1.1.0" }, "peerDependencies": { "typescript": "^5" } }, "sha512-Svq8cTuyzGxsxa2AU7ep4Z44aCxqtjw6NiQmRE/E8wDfdbBlE5/6zq9GH3+h/tv9kbr9OQx5PICMPVhV2fcWIA=="],
+    "@byearlybird/starling": ["@byearlybird/starling@0.13.2", "", { "dependencies": { "@standard-schema/spec": "^1.1.0", "nanostores": "^1.1.0" }, "peerDependencies": { "typescript": "^5" } }, "sha512-qA/QTrAF4ni+LuUq0E9MlM3h06kPNbcOmU6lzFwA5LinOqB9QkwiLpnduL3nzFxvIoiqcsp0rke9XKtQxw2dZQ=="],
 
     "@clerk/backend": ["@clerk/backend@2.29.0", "", { "dependencies": { "@clerk/shared": "^3.41.1", "@clerk/types": "^4.101.9", "cookie": "1.0.2", "standardwebhooks": "^1.0.0", "tslib": "2.8.1" } }, "sha512-cw4CK6ZHgeFROirlIOawelqRBxZAyH6v3GPSYZEEzYAL0WWUHx7cMXzoQcTMruH7w6UM7s3Ox+uUcINESWkQPA=="],
 
@@ -401,6 +402,8 @@
     "icss-replace-symbols": ["icss-replace-symbols@1.1.0", "", {}, "sha512-chIaY3Vh2mh2Q3RGXttaDIzeiPvaVXJ+C4DAh/w3c37SKZ/U6PGMmuicR2EQQp9bKG8zLMCl7I+PtIoOOPp8Gg=="],
 
     "icss-utils": ["icss-utils@5.1.0", "", { "peerDependencies": { "postcss": "^8.1.0" } }, "sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA=="],
+
+    "idb-keyval": ["idb-keyval@6.2.2", "", {}, "sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg=="],
 
     "is-arrayish": ["is-arrayish@0.3.4", "", {}, "sha512-m6UrgzFVUYawGBh1dUsWR5M2Clqic9RVXC/9f8ceNlv2IcO9j9J/z8UoCLPqtsPBFNzEpfR3xftohbfqDx8EQA=="],
 

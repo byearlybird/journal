@@ -1,13 +1,16 @@
 import { useState } from "react";
 import styles from "./App.module.css";
-import { store, useNotes } from "./store";
+import { useNotes, useStoreContext } from "./store";
 
 function App() {
+	const store = useStoreContext();
 	const notes = useNotes();
 	const [inputValue, setInputValue] = useState("");
 
 	const handleAdd = () => {
+		console.log("Adding note", inputValue);
 		if (inputValue.trim()) {
+			console.log("Adding note to store", inputValue.trim());
 			store.notes.add({ content: inputValue.trim() });
 			setInputValue("");
 		}

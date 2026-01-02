@@ -15,7 +15,23 @@ function App() {
 		}
 	};
 
-	const handlePush = async () => {
+	const handleSync = async () => {
+		// Pull first
+		try {
+			const res = await fetch("/api/journal", {
+				method: "GET",
+				headers: { "Content-Type": "application/json" },
+			});
+			const data = await res.json();
+			if (data.content) {
+				const parsedData = JSON.parse(data.content);
+				store.merge(parsedData);
+			}
+		} catch (err) {
+			console.error(err);
+		}
+
+		// Then push
 		const snapshot = store.$snapshot.get();
 		await fetch("/api/journal", {
 			method: "PUT",
@@ -24,42 +40,17 @@ function App() {
 		});
 	};
 
-	const handlePull = () => {
-		fetch("/api/journal", {
-			method: "GET",
-			headers: { "Content-Type": "application/json" },
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log("data", data);
-				const parsedData = JSON.parse(data.content);
-				console.log("parsedData", parsedData);
-				store.merge(parsedData);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	};
-
 	return (
 		<div className="mx-auto max-w-3xl p-4">
 			<div className="mb-4 flex items-center justify-between">
-				<div className="flex gap-4">
-					<button
-						type="button"
-						onClick={handlePull}
-						className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
-					>
-						Pull
-					</button>
-					<button
-						type="button"
-						onClick={handlePush}
-						className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
-					>
-						Push
-					</button>
-				</div>
+				<button
+					type="button"
+					onClick={handleSync}
+					disabled={!isSignedIn}
+					className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					Sync
+				</button>
 				{isSignedIn ? (
 					<SignOutButton>
 						<button

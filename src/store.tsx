@@ -1,12 +1,12 @@
 import { createStore } from "@byearlybird/starling";
 import { useStore } from "@nanostores/react";
 import * as idb from "idb-keyval";
-import { atom } from "nanostores";
 import {
 	createContext,
 	type ReactNode,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from "react";
 import z from "zod";
@@ -117,6 +117,3 @@ export function useNotes() {
 		},
 	);
 }
-
-// In-memory cache for the derived encryption key
-export const $cryptoKey = atom<CryptoKey | null>(null);

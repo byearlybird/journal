@@ -5,7 +5,6 @@ import {
 	useUser,
 } from "@clerk/clerk-react";
 import { useStore } from "@nanostores/react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
 	clearKey,
@@ -14,14 +13,10 @@ import {
 	encrypt,
 	loadKey,
 	saveKey,
-} from "../crypto";
-import { $cryptoKey, useNotes, useStoreContext } from "../store";
+} from "./crypto";
+import { $cryptoKey, useNotes, useStoreContext } from "./store";
 
-export const Route = createFileRoute("/")({
-	component: HomeComponent,
-});
-
-function HomeComponent() {
+function App() {
 	const { isSignedIn } = useAuth();
 	const { user } = useUser();
 	const store = useStoreContext();
@@ -210,3 +205,5 @@ function HomeComponent() {
 		</div>
 	);
 }
+
+export default App;

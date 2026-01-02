@@ -32,7 +32,6 @@ type StoreType = typeof store;
 
 const loadFromIdb = () => {
 	return idb.get("journal").then((data) => {
-		console.log("data", data);
 		if (data) {
 			store.merge(data);
 		}
@@ -41,7 +40,6 @@ const loadFromIdb = () => {
 
 export function startPersisting() {
 	const unsubscribe = store.$snapshot.listen((snapshot) => {
-		console.log("snapshot", snapshot);
 		idb.set("journal", snapshot);
 	});
 
@@ -52,7 +50,6 @@ export function startPersisting() {
 	const intervalId = setInterval(loadFromIdb, LOAD_INTERVAL_MS);
 
 	const stop = () => {
-		console.log("stopping persisting");
 		unsubscribe();
 		clearInterval(intervalId);
 	};
@@ -83,7 +80,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
 		loadPromise.then(() => {
 			if (!ignore) {
-				console.log("Store initialized");
 				setIsInitialized(true);
 			}
 		});

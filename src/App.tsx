@@ -8,9 +8,7 @@ function App() {
 	const [inputValue, setInputValue] = useState("");
 
 	const handleAdd = () => {
-		console.log("Adding note", inputValue);
 		if (inputValue.trim()) {
-			console.log("Adding note to store", inputValue.trim());
 			store.notes.add({ content: inputValue.trim() });
 			setInputValue("");
 		}

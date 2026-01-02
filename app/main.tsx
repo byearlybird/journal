@@ -2,9 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./main.css";
 import { ClerkProvider } from "@clerk/clerk-react";
-import App from "./index.tsx";
 import { store } from "../lib/store";
 import { initPersistence } from "../lib/store/persistence";
+import App from "./index.tsx";
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as
@@ -34,4 +34,3 @@ createRoot(document.getElementById("root")!).render(
 		</ClerkProvider>
 	</StrictMode>,
 );
-

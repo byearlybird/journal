@@ -27,5 +27,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["lib"]
+	"include": ["lib", "app/store"]
 }

@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./main.css";
 import App from "@app/index.tsx";
 import { ClerkProvider } from "@clerk/clerk-react";
-import { store } from "@lib/store";
-import { initPersistence } from "@lib/store/persistence";
+import { store } from "@app/store";
+import { initPersistence } from "@app/store/persistence";
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as

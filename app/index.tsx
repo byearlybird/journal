@@ -5,16 +5,10 @@ import {
 	useAuth,
 	useUser,
 } from "@clerk/clerk-react";
-import { store } from "@lib/store";
-import { useNotes } from "@lib/store/hooks";
-import {
-	clearCryptoKey,
-	decrypt,
-	deriveKey,
-	encrypt,
-	getCryptoKey,
-	saveCryptoKey,
-} from "@lib/sync";
+import { store } from "@app/store";
+import { useNotes } from "@app/store/hooks";
+import { clearCryptoKey, getCryptoKey, setCryptoKey } from "@app/persistence";
+import { decrypt, deriveKey, encrypt } from "@lib/crypto";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
 
@@ -77,7 +71,7 @@ function HomePage() {
 				const key = await deriveKey(passphrase, user.id);
 				if (cancelled) return;
 
-				await saveCryptoKey(key);
+				await setCryptoKey(key);
 				setCryptoKey(key);
 			} catch (err) {
 				console.error("Failed to derive key:", err);

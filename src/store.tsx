@@ -113,10 +113,11 @@ export function useStoreContext() {
 
 export function useNotes() {
 	const store = useStoreContext();
-	// Memoize the query to prevent recreation on each render
-	const $notesQuery = useMemo(
-		() => store.query(["notes"], ({ notes }) => Array.from(notes.values())),
-		[store],
+
+	return useStore(
+		store.query(["notes"], ({ notes }) => Array.from(notes.values())),
+		{
+			deps: [store],
+		},
 	);
-	return useStore($notesQuery);
 }

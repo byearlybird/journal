@@ -1,4 +1,5 @@
 import { createStore } from "@byearlybird/starling";
+import { useStore } from "@nanostores/react";
 import * as idb from "idb-keyval";
 import {
 	createContext,
@@ -6,7 +7,6 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
-	useSyncExternalStore,
 	useState,
 } from "react";
 import z from "zod";
@@ -118,20 +118,5 @@ export function useNotes() {
 		() => store.query(["notes"], ({ notes }) => Array.from(notes.values())),
 		[store],
 	);
-	// Use useSyncExternalStore to properly handle external store subscriptions
-	// This avoids the "Cannot update a component while rendering" error
-	return useSyncExternalStore(
-		(onStoreChange) => {
-			// Subscribe function - returns unsubscribe
-			return $notesQuery.subscribe(onStoreChange);
-		},
-		() => {
-			// Get snapshot function
-			return $notesQuery.get();
-		},
-		() => {
-			// Server snapshot (not used in client, but required by useSyncExternalStore)
-			return [];
-		},
-	);
+	return useStore($notesQuery);
 }

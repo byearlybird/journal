@@ -1,6 +1,3 @@
-import * as idb from "idb-keyval";
-
-const IDB_KEY = "journal:cryptoKey";
 const PBKDF2_ITERATIONS = 100_000;
 
 /**
@@ -81,27 +78,3 @@ export async function decrypt(
 
 	return new TextDecoder().decode(plaintext);
 }
-
-/**
- * Loads the stored CryptoKey from IndexedDB.
- * Returns null if no key is stored.
- */
-export async function loadKey(): Promise<CryptoKey | null> {
-	const key = await idb.get<CryptoKey>(IDB_KEY);
-	return key ?? null;
-}
-
-/**
- * Saves a CryptoKey to IndexedDB.
- */
-export async function saveKey(key: CryptoKey): Promise<void> {
-	await idb.set(IDB_KEY, key);
-}
-
-/**
- * Removes the stored CryptoKey from IndexedDB.
- */
-export async function clearKey(): Promise<void> {
-	await idb.del(IDB_KEY);
-}
-

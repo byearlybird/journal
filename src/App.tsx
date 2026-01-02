@@ -6,16 +6,17 @@ import {
 } from "@clerk/clerk-react";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
+import { store } from "./lib/store";
+import { useNotes } from "./lib/store/hooks";
 import {
-	clearKey,
+	clearCryptoKey,
 	decrypt,
 	deriveKey,
 	encrypt,
-	loadKey,
-	saveKey,
-} from "./crypto";
+	getCryptoKey,
+	saveCryptoKey,
+} from "./lib/sync";
 import { $router } from "./router";
-import { $cryptoKey, useNotes, useStoreContext } from "./store";
 
 function App() {
 	const page = useStore($router);
@@ -38,9 +39,8 @@ function App() {
 function HomePage() {
 	const { isSignedIn } = useAuth();
 	const { user } = useUser();
-	const store = useStoreContext();
 	const notes = useNotes();
-	const cryptoKey = useStore($cryptoKey);
+	const [cryptoKey, setCryptoKey] = useState<CryptoKey | null>(null);
 	const [inputValue, setInputValue] = useState("");
 	const [isLoadingKey, setIsLoadingKey] = useState(true);
 
@@ -55,11 +55,11 @@ function HomePage() {
 
 		const initKey = async () => {
 			// Try loading existing key from IDB
-			const existingKey = await loadKey();
+			const existingKey = await getCryptoKey();
 			if (cancelled) return;
 
 			if (existingKey) {
-				$cryptoKey.set(existingKey);
+				setCryptoKey(existingKey);
 				setIsLoadingKey(false);
 				return;
 			}
@@ -77,8 +77,8 @@ function HomePage() {
 				const key = await deriveKey(passphrase, user.id);
 				if (cancelled) return;
 
-				await saveKey(key);
-				$cryptoKey.set(key);
+				await saveCryptoKey(key);
+				setCryptoKey(key);
 			} catch (err) {
 				console.error("Failed to derive key:", err);
 				alert("Failed to set up encryption. Please try again.");
@@ -122,8 +122,8 @@ function HomePage() {
 				} catch (err) {
 					console.error("Decryption failed:", err);
 					// Clear the bad key and prompt for re-entry
-					await clearKey();
-					$cryptoKey.set(null);
+					await clearCryptoKey();
+					setCryptoKey(null);
 					alert(
 						"Decryption failed. Wrong passphrase? Please refresh and try again.",
 					);
@@ -150,8 +150,8 @@ function HomePage() {
 
 	const handleSignOut = async () => {
 		// Clear the encryption key on sign out
-		await clearKey();
-		$cryptoKey.set(null);
+		await clearCryptoKey();
+		setCryptoKey(null);
 	};
 
 	if (isLoadingKey && isSignedIn) {

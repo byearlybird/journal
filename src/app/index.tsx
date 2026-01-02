@@ -6,8 +6,8 @@ import {
 } from "@clerk/clerk-react";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
-import { store } from "./lib/store";
-import { useNotes } from "./lib/store/hooks";
+import { store } from "../lib/store";
+import { useNotes } from "../lib/store/hooks";
 import {
 	clearCryptoKey,
 	decrypt,
@@ -15,7 +15,7 @@ import {
 	encrypt,
 	getCryptoKey,
 	saveCryptoKey,
-} from "./lib/sync";
+} from "../lib/sync";
 import { $router } from "./router";
 
 function App() {
@@ -226,3 +226,4 @@ function HomePage() {
 }
 
 export default App;
+

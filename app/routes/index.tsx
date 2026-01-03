@@ -82,60 +82,46 @@ export function HomePage() {
 	};
 
 	if (isLoadingKey && isSignedIn) {
-		return (
-			<div className="mx-auto max-w-3xl p-4 text-white">
-				Loading encryption...
-			</div>
-		);
+		return <div className="home-page-loading">Loading encryption...</div>;
 	}
 
 	return (
-		<div className="mx-auto max-w-3xl p-4">
-			<div className="mb-4 flex items-center justify-end">
+		<div className="home-page">
+			<div className="home-page-header">
 				{isSignedIn ? (
 					<SignOutButton>
 						<button
 							type="button"
 							onClick={handleSignOut}
-							className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
+							className="home-page-button"
 						>
 							Sign Out
 						</button>
 					</SignOutButton>
 				) : (
 					<SignInButton>
-						<button
-							type="button"
-							className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
-						>
+						<button type="button" className="home-page-button">
 							Sign In
 						</button>
 					</SignInButton>
 				)}
 			</div>
 
-			<div className="mb-8 flex flex-col gap-2">
+			<div className="home-page-form">
 				<textarea
 					value={inputValue}
 					onChange={(e) => setInputValue(e.target.value)}
-					className="min-h-[100px] resize-y border border-white bg-transparent p-2 font-sans text-white placeholder:text-white/50"
+					className="home-page-textarea"
 					placeholder="This an un-saved entry"
 				/>
-				<button
-					type="button"
-					onClick={handleAdd}
-					className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10"
-				>
+				<button type="button" onClick={handleAdd} className="home-page-button">
 					Add
 				</button>
 			</div>
 
-			<div className="flex flex-col gap-4">
+			<div className="home-page-notes">
 				{notes.map((note) => (
-					<div
-						key={note.id}
-						className="whitespace-pre-wrap break-words border border-white bg-transparent p-4 text-white"
-					>
+					<div key={note.id} className="home-page-note">
 						{note.content}
 					</div>
 				))}

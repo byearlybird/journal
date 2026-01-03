@@ -18,11 +18,9 @@
 		"@nanostores/react": "^1.0.0",
 		"@nanostores/router": "^1.0.0",
 		"@phosphor-icons/react": "^2.1.10",
-		"@tailwindcss/vite": "^4.1.18",
 		"idb-keyval": "^6.2.2",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
-		"tailwindcss": "^4.1.18",
 		"zod": "^4.3.4"
 	},
 	"devDependencies": {

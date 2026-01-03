@@ -1,4 +1,4 @@
-import { usePersistence } from "@app/store/sync-hooks";
+import { usePersistence, useRemotePersistence } from "@app/store/sync-hooks";
 import { useStore } from "@nanostores/react";
 import { createRouter } from "@nanostores/router";
 import { HomePage } from ".";
@@ -9,6 +9,8 @@ export const $router = createRouter({
 
 export function Root() {
 	usePersistence();
+	useRemotePersistence();
+
 	const page = useStore($router);
 
 	switch (page?.route) {

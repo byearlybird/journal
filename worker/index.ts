@@ -1,5 +1,6 @@
 import { WorkerEntrypoint } from "cloudflare:workers";
 import { createClerkClient } from "@clerk/backend";
+import { pushPayloadSchema } from "../lib/sync-schema";
 
 interface Env {
 	journal_bucket: R2Bucket;
@@ -47,11 +48,25 @@ export default class extends WorkerEntrypoint<Env> {
 				});
 			}
 			case "PUT": {
-				const text = await request.text();
-				await this.env.journal_bucket.put(storageKey, text);
-				return new Response(JSON.stringify({ success: true }), {
-					headers: { "Content-Type": "application/json" },
-				});
+				try {
+					const json = await request.json();
+					const validated = pushPayloadSchema.parse(json);
+					await this.env.journal_bucket.put(storageKey, validated.data);
+					return new Response(JSON.stringify({ success: true }), {
+						headers: { "Content-Type": "application/json" },
+					});
+				} catch (error) {
+					return new Response(
+						JSON.stringify({
+							error: "Invalid request body",
+							details: error instanceof Error ? error.message : String(error),
+						}),
+						{
+							status: 400,
+							headers: { "Content-Type": "application/json" },
+						},
+					);
+				}
 			}
 			default:
 				return new Response("Method Not Allowed", {

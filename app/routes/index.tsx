@@ -11,14 +11,13 @@ import {
 	useAuth,
 	useUser,
 } from "@clerk/clerk-react";
-import { decrypt, deriveKey, encrypt } from "@lib/crypto";
+import { deriveKey } from "@lib/crypto";
 import { useEffect, useState } from "react";
 
 export function HomePage() {
 	const { isSignedIn } = useAuth();
 	const { user } = useUser();
 	const notes = useNotes();
-	const [cryptoKey, setCryptoKey] = useState<CryptoKey | null>(null);
 	const [inputValue, setInputValue] = useState("");
 	const [isLoadingKey, setIsLoadingKey] = useState(true);
 
@@ -37,7 +36,6 @@ export function HomePage() {
 			if (cancelled) return;
 
 			if (existingKey) {
-				setCryptoKey(existingKey);
 				setIsLoadingKey(false);
 				return;
 			}
@@ -56,7 +54,6 @@ export function HomePage() {
 				if (cancelled) return;
 
 				await setCryptoKeyPersistence(key);
-				setCryptoKey(key);
 			} catch (err) {
 				console.error("Failed to derive key:", err);
 				alert("Failed to set up encryption. Please try again.");
@@ -79,57 +76,9 @@ export function HomePage() {
 		}
 	};
 
-	const handleSync = async () => {
-		if (!cryptoKey) {
-			alert("Encryption not set up. Please refresh and enter your passphrase.");
-			return;
-		}
-
-		// Pull first
-		try {
-			const res = await fetch("/api/journal", {
-				method: "GET",
-				headers: { "Content-Type": "application/json" },
-			});
-			const data = await res.json();
-			if (data.content) {
-				try {
-					const decrypted = await decrypt(data.content, cryptoKey);
-					const parsedData = JSON.parse(decrypted);
-					store.merge(parsedData);
-				} catch (err) {
-					console.error("Decryption failed:", err);
-					// Clear the bad key and prompt for re-entry
-					await clearCryptoKey();
-					setCryptoKey(null);
-					alert(
-						"Decryption failed. Wrong passphrase? Please refresh and try again.",
-					);
-					return;
-				}
-			}
-		} catch (err) {
-			console.error(err);
-		}
-
-		// Then push (encrypted)
-		try {
-			const snapshot = store.$snapshot.get();
-			const encrypted = await encrypt(JSON.stringify(snapshot), cryptoKey);
-			await fetch("/api/journal", {
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: encrypted,
-			});
-		} catch (err) {
-			console.error("Failed to sync:", err);
-		}
-	};
-
 	const handleSignOut = async () => {
 		// Clear the encryption key on sign out
 		await clearCryptoKey();
-		setCryptoKey(null);
 	};
 
 	if (isLoadingKey && isSignedIn) {
@@ -142,15 +91,7 @@ export function HomePage() {
 
 	return (
 		<div className="mx-auto max-w-3xl p-4">
-			<div className="mb-4 flex items-center justify-between">
-				<button
-					type="button"
-					onClick={handleSync}
-					disabled={!isSignedIn || !cryptoKey}
-					className="cursor-pointer border border-white bg-transparent px-4 py-2 text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					Sync
-				</button>
+			<div className="mb-4 flex items-center justify-end">
 				{isSignedIn ? (
 					<SignOutButton>
 						<button

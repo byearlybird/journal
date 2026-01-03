@@ -1,0 +1,13 @@
+:root {
+	/* Fonts */
+	--font-sans: "IBM Plex Sans", sans-serif;
+	--font-serif: "IBM Plex Serif", serif;
+
+	/* Colors */
+	--app-bg: black;
+	--app-fg: rgba(255, 255, 255, 0.9);
+
+	/* Radius */
+	--rounded: 6px;
+	--rounded-full: 9999px;
+}

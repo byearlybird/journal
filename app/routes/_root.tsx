@@ -25,7 +25,5 @@ export function Root() {
 }
 
 function NotFound() {
-	return (
-		<div className="not-found">404 - Page not found</div>
-	);
+	return <div className="not-found">404 - Page not found</div>;
 }

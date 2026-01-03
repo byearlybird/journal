@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+
+:root {
+	--font-sans:
+		"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html {
+	background-color: black;
+}
+
+body {
+	position: relative;
+}
+
+#root {
+	font-family: var(--font-sans);
+	color: rgba(255, 255, 255, 0.87);
+	isolation: isolate;
+}

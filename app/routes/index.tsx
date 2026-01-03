@@ -1,9 +1,9 @@
+import { store } from "@app/store";
 import {
 	clearCryptoKey,
 	getCryptoKey,
 	setCryptoKey as setCryptoKeyPersistence,
-} from "@app/persistence";
-import { store } from "@app/store";
+} from "@app/store/persistence";
 import { useNotes } from "@app/store/queries";
 import {
 	SignInButton,

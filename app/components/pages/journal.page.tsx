@@ -8,7 +8,7 @@ export function JournalPage() {
 			{notes.map((note) => (
 				<article
 					key={note.id}
-					className="flex border border-white bg-black p-4"
+					className="flex rounded border border-white bg-black p-4"
 				>
 					{note.content}
 				</article>

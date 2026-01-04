@@ -1,6 +1,6 @@
 import { clearCryptoKey } from "@app/store/crypto-key";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/clerk-react";
-import "./settings-page.css";
+import "./settings.page.css";
 
 export function SettingsPage() {
 	const { isSignedIn } = useAuth();

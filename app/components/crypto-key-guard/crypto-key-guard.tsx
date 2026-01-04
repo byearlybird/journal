@@ -75,4 +75,3 @@ export function CryptoKeyGuard({ children }: { children: React.ReactNode }) {
 	// Ready state (not signed in OR key provided)
 	return <>{children}</>;
 }
-

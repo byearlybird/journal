@@ -1,6 +1,6 @@
+import { deriveKey } from "@lib/crypto";
 import { useStore } from "@nanostores/react";
 import { atom } from "nanostores";
-import { deriveKey } from "@lib/crypto";
 
 const $cryptoKey = atom<CryptoKey | null>(null);
 

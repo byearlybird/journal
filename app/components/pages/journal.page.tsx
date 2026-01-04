@@ -1,5 +1,5 @@
 import { useNotes } from "@app/store/queries";
-import "./journal-page.css";
+import "./journal.page.css";
 
 export function JournalPage() {
 	const notes = useNotes();

@@ -1,15 +1,9 @@
 import {
-	clearCryptoKey,
 	getCryptoKey,
 	setCryptoKey as setCryptoKeyPersistence,
 } from "@app/store/persistence";
 import { useNotes } from "@app/store/queries";
-import {
-	SignInButton,
-	SignOutButton,
-	useAuth,
-	useUser,
-} from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { deriveKey } from "@lib/crypto";
 import { useEffect, useState } from "react";
 import "./home-page.css";
@@ -68,37 +62,12 @@ export function HomePage() {
 		};
 	}, [isSignedIn, user?.id]);
 
-	const handleSignOut = async () => {
-		// Clear the encryption key on sign out
-		await clearCryptoKey();
-	};
-
 	if (isLoadingKey && isSignedIn) {
 		return <div className="home-page-loading">Loading encryption...</div>;
 	}
 
 	return (
 		<div className="home-page">
-			<div className="home-page-header">
-				{isSignedIn ? (
-					<SignOutButton>
-						<button
-							type="button"
-							onClick={handleSignOut}
-							className="home-page-button"
-						>
-							Sign Out
-						</button>
-					</SignOutButton>
-				) : (
-					<SignInButton>
-						<button type="button" className="home-page-button">
-							Sign In
-						</button>
-					</SignInButton>
-				)}
-			</div>
-
 			<div className="home-page-notes">
 				{notes.map((note) => (
 					<div key={note.id} className="home-page-note">

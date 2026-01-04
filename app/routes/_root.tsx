@@ -1,13 +1,15 @@
 import { HomePage } from "@app/components/home-page/home-page";
 import { Navbar } from "@app/components/navbar/navbar";
 import { NotFound } from "@app/components/not-found-page/not-found-page";
+import { SettingsPage } from "@app/components/settings-page/settings-page";
 import { usePersistence } from "@app/store/persistence";
 import { useSync } from "@app/store/sync";
 import { useStore } from "@nanostores/react";
 import { createRouter } from "@nanostores/router";
 
 export const $router = createRouter({
-	home: "/",
+	journal: "/",
+	settings: "/settings",
 });
 
 export function Root() {
@@ -36,8 +38,10 @@ function Content() {
 	switch (page?.route) {
 		case undefined:
 			return <NotFound />;
-		case "home":
+		case "journal":
 			return <HomePage />;
+		case "settings":
+			return <SettingsPage />;
 		default:
 			return null;
 	}

@@ -5,7 +5,7 @@ export function Navbar() {
 	return (
 		<div className="navbar">
 			<nav>
-				<a href="/journal">Journal</a>
+				<a href="/">Journal</a>
 				<a href="/settings">Settings</a>
 			</nav>
 			<button

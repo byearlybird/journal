@@ -7,9 +7,9 @@
 	--app-bg: black;
 	--app-fg: rgba(255, 255, 255, 0.9);
 
-	--surface-bg: rgba(0, 0, 0, 0.9);
+	--surface-bg: rgba(27, 27, 27, 0.9);
 	--surface-fg: rgba(255, 255, 255, 0.9);
-	--surface-border: rgba(255, 255, 255, 0.33);
+	--surface-border: rgba(255, 255, 255, 0.1);
 
 	--btn-bg: rgba(255, 255, 255, 0.9);
 	--btn-fg: rgba(0, 0, 0, 0.9);

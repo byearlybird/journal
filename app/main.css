@@ -1,3 +1,32 @@
-@import "./styles/reset.css";
-@import "./styles/tokens.css";
-@import "./styles/app.css";
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+
+@theme {
+	/* Fonts */
+	--font-sans: "IBM Plex Sans", sans-serif;
+	--font-serif: "IBM Plex Serif", serif;
+}
+
+/* Safe area CSS variables (not theme, just standard vars) */
+:root {
+	--safe-top: env(safe-area-inset-top, 0px);
+	--safe-bottom: env(safe-area-inset-bottom, 0px);
+	--safe-left: env(safe-area-inset-left, 0px);
+	--safe-right: env(safe-area-inset-right, 0px);
+}
+
+@layer base {
+	html {
+		background-color: black;
+	}
+
+	body {
+		position: relative;
+	}
+
+	#root {
+		font-family: var(--font-sans);
+		color: white;
+		isolation: isolate;
+	}
+}

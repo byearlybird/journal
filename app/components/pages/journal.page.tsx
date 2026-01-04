@@ -1,13 +1,17 @@
 import { useNotes } from "@app/store/queries";
-import "./journal.page.css";
 
 export function JournalPage() {
 	const notes = useNotes();
 
 	return (
-		<div className="journal-page">
+		<div className="flex flex-col gap-4 p-4">
 			{notes.map((note) => (
-				<article key={note.id}>{note.content}</article>
+				<article
+					key={note.id}
+					className="flex border border-white bg-black p-4"
+				>
+					{note.content}
+				</article>
 			))}
 		</div>
 	);

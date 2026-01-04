@@ -6,7 +6,6 @@ import {
 import { validateCryptoKey } from "@app/store/sync";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useState } from "react";
-import "./crypto-key-guard.css";
 
 export function CryptoKeyGuard({ children }: { children: React.ReactNode }) {
 	const { isSignedIn } = useAuth();
@@ -48,8 +47,10 @@ export function CryptoKeyGuard({ children }: { children: React.ReactNode }) {
 	// Loading state
 	if (isLoading) {
 		return (
-			<div className="crypto-key-guard">
-				<div className="crypto-key-guard-content">Loading...</div>
+			<div className="flex min-h-screen items-center justify-center p-4">
+				<div className="flex flex-col items-center gap-4 border border-white bg-black p-6">
+					Loading...
+				</div>
 			</div>
 		);
 	}
@@ -57,12 +58,12 @@ export function CryptoKeyGuard({ children }: { children: React.ReactNode }) {
 	// Needs key state (signed in but no key)
 	if (isSignedIn && !cryptoKey) {
 		return (
-			<div className="crypto-key-guard">
-				<div className="crypto-key-guard-content">
-					<p>Enter your key to unlock</p>
+			<div className="flex min-h-screen items-center justify-center p-4">
+				<div className="flex flex-col items-center gap-4 border border-white bg-black p-6">
+					<p className="m-0 text-white">Enter your key to unlock</p>
 					<button
 						type="button"
-						className="crypto-key-guard-button"
+						className="cursor-pointer border-none bg-white px-6 py-3 font-sans text-base text-black"
 						onClick={handleUnlock}
 					>
 						Unlock

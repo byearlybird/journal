@@ -1,31 +1,31 @@
-import { store } from "@app/store";
-import "./navbar.css";
 import { $router } from "@app/routes/_root";
+import { store } from "@app/store";
 import { useStore } from "@nanostores/react";
 import { type ConfigFromRouter, getPagePath } from "@nanostores/router";
 import {
 	BookOpenIcon,
 	GearIcon,
-	PencilSimpleLineIcon,
 	type Icon,
+	PencilSimpleLineIcon,
 } from "@phosphor-icons/react";
+import clsx from "clsx";
 
 type RouterConfig = ConfigFromRouter<typeof $router>;
 type RouteName = keyof RouterConfig;
 
 export function Navbar() {
 	return (
-		<div className="navbar">
-			<nav>
+		<div className="fixed right-[max(var(--safe-right),1rem)] bottom-[max(var(--safe-bottom),1rem)] left-[max(var(--safe-left),1rem)] flex justify-between">
+			<nav className="flex gap-1 border border-white bg-black p-0.5">
 				<NavItem icon={BookOpenIcon} label="Journal" page="journal" />
 				<NavItem icon={GearIcon} label="Settings" page="settings" />
 			</nav>
 			<button
 				type="button"
 				onClick={promptCreateEntry}
-				className="action-button"
+				className="flex h-12 w-12 items-center justify-center bg-white text-black transition-transform duration-100 ease-in-out active:scale-110"
 			>
-				<PencilSimpleLineIcon />
+				<PencilSimpleLineIcon className="size-4" />
 			</button>
 		</div>
 	);
@@ -45,8 +45,14 @@ function NavItem({
 	const isActive = currentPage?.route === page;
 
 	return (
-		<a className="nav-item" href={href} data-active={isActive}>
-			<Icon size={16} />
+		<a
+			href={href}
+			className={clsx(
+				"flex items-center gap-2 px-3 py-2 transition-transform duration-100 ease-in-out active:scale-110",
+				isActive && "border border-white bg-white text-black",
+			)}
+		>
+			<Icon className="size-4" />
 			{isActive ? label : null}
 		</a>
 	);

@@ -9,9 +9,9 @@
 	/* Colors */
 	--color-*: initial;
 
-	--color-black: hsl(47, 70%, 4%);
-	--color-white: hsl(47, 70%, 96%);
-	--color-yellow: hsl(47, 70%, 70%);
+	--color-black: hsl(60, 3%, 15%);
+	--color-white: hsl(48, 33%, 97%);
+	--color-yellow: hsl(59, 45%, 56%);
 
 	/* Radii */
 	--radius-*: initial;

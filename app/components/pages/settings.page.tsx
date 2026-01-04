@@ -1,6 +1,7 @@
 import { clearCryptoKey } from "@app/store/crypto-key";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/clerk-react";
 import "./settings.page.css";
+import { SignInIcon, SignOutIcon } from "@phosphor-icons/react";
 
 export function SettingsPage() {
 	const { isSignedIn } = useAuth();
@@ -19,13 +20,13 @@ export function SettingsPage() {
 						className="account-button"
 						onClick={handleSignOut}
 					>
-						Sign Out
+						Sign Out <SignOutIcon size={16} />
 					</button>
 				</SignOutButton>
 			) : (
 				<SignInButton>
 					<button type="button" className="account-button">
-						Sign In
+						Sign In <SignInIcon size={16} />
 					</button>
 				</SignInButton>
 			)}

@@ -12,5 +12,7 @@
 		background-color: var(--surface-bg);
 		border: 1px solid var(--surface-border);
 		display: flex;
+		align-items: center;
+		gap: var(--spacing-2);
 	}
 }

@@ -10,7 +10,7 @@ export function JournalPage() {
 			<Tabs.List className="flex gap-4 p-4">
 				<Tabs.Tab
 					value="today"
-					className="rounded-full  px-4 py-1 text-white/70 data-active:text-white/90 data-active:bg-white/10"
+					className="rounded-full  px-4 py-1 text-white/70 data-active:text-white/90 data-active:bg-black/90"
 				>
 					Today
 				</Tabs.Tab>
@@ -23,7 +23,10 @@ export function JournalPage() {
 			</Tabs.List>
 			<Tabs.Panel value="today" className="flex flex-col gap-4 p-4">
 				{todayNotes.map((note) => (
-					<article key={note.id} className="flex rounded-md bg-white/5 p-4">
+					<article
+						key={note.id}
+						className="flex rounded-md border border-white/10 border-dashed p-4"
+					>
 						{note.content}
 					</article>
 				))}

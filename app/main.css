@@ -9,9 +9,10 @@
 	/* Colors */
 	--color-*: initial;
 
-	--color-black: hsl(60, 3%, 15%);
-	--color-white: hsl(48, 33%, 97%);
-	--color-yellow: hsl(59, 45%, 56%);
+	--color-black: #191919;
+	--color-graphite: #262625;
+	--color-white: #fafaf7;
+	--color-yellow: #c1c05c;
 
 	/* Radii */
 	--radius-*: initial;
@@ -31,7 +32,9 @@
 
 @layer base {
 	html {
-		background-color: var(--color-black);
+		background-color: var(--color-graphite);
+		font-family: var(--font-sans);
+		color: color-mix(in oklab, var(--color-white) 90%, transparent);
 	}
 
 	body {
@@ -39,8 +42,6 @@
 	}
 
 	#root {
-		font-family: var(--font-sans);
-		color: var(--color-white);
 		isolation: isolate;
 	}
 }

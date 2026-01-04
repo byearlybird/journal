@@ -1,10 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 
 @theme {
 	/* Fonts */
-	--font-sans: "IBM Plex Sans", sans-serif;
-	--font-serif: "IBM Plex Serif", serif;
+	--font-sans: "Karla", sans-serif;
+	--font-serif: "Lora", serif;
+
+	/* Colors */
+	--color-*: initial;
+
+	--color-black: hsl(47, 70%, 4%);
+	--color-white: hsl(47, 70%, 96%);
+	--color-yellow: hsl(47, 70%, 70%);
+
+	/* Radii */
+	--radius-*: initial;
+	--radius-sm: 8px; /* inputs, buttons */
+	--radius-md: 12px; /* cards */
+	--radius-lg: 16px; /* modals */
+	--radius-full: 9999px;
 }
 
 /* Safe area CSS variables (not theme, just standard vars) */
@@ -17,7 +31,7 @@
 
 @layer base {
 	html {
-		background-color: black;
+		background-color: var(--color-black);
 	}
 
 	body {
@@ -26,7 +40,7 @@
 
 	#root {
 		font-family: var(--font-sans);
-		color: white;
+		color: var(--color-white);
 		isolation: isolate;
 	}
 }

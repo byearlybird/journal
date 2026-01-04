@@ -16,14 +16,14 @@ type RouteName = keyof RouterConfig;
 export function Navbar() {
 	return (
 		<div className="fixed right-[max(var(--safe-right),1rem)] bottom-[max(var(--safe-bottom),1rem)] left-[max(var(--safe-left),1rem)] flex justify-between">
-			<nav className="flex gap-1 rounded-full border border-white bg-black p-0.5">
+			<nav className="flex gap-1 rounded-lg border border-white/10 backdrop-blur bg-white/20 p-0.5">
 				<NavItem icon={BookOpenIcon} label="Journal" page="journal" />
 				<NavItem icon={GearIcon} label="Settings" page="settings" />
 			</nav>
 			<button
 				type="button"
 				onClick={promptCreateEntry}
-				className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-transform duration-100 ease-in-out active:scale-110"
+				className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow text-black transition-transform duration-100 ease-in-out active:scale-110"
 			>
 				<PencilSimpleLineIcon className="size-4" />
 			</button>
@@ -48,8 +48,9 @@ function NavItem({
 		<a
 			href={href}
 			className={clsx(
-				"flex items-center gap-2 rounded-full px-3 py-2 transition-transform duration-100 ease-in-out active:scale-110",
-				isActive && "border border-white bg-white text-black",
+				"flex items-center gap-2 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-110",
+				isActive &&
+					"border border-white/10 backdrop-blur bg-yellow/10 text-white",
 			)}
 		>
 			<Icon className="size-4" />

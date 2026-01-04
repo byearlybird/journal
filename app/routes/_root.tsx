@@ -1,5 +1,5 @@
 import { CryptoKeyGuard } from "@app/components/crypto-key-guard/crypto-key-guard";
-import { HomePage } from "@app/components/home-page/home-page";
+import { JournalPage } from "@app/components/journal-page/journal-page";
 import { Navbar } from "@app/components/navbar/navbar";
 import { NotFound } from "@app/components/not-found-page/not-found-page";
 import { SettingsPage } from "@app/components/settings-page/settings-page";
@@ -42,7 +42,7 @@ function Content() {
 		case "journal":
 			return (
 				<CryptoKeyGuard>
-					<HomePage />
+					<JournalPage />
 				</CryptoKeyGuard>
 			);
 		case "settings":

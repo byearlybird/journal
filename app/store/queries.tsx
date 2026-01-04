@@ -15,6 +15,11 @@ export const useNotes = () =>
 export const useTodayNotes = () =>
 	useStore(
 		store.query(["notes"], ({ notes }) =>
-			Array.from(notes.values()).filter((note) => isToday(note.createdAt)),
+			Array.from(notes.values())
+				.filter((note) => isToday(note.createdAt))
+				.sort(
+					(a, b) =>
+						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+				),
 		),
 	);

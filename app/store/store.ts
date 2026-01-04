@@ -17,3 +17,5 @@ export const store = createStore({
 });
 
 export type Store = typeof store;
+
+export type Note = z.infer<typeof noteSchema>;

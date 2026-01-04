@@ -1,5 +1,5 @@
 import { store } from "@app/store";
-import { getCryptoKey } from "@app/store/persistence";
+import { getCryptoKey } from "@app/store/crypto-key";
 import { useSession } from "@clerk/clerk-react";
 import { decrypt, encrypt } from "@lib/crypto";
 import { pullResponseSchema, pushPayloadSchema } from "@lib/sync-schema";
@@ -34,6 +34,50 @@ export function useSync() {
 			}
 		};
 	}, [isSignedIn]);
+}
+
+/**
+ * Validates a crypto key by attempting to fetch and decrypt remote data.
+ * Returns true if the key is valid (decryption succeeds or no data exists).
+ * Returns false if decryption fails (wrong passphrase).
+ */
+export async function validateCryptoKey(
+	cryptoKey: CryptoKey,
+): Promise<boolean> {
+	try {
+		const res = await fetch(API_ENDPOINT, {
+			method: "GET",
+			headers: JSON_HEADERS,
+		});
+
+		const responseText = await res.text();
+		if (!responseText) {
+			// No remote data yet, key is valid by default
+			return true;
+		}
+
+		// Parse response
+		let data: unknown;
+		try {
+			data = JSON.parse(responseText);
+		} catch {
+			// Can't parse response, but that's not a key issue
+			return true;
+		}
+
+		const validated = pullResponseSchema.parse(data);
+		if (!validated.content) {
+			return true; // No content, key is valid
+		}
+
+		// Try to decrypt - if this fails, key is wrong
+		await decrypt(validated.content, cryptoKey);
+		return true;
+	} catch (err) {
+		// Decryption failed - wrong key
+		console.error("Key validation failed:", err);
+		return false;
+	}
 }
 
 /**
@@ -110,7 +154,7 @@ async function pushToRemote(cryptoKey: CryptoKey): Promise<void> {
  * Performs a full sync: pulls remote data (if available) and then pushes local data.
  */
 async function syncWithRemote(): Promise<void> {
-	const cryptoKey = await getCryptoKey();
+	const cryptoKey = getCryptoKey();
 	if (!cryptoKey) {
 		// No crypto key available, skip sync
 		return;

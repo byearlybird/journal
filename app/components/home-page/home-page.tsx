@@ -1,70 +1,8 @@
-import {
-	getCryptoKey,
-	setCryptoKey as setCryptoKeyPersistence,
-} from "@app/store/persistence";
 import { useNotes } from "@app/store/queries";
-import { useAuth, useUser } from "@clerk/clerk-react";
-import { deriveKey } from "@lib/crypto";
-import { useEffect, useState } from "react";
 import "./home-page.css";
 
 export function HomePage() {
-	const { isSignedIn } = useAuth();
-	const { user } = useUser();
 	const notes = useNotes();
-	const [isLoadingKey, setIsLoadingKey] = useState(true);
-
-	// Load or prompt for encryption key when signed in
-	useEffect(() => {
-		if (!isSignedIn || !user?.id) {
-			setIsLoadingKey(false);
-			return;
-		}
-
-		let cancelled = false;
-
-		const initKey = async () => {
-			// Try loading existing key from IDB
-			const existingKey = await getCryptoKey();
-			if (cancelled) return;
-
-			if (existingKey) {
-				setIsLoadingKey(false);
-				return;
-			}
-
-			// No key found, prompt for passphrase
-			const passphrase = prompt("Enter your encryption passphrase:");
-			if (cancelled) return;
-
-			if (!passphrase) {
-				setIsLoadingKey(false);
-				return;
-			}
-
-			try {
-				const key = await deriveKey(passphrase, user.id);
-				if (cancelled) return;
-
-				await setCryptoKeyPersistence(key);
-			} catch (err) {
-				console.error("Failed to derive key:", err);
-				alert("Failed to set up encryption. Please try again.");
-			}
-
-			setIsLoadingKey(false);
-		};
-
-		initKey();
-
-		return () => {
-			cancelled = true;
-		};
-	}, [isSignedIn, user?.id]);
-
-	if (isLoadingKey && isSignedIn) {
-		return <div className="home-page-loading">Loading encryption...</div>;
-	}
 
 	return (
 		<div className="home-page">

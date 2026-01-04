@@ -1,3 +1,4 @@
+import { CryptoKeyGuard } from "@app/components/crypto-key-guard/crypto-key-guard";
 import { HomePage } from "@app/components/home-page/home-page";
 import { Navbar } from "@app/components/navbar/navbar";
 import { NotFound } from "@app/components/not-found-page/not-found-page";
@@ -39,7 +40,11 @@ function Content() {
 		case undefined:
 			return <NotFound />;
 		case "journal":
-			return <HomePage />;
+			return (
+				<CryptoKeyGuard>
+					<HomePage />
+				</CryptoKeyGuard>
+			);
 		case "settings":
 			return <SettingsPage />;
 		default:

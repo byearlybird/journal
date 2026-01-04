@@ -1,4 +1,5 @@
 import { HomePage } from "@app/components/home-page/home-page";
+import { Navbar } from "@app/components/navbar/navbar";
 import { NotFound } from "@app/components/not-found-page/not-found-page";
 import { usePersistence } from "@app/store/persistence";
 import { useSync } from "@app/store/sync";
@@ -21,7 +22,12 @@ export function Root() {
 }
 
 function GlobalLayout({ children }: { children: React.ReactNode }) {
-	return <>{children}</>;
+	return (
+		<>
+			{children}
+			<Navbar />
+		</>
+	);
 }
 
 function Content() {

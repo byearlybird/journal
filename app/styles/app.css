@@ -13,3 +13,11 @@ body {
 	color: var(--app-fg);
 	isolation: isolate;
 }
+
+@media (pointer: coarse) {
+	a,
+	button {
+		min-height: var(--touch-size);
+		min-width: var(--touch-size);
+	}
+}

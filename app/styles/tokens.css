@@ -7,7 +7,56 @@
 	--app-bg: black;
 	--app-fg: rgba(255, 255, 255, 0.9);
 
+	--surface-bg: rgba(0, 0, 0, 0.9);
+	--surface-fg: rgba(255, 255, 255, 0.9);
+	--surface-border: rgba(255, 255, 255, 0.33);
+
+	--btn-bg: rgba(255, 255, 255, 0.9);
+	--btn-fg: rgba(0, 0, 0, 0.9);
+
 	/* Radius */
 	--rounded: 6px;
+	--rounded-lg: 12px;
 	--rounded-full: 9999px;
+
+	/* Layout */
+	--safe-top: env(safe-area-inset-top, 0px);
+	--safe-bottom: env(safe-area-inset-bottom, 0px);
+	--safe-left: env(safe-area-inset-left, 0px);
+	--safe-right: env(safe-area-inset-right, 0px);
+
+	--width-xs: 480px;
+	--width-sm: 640px;
+	--width-md: 768px;
+	--width-lg: 1024px;
+	--width-xl: 1280px;
+
+	/* Spacing / Sizing */
+	--spacing-1: 0.25rem;
+	--spacing-2: calc(2 * var(--spacing-1));
+	--spacing-3: calc(3 * var(--spacing-1));
+	--spacing-4: calc(4 * var(--spacing-1));
+	--spacing-5: calc(5 * var(--spacing-1));
+	--spacing-6: calc(6 * var(--spacing-1));
+
+	--spacing-8: calc(8 * var(--spacing-1));
+	--spacing-10: calc(10 * var(--spacing-1));
+	--spacing-12: calc(12 * var(--spacing-1));
+	--spacing-14: calc(14 * var(--spacing-1));
+	--spacing-16: calc(16 * var(--spacing-1));
+	--spacing-18: calc(18 * var(--spacing-1));
+	--spacing-20: calc(20 * var(--spacing-1));
+
+	--spacing-24: calc(24 * var(--spacing-1));
+	--spacing-28: calc(28 * var(--spacing-1));
+	--spacing-32: calc(32 * var(--spacing-1));
+	--spacing-36: calc(36 * var(--spacing-1));
+	--spacing-40: calc(40 * var(--spacing-1));
+	--spacing-44: calc(44 * var(--spacing-1));
+	--spacing-48: calc(48 * var(--spacing-1));
+
+	--touch-size: 48px;
+
+	/* Other */
+	--blur: blur(4px);
 }

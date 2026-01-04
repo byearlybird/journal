@@ -1,3 +1,4 @@
+import { store } from "@app/store";
 import "./navbar.css";
 
 export function Navbar() {
@@ -7,9 +8,22 @@ export function Navbar() {
 				<a href="/journal">Journal</a>
 				<a href="/settings">Settings</a>
 			</nav>
-			<button type="button" className="action-button">
+			<button
+				type="button"
+				onClick={promptCreateEntry}
+				className="action-button"
+			>
 				+
 			</button>
 		</div>
 	);
+}
+
+function promptCreateEntry() {
+	const response = window.prompt("What's on your mind?");
+	if (response && response.length > 0) {
+		store.notes.add({
+			content: response,
+		});
+	}
 }

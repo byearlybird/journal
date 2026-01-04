@@ -1,4 +1,3 @@
-import { store } from "@app/store";
 import {
 	clearCryptoKey,
 	getCryptoKey,
@@ -19,7 +18,6 @@ export function HomePage() {
 	const { isSignedIn } = useAuth();
 	const { user } = useUser();
 	const notes = useNotes();
-	const [inputValue, setInputValue] = useState("");
 	const [isLoadingKey, setIsLoadingKey] = useState(true);
 
 	// Load or prompt for encryption key when signed in
@@ -70,13 +68,6 @@ export function HomePage() {
 		};
 	}, [isSignedIn, user?.id]);
 
-	const handleAdd = () => {
-		if (inputValue.trim()) {
-			store.notes.add({ content: inputValue.trim() });
-			setInputValue("");
-		}
-	};
-
 	const handleSignOut = async () => {
 		// Clear the encryption key on sign out
 		await clearCryptoKey();
@@ -106,18 +97,6 @@ export function HomePage() {
 						</button>
 					</SignInButton>
 				)}
-			</div>
-
-			<div className="home-page-form">
-				<textarea
-					value={inputValue}
-					onChange={(e) => setInputValue(e.target.value)}
-					className="home-page-textarea"
-					placeholder="This an un-saved entry"
-				/>
-				<button type="button" onClick={handleAdd} className="home-page-button">
-					Add
-				</button>
 			</div>
 
 			<div className="home-page-notes">

@@ -9,17 +9,17 @@ export function JournalPage() {
 
 	return (
 		<TabGroup defaultIndex={0}>
-			<TabList className="flex gap-4 p-2">
+			<TabList className="flex gap-4 p-4">
 				<JournalTab>Today</JournalTab>
 				<JournalTab>All Entries</JournalTab>
 			</TabList>
 			<TabPanels>
-				<TabPanel className="flex flex-col gap-4 p-2">
+				<TabPanel className="flex flex-col gap-4 p-4">
 					{todayNotes.map((note) => (
 						<JournalEntry format="time" key={note.id} note={note} />
 					))}
 				</TabPanel>
-				<TabPanel className="flex flex-col gap-4 p-2">
+				<TabPanel className="flex flex-col gap-4 p-4">
 					{notes.map((note) => (
 						<JournalEntry format="date" key={note.id} note={note} />
 					))}

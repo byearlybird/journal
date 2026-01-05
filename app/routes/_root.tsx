@@ -4,6 +4,7 @@ import { Navbar } from "@app/components/navbar";
 import { JournalPage } from "@app/components/pages/journal.page";
 import { NotFound } from "@app/components/pages/not-found.page";
 import { SettingsPage } from "@app/components/pages/settings.page";
+import { Sidebar } from "@app/components/sidebar";
 import { usePersistence } from "@app/store/persistence";
 import { useSync } from "@app/store/sync";
 import { useStore } from "@nanostores/react";
@@ -28,8 +29,15 @@ export function Root() {
 function GlobalLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
-			{children}
-			<Navbar />
+			<div className="grid grid-cols-5 h-screen">
+				<div className="hidden md:block w-full">
+					<Sidebar />
+				</div>
+				<div className="col-span-5 md:col-span-4">{children}</div>
+				<div className="md:hidden">
+					<Navbar />
+				</div>
+			</div>
 			<CreateDialog />
 		</>
 	);

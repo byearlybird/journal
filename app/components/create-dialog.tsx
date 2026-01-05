@@ -44,7 +44,7 @@ export function CreateDialog() {
 						exit={{ opacity: 0 }}
 						className="fixed inset-0 bg-black/50"
 					/>
-					<div className="fixed inset-x-0 top-0 flex w-screen justify-center p-2 h-svh">
+					<div className="fixed inset-x-0 top-0 flex h-svh w-screen justify-center p-2">
 						<DialogPanel
 							as={motion.div}
 							initial={{ opacity: 0, y: -100 }}
@@ -56,7 +56,7 @@ export function CreateDialog() {
 									hasFocused = true;
 								}
 							}}
-							className="space-y-4 border border-white/10 rounded-lg bg-graphite w-full h-1/2 flex flex-col overflow-y-auto"
+							className="flex h-1/2 w-full flex-col space-y-4 overflow-y-auto rounded-lg border border-white/10 bg-graphite"
 						>
 							<DialogTitle className="sr-only">Create a new entry</DialogTitle>
 							<Textarea
@@ -64,23 +64,23 @@ export function CreateDialog() {
 								placeholder="What's on your mind?"
 								value={content}
 								onChange={(e) => setContent(e.target.value)}
-								className="w-full focus:outline-none p-4 h-full resize-none scrollbar-hide placeholder:text-white/50"
+								className="scrollbar-hide h-full w-full resize-none p-4 placeholder:text-white/50 focus:outline-none"
 							/>
-							<div className="flex gap-4 p-4 left-0 justify-between right-0">
+							<div className="right-0 left-0 flex justify-between gap-4 p-4">
 								<button
 									type="button"
 									onClick={closeCreateDialog}
-									className="flex items-center justify-center size-11 rounded-full border border-white/10"
+									className="flex size-11 items-center justify-center rounded-full border border-white/10"
 								>
-									<XIcon className="w-4 h-4" />
+									<XIcon className="h-4 w-4" />
 								</button>
 								<button
 									disabled={content.trim() === ""}
 									type="button"
-									className="flex items-center disabled:opacity-50 justify-center size-11 bg-yellow rounded-full text-black"
+									className="flex size-11 items-center justify-center rounded-full bg-yellow text-black disabled:opacity-50"
 									onClick={handleSave}
 								>
-									<CheckIcon className="w-4 h-4" />
+									<CheckIcon className="h-4 w-4" />
 								</button>
 							</div>
 						</DialogPanel>

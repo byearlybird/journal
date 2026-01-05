@@ -16,7 +16,7 @@ export function SettingsPage() {
 				<SignOutButton>
 					<button
 						type="button"
-						className="flex items-center rounded-md gap-2 border border-white/10 bg-white/10 p-4 text-black"
+						className="flex items-center gap-2 rounded-md border border-white/10 bg-white/10 p-4 text-black"
 						onClick={handleSignOut}
 					>
 						Sign Out <SignOutIcon className="size-4" />
@@ -26,7 +26,7 @@ export function SettingsPage() {
 				<SignInButton>
 					<button
 						type="button"
-						className="flex items-center rounded-md gap-2 border border-white/10 bg-white/10 p-4"
+						className="flex items-center gap-2 rounded-md border border-white/10 bg-white/10 p-4"
 					>
 						Sign In <SignInIcon className="size-4" />
 					</button>

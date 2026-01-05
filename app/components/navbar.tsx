@@ -9,20 +9,21 @@ import {
 	PencilSimpleLineIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { openCreateDialog } from "./create-dialog";
 
 type RouterConfig = ConfigFromRouter<typeof $router>;
 type RouteName = keyof RouterConfig;
 
 export function Navbar() {
 	return (
-		<div className="fixed right-[max(var(--safe-right),1rem)] bottom-[max(var(--safe-bottom),1rem)] left-[max(var(--safe-left),1rem)] flex justify-between">
+		<div className="fixed right-[max(var(--safe-right),0.5rem)] bottom-[max(var(--safe-bottom),0.5rem)] left-[max(var(--safe-left),0.5rem)] flex justify-between">
 			<nav className="flex gap-1 rounded-lg border border-white/10 backdrop-blur bg-[#191919]/80 p-0.5">
 				<NavItem icon={BookOpenIcon} label="Journal" page="journal" />
 				<NavItem icon={GearIcon} label="Settings" page="settings" />
 			</nav>
 			<button
 				type="button"
-				onClick={promptCreateEntry}
+				onClick={() => openCreateDialog()}
 				className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow text-black transition-transform duration-100 ease-in-out active:scale-110"
 			>
 				<PencilSimpleLineIcon className="size-4" />
@@ -57,13 +58,4 @@ function NavItem({
 			{isActive ? label : null}
 		</a>
 	);
-}
-
-function promptCreateEntry() {
-	const response = window.prompt("What's on your mind?");
-	if (response && response.length > 0) {
-		store.notes.add({
-			content: response,
-		});
-	}
 }

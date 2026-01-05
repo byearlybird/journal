@@ -1,5 +1,6 @@
-import { CryptoKeyGuard } from "@app/components/crypto-key-guard/crypto-key-guard";
-import { Navbar } from "@app/components/navbar/navbar";
+import { CreateDialog } from "@app/components/create-dialog";
+import { CryptoKeyGuard } from "@app/components/crypto-key-guard";
+import { Navbar } from "@app/components/navbar";
 import { JournalPage } from "@app/components/pages/journal.page";
 import { NotFound } from "@app/components/pages/not-found.page";
 import { SettingsPage } from "@app/components/pages/settings.page";
@@ -29,6 +30,7 @@ function GlobalLayout({ children }: { children: React.ReactNode }) {
 		<>
 			{children}
 			<Navbar />
+			<CreateDialog />
 		</>
 	);
 }

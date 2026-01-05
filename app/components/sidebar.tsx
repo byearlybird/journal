@@ -14,30 +14,22 @@ type RouterConfig = ConfigFromRouter<typeof $router>;
 type RouteName = keyof RouterConfig;
 export function Sidebar() {
 	return (
-		<div className="border-r border-white/10 h-full flex flex-col w-full">
-			{/* <div className="border-b border-white/10 w-full p-4">
+		<div className="flex h-full w-full flex-col border-white/10 border-r">
+			<div className="flex h-full flex-col gap-3 p-4">
 				<button
 					type="button"
 					onClick={() => openCreateDialog()}
-					className="flex w-full gap-2 px-3 py-2 text-sm items-center justify-center rounded-sm bg-yellow text-black transition-transform duration-100 ease-in-out active:scale-105"
+					className="flex items-center gap-2 rounded-md px-1.5 py-1.5 transition-transform duration-100 ease-in-out active:scale-110"
 				>
-					Create entry
-					<PencilSimpleLineIcon className="size-4" />
-				</button>
-			</div> */}
-			<div className="p-4 gap-3 flex flex-col">
-				<button
-					type="button"
-					onClick={() => openCreateDialog()}
-					className="flex px-1.5 py-1.5 items-center gap-2 rounded-md transition-transform duration-100 ease-in-out active:scale-110"
-				>
-					<span className="flex items-center justify-center rounded-full bg-yellow text-black p-1">
+					<span className="flex items-center justify-center rounded-full bg-yellow p-1 text-black">
 						<PencilSimpleLineIcon className="size-4" />
 					</span>
 					New entry
 				</button>
 				<NavItem page="journal" label="Journal" icon={BookOpenIcon} />
-				<NavItem page="settings" label="Settings" icon={GearIcon} />
+				<div className="mt-auto">
+					<NavItem page="settings" label="Settings" icon={GearIcon} />
+				</div>
 			</div>
 		</div>
 	);

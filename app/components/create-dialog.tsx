@@ -56,7 +56,7 @@ export function CreateDialog() {
 									hasFocused = true;
 								}
 							}}
-							className="flex h-1/2 w-full flex-col space-y-4 overflow-y-auto rounded-lg border border-white/10 bg-graphite max-w-2xl"
+							className="flex h-1/2 w-full max-w-2xl flex-col space-y-4 overflow-y-auto rounded-lg border border-white/10 bg-graphite"
 						>
 							<DialogTitle className="sr-only">Create a new entry</DialogTitle>
 							<Textarea

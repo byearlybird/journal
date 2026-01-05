@@ -29,11 +29,11 @@ export function Root() {
 function GlobalLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
-			<div className="grid grid-cols-5 h-screen">
-				<div className="hidden md:block w-full">
+			<div className="grid h-screen grid-cols-5">
+				<div className="hidden w-full md:block">
 					<Sidebar />
 				</div>
-				<div className="col-span-5 md:col-span-4 max-h-screen overflow-y-auto">
+				<div className="col-span-5 max-h-screen overflow-y-auto md:col-span-4">
 					{children}
 				</div>
 				<div className="md:hidden">

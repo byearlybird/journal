@@ -33,7 +33,9 @@ function GlobalLayout({ children }: { children: React.ReactNode }) {
 				<div className="hidden md:block w-full">
 					<Sidebar />
 				</div>
-				<div className="col-span-5 md:col-span-4">{children}</div>
+				<div className="col-span-5 md:col-span-4 max-h-screen overflow-y-auto">
+					{children}
+				</div>
 				<div className="md:hidden">
 					<Navbar />
 				</div>

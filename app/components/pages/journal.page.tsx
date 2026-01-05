@@ -2,18 +2,24 @@ import { useNotes, useTodayNotes } from "@app/store/queries";
 import type { Note } from "@app/store/store";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
+import { useRef } from "react";
 
 export function JournalPage() {
 	const notes = useNotes();
+	const scrollRef = useRef(null);
 	const todayNotes = useTodayNotes();
 
 	return (
 		<TabGroup defaultIndex={0}>
-			<TabList className="flex gap-4 p-4">
+			<TabList
+				className={
+					"flex gap-4 px-4 py-2 sticky top-0 bg-graphite/80 z-10 backdrop-blur"
+				}
+			>
 				<JournalTab>Today</JournalTab>
 				<JournalTab>All Entries</JournalTab>
 			</TabList>
-			<TabPanels>
+			<TabPanels ref={scrollRef}>
 				<TabPanel className="flex flex-col gap-4 p-4">
 					{todayNotes.map((note) => (
 						<JournalEntry format="time" key={note.id} note={note} />

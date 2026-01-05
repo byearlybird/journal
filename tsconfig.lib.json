@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
-		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.lib.tsbuildinfo",
 		"target": "ES2022",
 		"useDefineForClassFields": true,
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"module": "ESNext",
-		"types": ["vite/client"],
+		"types": [],
 		"skipLibCheck": true,
 
 		/* Bundler mode */
@@ -14,11 +14,9 @@
 		"verbatimModuleSyntax": true,
 		"moduleDetection": "force",
 		"noEmit": true,
-		"jsx": "react-jsx",
 		"baseUrl": ".",
 		"paths": {
-			"@lib/*": ["lib/*"],
-			"@app/*": ["app/*"]
+			"@lib/*": ["lib/*"]
 		},
 
 		/* Linting */
@@ -29,5 +27,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["app"]
+	"include": ["lib"]
 }

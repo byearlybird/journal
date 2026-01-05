@@ -14,8 +14,14 @@
 	},
 	"linter": {
 		"enabled": true,
+		"domains": {
+			"react": "recommended"
+		},
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"nursery": {
+				"useSortedClasses": "warn"
+			}
 		}
 	},
 	"javascript": {

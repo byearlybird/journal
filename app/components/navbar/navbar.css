@@ -1,0 +1,35 @@
+@scope (.navbar) {
+	:scope {
+		display: flex;
+		position: fixed;
+		justify-content: space-between;
+		bottom: max(var(--safe-bottom), var(--spacing-4));
+		left: max(var(--safe-left), var(--spacing-4));
+		right: max(var(--safe-right), var(--spacing-4));
+	}
+
+	nav {
+		display: flex;
+		border-radius: var(--rounded-full);
+		padding: var(--spacing-3);
+		gap: var(--spacing-3);
+		background-color: var(--surface-bg);
+		backdrop-filter: var(--blur);
+		border: 1px solid var(--surface-border);
+
+		a {
+			display: flex;
+		}
+	}
+
+	.action-button {
+		align-items: center;
+		background-color: var(--btn-bg);
+		height: var(--spacing-12);
+		width: var(--spacing-12);
+
+		color: var(--btn-fg);
+		backdrop-filter: var(--blur);
+		border-radius: var(--rounded-full);
+	}
+}

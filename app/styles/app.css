@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+
+html {
+	background-color: var(--app-bg);
+}
+
+body {
+	position: relative;
+}
+
+#root {
+	font-family: var(--font-sans);
+	color: var(--app-fg);
+	isolation: isolate;
+}
+
+@media (pointer: coarse) {
+	a,
+	button {
+		min-height: var(--touch-size);
+		min-width: var(--touch-size);
+	}
+}

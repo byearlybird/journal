@@ -70,7 +70,7 @@ export function CreateDialog() {
 								<button
 									type="button"
 									onClick={closeCreateDialog}
-									className="flex size-11 items-center justify-center rounded-full border "
+									className="flex size-11 items-center justify-center rounded-full border"
 								>
 									<XIcon className="h-4 w-4" />
 								</button>

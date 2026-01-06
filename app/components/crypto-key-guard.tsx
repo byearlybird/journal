@@ -84,7 +84,7 @@ function Required() {
 	return (
 		<>
 			<div className="flex size-full flex-col items-center justify-center">
-				<div className="flex flex-col justify-center gap-6 rounded-md border border-white/10 bg-black p-6">
+				<div className="flex flex-col justify-center gap-6 rounded-md border bg-black p-6">
 					<div className="flex flex-col gap-2">
 						<h2 className="font-medium text-lg">Unlock your journal</h2>
 						<p className="text-sm text-white/70">
@@ -95,7 +95,7 @@ function Required() {
 						<button
 							type="button"
 							onClick={handleUnlock}
-							className="flex items-center gap-2 rounded-sm border border-white/10 bg-white/5 p-2"
+							className="flex items-center gap-2 rounded-sm border bg-white/5 p-2"
 						>
 							Unlock
 							<LockKeyIcon className="size-4" />
@@ -126,7 +126,7 @@ function Required() {
 								onAnimationComplete={() => {
 									inputRef.current?.focus();
 								}}
-								className="flex h-auto w-full max-w-md flex-col space-y-4 rounded-lg border border-white/10 bg-graphite p-6"
+								className="flex h-auto w-full max-w-md flex-col space-y-4 rounded-lg border bg-graphite p-6"
 							>
 								<DialogTitle className="font-medium text-lg text-white">
 									Enter your encryption passphrase
@@ -151,7 +151,7 @@ function Required() {
 											}
 										}}
 										disabled={isLoading}
-										className="w-full rounded-md border border-white/10 bg-black/50 px-4 py-3 text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none disabled:opacity-50"
+										className="w-full rounded-md border bg-black/50 px-4 py-3 text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none disabled:opacity-50"
 									/>
 									{error && <p className="text-red-400 text-sm">{error}</p>}
 								</div>
@@ -160,7 +160,7 @@ function Required() {
 										type="button"
 										onClick={handleClose}
 										disabled={isLoading}
-										className="flex size-11 items-center justify-center rounded-full border border-white/10 disabled:opacity-50"
+										className="flex size-11 items-center justify-center rounded-full border disabled:opacity-50"
 									>
 										<XIcon className="h-4 w-4" />
 									</button>

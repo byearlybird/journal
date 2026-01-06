@@ -17,7 +17,7 @@ export function Sidebar() {
 	const { isOkay } = useCryptoKey();
 
 	return (
-		<div className="flex h-full w-full flex-col border-white/10 border-r">
+		<div className="flex h-full w-full flex-col border-r">
 			<div className="flex h-full flex-col gap-3 p-4">
 				<button
 					type="button"
@@ -57,8 +57,7 @@ function NavItem({
 			href={href}
 			className={clsx(
 				"flex items-center gap-3 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-110",
-				isActive &&
-					"border border-white/10 bg-white/10 text-white backdrop-blur",
+				isActive && "border bg-white/10 text-white backdrop-blur",
 			)}
 		>
 			<Icon className="size-4" />

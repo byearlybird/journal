@@ -16,7 +16,7 @@ type RouteName = keyof RouterConfig;
 export function Navbar() {
 	return (
 		<div className="fixed right-[max(var(--safe-right),0.5rem)] bottom-[max(var(--safe-bottom),0.5rem)] left-[max(var(--safe-left),0.5rem)] flex justify-between">
-			<nav className="flex gap-1 rounded-lg border border-white/10 bg-[#191919]/80 p-0.5 backdrop-blur">
+			<nav className="flex gap-1 rounded-lg border bg-black/80 p-0.5 backdrop-blur">
 				<NavItem icon={BookOpenIcon} label="Journal" page="journal" />
 				<NavItem icon={GearIcon} label="Settings" page="settings" />
 			</nav>
@@ -49,8 +49,7 @@ function NavItem({
 			href={href}
 			className={clsx(
 				"flex items-center gap-2 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-110",
-				isActive &&
-					"border border-white/10 bg-white/10 text-white backdrop-blur",
+				isActive && "border bg-white/10 text-white backdrop-blur",
 			)}
 		>
 			<Icon className="size-4" />

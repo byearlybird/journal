@@ -56,7 +56,7 @@ export function CreateDialog() {
 									hasFocused = true;
 								}
 							}}
-							className="flex h-1/2 w-full max-w-2xl flex-col space-y-4 overflow-y-auto rounded-lg border border-white/10 bg-graphite"
+							className="flex h-1/2 w-full max-w-2xl flex-col space-y-4 overflow-y-auto rounded-lg border bg-graphite"
 						>
 							<DialogTitle className="sr-only">Create a new entry</DialogTitle>
 							<Textarea
@@ -70,7 +70,7 @@ export function CreateDialog() {
 								<button
 									type="button"
 									onClick={closeCreateDialog}
-									className="flex size-11 items-center justify-center rounded-full border border-white/10"
+									className="flex size-11 items-center justify-center rounded-full border "
 								>
 									<XIcon className="h-4 w-4" />
 								</button>

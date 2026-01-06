@@ -21,10 +21,16 @@ export function JournalPage() {
 			</TabList>
 			<TabPanels ref={scrollRef}>
 				<TabPanel className="flex flex-col gap-4 p-4">
-					<DayNotesItem
-						date={format(new Date(), "yyyy-MM-dd")}
-						notes={todayNotes}
-					/>
+					{todayNotes.length > 0 ? (
+						<DayNotesItem
+							date={format(new Date(), "yyyy-MM-dd")}
+							notes={todayNotes}
+						/>
+					) : (
+						<div className="flex flex-col size-full items-center justify-center">
+							<p className="text-sm text-white/50 p-6">No entries yet today</p>
+						</div>
+					)}
 				</TabPanel>
 				<TabPanel className="flex flex-col gap-4 p-4">
 					{Object.entries(allNotes).map(([date, notes]) => (

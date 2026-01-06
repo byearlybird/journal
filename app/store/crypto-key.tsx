@@ -61,6 +61,7 @@ export async function setCryptoKey(userId: string, key: CryptoKey) {
 
 /**
  * Initializes the crypto key from IndexedDB when the user signs in.
+ * Clears the crypto key from memory when the user signs out.
  */
 export function useCryptoKeyInit() {
 	const { isSignedIn, userId } = useAuth();
@@ -69,6 +70,8 @@ export function useCryptoKeyInit() {
 	useEffect(() => {
 		if (!isSignedIn || !userId) {
 			hasLoadedRef.current = false;
+			// Clear crypto key from memory when user signs out
+			$cryptoKey.set(null);
 			return;
 		}
 

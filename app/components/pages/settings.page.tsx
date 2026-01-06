@@ -1,3 +1,4 @@
+import { clearCryptoKey } from "@app/store/crypto-key";
 import {
 	SignInButton as ClerkSignInButton,
 	SignOutButton as ClerkSignOutButton,
@@ -6,7 +7,6 @@ import {
 	useUser,
 } from "@clerk/clerk-react";
 import { SignInIcon, SignOutIcon } from "@phosphor-icons/react";
-import { clearCryptoKey } from "@app/store/crypto-key";
 
 export function SettingsPage() {
 	return (
@@ -57,10 +57,11 @@ function SignOutButton() {
 	};
 
 	return (
-		<ClerkSignOutButton signOutCallback={handleSignOut}>
+		<ClerkSignOutButton>
 			<button
 				type="button"
 				className="flex items-center justify-center gap-2 rounded-sm border bg-white/5 px-2 py-1"
+				onClick={handleSignOut}
 			>
 				Sign out
 				<SignOutIcon className="size-4" />

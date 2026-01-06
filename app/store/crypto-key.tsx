@@ -1,9 +1,9 @@
 import { useAuth } from "@clerk/clerk-react";
 import { deriveKey } from "@lib/crypto";
 import { useStore } from "@nanostores/react";
+import * as idb from "idb-keyval";
 import { atom } from "nanostores";
 import { useEffect, useMemo, useRef } from "react";
-import * as idb from "idb-keyval";
 
 const $cryptoKey = atom<CryptoKey | null>(null);
 
@@ -16,13 +16,10 @@ const getCryptoKeyStorageKey = (userId: string) =>
 async function loadPersistedCryptoKey(
 	userId: string,
 ): Promise<CryptoKey | null> {
-	return idb.get(getCryptoKeyStorageKey(userId));
+	return (await idb.get(getCryptoKeyStorageKey(userId))) ?? null;
 }
 
-async function persistCryptoKey(
-	userId: string,
-	key: CryptoKey,
-): Promise<void> {
+async function persistCryptoKey(userId: string, key: CryptoKey): Promise<void> {
 	return idb.set(getCryptoKeyStorageKey(userId), key);
 }
 

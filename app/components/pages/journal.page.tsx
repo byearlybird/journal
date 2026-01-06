@@ -27,8 +27,8 @@ export function JournalPage() {
 							notes={todayNotes}
 						/>
 					) : (
-						<div className="flex flex-col size-full items-center justify-center">
-							<p className="text-sm text-white/50 p-6">No entries yet today</p>
+						<div className="flex size-full flex-col items-center justify-center">
+							<p className="p-6 text-sm text-white/50">No entries yet today</p>
 						</div>
 					)}
 				</TabPanel>

@@ -2,16 +2,42 @@ import { useAuth } from "@clerk/clerk-react";
 import { deriveKey } from "@lib/crypto";
 import { useStore } from "@nanostores/react";
 import { atom } from "nanostores";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import * as idb from "idb-keyval";
 
 const $cryptoKey = atom<CryptoKey | null>(null);
 
+// Keys
+const PREFIX = "journal";
+const getCryptoKeyStorageKey = (userId: string) =>
+	`${PREFIX}:crypto-key:${userId}`;
+
+// Storage functions
+async function loadPersistedCryptoKey(
+	userId: string,
+): Promise<CryptoKey | null> {
+	return idb.get(getCryptoKeyStorageKey(userId));
+}
+
+async function persistCryptoKey(
+	userId: string,
+	key: CryptoKey,
+): Promise<void> {
+	return idb.set(getCryptoKeyStorageKey(userId), key);
+}
+
+async function clearPersistedCryptoKey(userId: string): Promise<void> {
+	return idb.del(getCryptoKeyStorageKey(userId));
+}
+
+// Store functions
 export function getCryptoKey() {
 	return $cryptoKey.get();
 }
 
-export function clearCryptoKey() {
+export async function clearCryptoKey(userId: string) {
 	$cryptoKey.set(null);
+	await clearPersistedCryptoKey(userId);
 }
 
 /**
@@ -26,10 +52,43 @@ export async function deriveCryptoKey(
 }
 
 /**
- * Sets the crypto key in the store.
+ * Sets the crypto key in the store and persists it to IndexedDB.
  */
-export function setCryptoKey(key: CryptoKey) {
+export async function setCryptoKey(userId: string, key: CryptoKey) {
 	$cryptoKey.set(key);
+	await persistCryptoKey(userId, key);
+}
+
+/**
+ * Initializes the crypto key from IndexedDB when the user signs in.
+ * Clears the crypto key from memory when the user signs out.
+ */
+export function useCryptoKeyInit() {
+	const { isSignedIn, userId } = useAuth();
+	const hasLoadedRef = useRef(false);
+
+	useEffect(() => {
+		if (!isSignedIn || !userId) {
+			hasLoadedRef.current = false;
+			// Clear crypto key from memory when user signs out
+			$cryptoKey.set(null);
+			return;
+		}
+
+		// Load persisted key once when signed in
+		if (!hasLoadedRef.current) {
+			hasLoadedRef.current = true;
+			loadPersistedCryptoKey(userId)
+				.then((key) => {
+					if (key) {
+						$cryptoKey.set(key);
+					}
+				})
+				.catch((err) => {
+					console.error("Failed to load persisted crypto key:", err);
+				});
+		}
+	}, [isSignedIn, userId]);
 }
 
 export function useCryptoKey() {

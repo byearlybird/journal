@@ -5,6 +5,7 @@ import { JournalPage } from "@app/components/pages/journal.page";
 import { NotFound } from "@app/components/pages/not-found.page";
 import { SettingsPage } from "@app/components/pages/settings.page";
 import { Sidebar } from "@app/components/sidebar";
+import { useCryptoKeyInit } from "@app/store/crypto-key";
 import { usePersistence } from "@app/store/persistence";
 import { useSync } from "@app/store/sync";
 import { useStore } from "@nanostores/react";
@@ -18,6 +19,7 @@ export const $router = createRouter({
 export function Root() {
 	usePersistence();
 	useSync();
+	useCryptoKeyInit();
 
 	return (
 		<GlobalLayout>

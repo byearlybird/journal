@@ -62,7 +62,7 @@ function Required() {
 			}
 
 			// Key is valid, set it in the store
-			setCryptoKey(key);
+			await setCryptoKey(user.id, key);
 			setIsDialogOpen(false);
 			setPassphrase("");
 		} catch (err) {

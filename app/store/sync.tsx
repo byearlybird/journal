@@ -1,16 +1,17 @@
-import { store } from "@app/store";
+import { client, db } from "@app/db/db";
+import { merge } from "@app/db/merger";
 import { getCryptoKey } from "@app/store/crypto-key";
 import { useSession } from "@clerk/clerk-react";
-import { decrypt, encrypt } from "@lib/crypto";
-import { pullResponseSchema, pushPayloadSchema } from "@lib/sync-schema";
+import { decryptFile, encryptFile } from "@lib/crypto";
+import { type QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
 const POLL_REMOTE_INTERVAL_MS = 10000; // 10 seconds
 const API_ENDPOINT = "/api/journal";
-const JSON_HEADERS = { "Content-Type": "application/json" };
 
 export function useSync() {
 	const { isSignedIn } = useSession();
+	const queryClient = useQueryClient();
 	const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 	useEffect(() => {
@@ -24,7 +25,10 @@ export function useSync() {
 		}
 
 		// Start polling remote
-		intervalRef.current = setInterval(syncWithRemote, POLL_REMOTE_INTERVAL_MS);
+		intervalRef.current = setInterval(
+			() => syncWithRemote(queryClient),
+			POLL_REMOTE_INTERVAL_MS,
+		);
 
 		// Cleanup on unmount or when signed out
 		return () => {
@@ -33,7 +37,7 @@ export function useSync() {
 				intervalRef.current = null;
 			}
 		};
-	}, [isSignedIn]);
+	}, [isSignedIn, queryClient]);
 }
 
 /**
@@ -47,31 +51,20 @@ export async function validateCryptoKey(
 	try {
 		const res = await fetch(API_ENDPOINT, {
 			method: "GET",
-			headers: JSON_HEADERS,
 		});
 
-		const responseText = await res.text();
-		if (!responseText) {
-			// No remote data yet, key is valid by default
+		if (res.status === 204 || res.status === 200) {
+			const arrayBuffer = await res.arrayBuffer();
+			if (arrayBuffer.byteLength === 0) {
+				// No remote data yet, key is valid by default
+				return true;
+			}
+
+			// Try to decrypt - if this fails, key is wrong
+			await decryptFile(arrayBuffer, cryptoKey);
 			return true;
 		}
 
-		// Parse response
-		let data: unknown;
-		try {
-			data = JSON.parse(responseText);
-		} catch {
-			// Can't parse response, but that's not a key issue
-			return true;
-		}
-
-		const validated = pullResponseSchema.parse(data);
-		if (!validated.content) {
-			return true; // No content, key is valid
-		}
-
-		// Try to decrypt - if this fails, key is wrong
-		await decrypt(validated.content, cryptoKey);
 		return true;
 	} catch (err) {
 		// Decryption failed - wrong key
@@ -81,69 +74,60 @@ export async function validateCryptoKey(
 }
 
 /**
- * Pulls encrypted data from the remote server, decrypts it, and merges it into the store.
+ * Pulls encrypted database file from the remote server, decrypts it, and merges it into the local database.
  * Returns true if successful, false otherwise.
  */
 async function pullFromRemote(cryptoKey: CryptoKey): Promise<boolean> {
 	try {
 		const res = await fetch(API_ENDPOINT, {
 			method: "GET",
-			headers: JSON_HEADERS,
 		});
 
-		const responseText = await res.text();
-		if (!responseText) {
+		if (res.status === 204) {
 			// No remote data yet, this is fine
 			return true;
 		}
 
-		// Parse and validate response
-		let data: unknown;
-		try {
-			data = JSON.parse(responseText);
-		} catch (err) {
-			console.error("Failed to parse response as JSON:", err);
-			return false;
-		}
-
-		const validated = pullResponseSchema.parse(data);
-		if (!validated.content) {
-			return true; // No content to merge
+		const encryptedArrayBuffer = await res.arrayBuffer();
+		if (encryptedArrayBuffer.byteLength === 0) {
+			// No remote data yet, this is fine
+			return true;
 		}
 
 		// Decrypt and merge
 		try {
-			const decrypted = await decrypt(validated.content, cryptoKey);
-			const parsedData = JSON.parse(decrypted);
-			store.merge(parsedData);
+			const decryptedArrayBuffer = await decryptFile(
+				encryptedArrayBuffer,
+				cryptoKey,
+			);
+			// Convert ArrayBuffer to File for merge function
+			const dbFile = new File([decryptedArrayBuffer], "database.sqlite3", {
+				type: "application/x-sqlite3",
+			});
+			await merge(db, dbFile);
 			return true;
 		} catch (err) {
-			console.error("Decryption failed:", err);
+			console.error("Decryption or merge failed:", err);
 			return false;
 		}
 	} catch (err) {
-		if (err instanceof Error && err.name === "ZodError") {
-			console.error("Invalid response format from server:", err);
-		} else {
-			console.error("Failed to pull data:", err);
-		}
+		console.error("Failed to pull data:", err);
 		return false;
 	}
 }
 
 /**
- * Pushes the current store snapshot to the remote server as encrypted data.
+ * Pushes the current database file to the remote server as encrypted data.
  */
 async function pushToRemote(cryptoKey: CryptoKey): Promise<void> {
 	try {
-		const snapshot = store.$snapshot.get();
-		const encrypted = await encrypt(JSON.stringify(snapshot), cryptoKey);
-		const payload = pushPayloadSchema.parse({ data: encrypted });
+		const dbFile = await client.getDatabaseFile();
+		const encryptedArrayBuffer = await encryptFile(dbFile, cryptoKey);
 
 		await fetch(API_ENDPOINT, {
 			method: "PUT",
-			headers: JSON_HEADERS,
-			body: JSON.stringify(payload),
+			headers: { "Content-Type": "application/octet-stream" },
+			body: encryptedArrayBuffer,
 		});
 	} catch (err) {
 		console.error("Failed to push data:", err);
@@ -153,7 +137,7 @@ async function pushToRemote(cryptoKey: CryptoKey): Promise<void> {
 /**
  * Performs a full sync: pulls remote data (if available) and then pushes local data.
  */
-async function syncWithRemote(): Promise<void> {
+async function syncWithRemote(queryClient: QueryClient): Promise<void> {
 	const cryptoKey = getCryptoKey();
 	if (!cryptoKey) {
 		// No crypto key available, skip sync
@@ -163,4 +147,5 @@ async function syncWithRemote(): Promise<void> {
 	// Pull first, then push (even if pull fails, we still want to push)
 	await pullFromRemote(cryptoKey);
 	await pushToRemote(cryptoKey);
+	queryClient.invalidateQueries();
 }

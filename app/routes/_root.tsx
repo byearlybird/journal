@@ -1,9 +1,11 @@
-import { CryptoKeyGuard } from "@app/components/crypto-key-guard/crypto-key-guard";
-import { HomePage } from "@app/components/home-page/home-page";
-import { Navbar } from "@app/components/navbar/navbar";
-import { NotFound } from "@app/components/not-found-page/not-found-page";
-import { SettingsPage } from "@app/components/settings-page/settings-page";
-import { usePersistence } from "@app/store/persistence";
+import { CreateDialog } from "@app/components/create-dialog";
+import { CryptoKeyGuard } from "@app/components/crypto-key-guard";
+import { Navbar } from "@app/components/navbar";
+import { JournalPage } from "@app/components/pages/journal.page";
+import { NotFound } from "@app/components/pages/not-found.page";
+import { SettingsPage } from "@app/components/pages/settings.page";
+import { Sidebar } from "@app/components/sidebar";
+import { useCryptoKeyInit } from "@app/store/crypto-key";
 import { useSync } from "@app/store/sync";
 import { useStore } from "@nanostores/react";
 import { createRouter } from "@nanostores/router";
@@ -14,8 +16,8 @@ export const $router = createRouter({
 });
 
 export function Root() {
-	usePersistence();
 	useSync();
+	useCryptoKeyInit();
 
 	return (
 		<GlobalLayout>
@@ -27,8 +29,18 @@ export function Root() {
 function GlobalLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
-			{children}
-			<Navbar />
+			<div className="grid h-screen grid-cols-5">
+				<div className="hidden w-full md:block">
+					<Sidebar />
+				</div>
+				<div className="col-span-5 max-h-screen overflow-y-auto md:col-span-4">
+					{children}
+				</div>
+				<div className="md:hidden">
+					<Navbar />
+				</div>
+			</div>
+			<CreateDialog />
 		</>
 	);
 }
@@ -42,7 +54,7 @@ function Content() {
 		case "journal":
 			return (
 				<CryptoKeyGuard>
-					<HomePage />
+					<JournalPage />
 				</CryptoKeyGuard>
 			);
 		case "settings":

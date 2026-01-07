@@ -78,3 +78,66 @@ export async function decrypt(
 
 	return new TextDecoder().decode(plaintext);
 }
+
+/**
+ * Encrypts binary data (File/Blob/ArrayBuffer/Uint8Array) using AES-GCM.
+ * Returns ArrayBuffer containing IV (12 bytes) + ciphertext.
+ */
+export async function encryptFile(
+	data: File | Blob | ArrayBuffer | Uint8Array,
+	key: CryptoKey,
+): Promise<ArrayBuffer> {
+	// Convert input to ArrayBuffer
+	let arrayBuffer: ArrayBuffer;
+	if (data instanceof File || data instanceof Blob) {
+		arrayBuffer = await data.arrayBuffer();
+	} else if (data instanceof ArrayBuffer) {
+		arrayBuffer = data;
+	} else {
+		// For Uint8Array, create a new ArrayBuffer from the view
+		arrayBuffer = new Uint8Array(data).buffer;
+	}
+
+	const iv = crypto.getRandomValues(new Uint8Array(12));
+
+	const ciphertext = await crypto.subtle.encrypt(
+		{ name: "AES-GCM", iv },
+		key,
+		arrayBuffer,
+	);
+
+	// Concatenate IV + ciphertext
+	const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+	combined.set(iv, 0);
+	combined.set(new Uint8Array(ciphertext), iv.length);
+
+	return combined.buffer;
+}
+
+/**
+ * Decrypts binary data (ArrayBuffer/Uint8Array) containing IV + ciphertext using AES-GCM.
+ * Returns ArrayBuffer with decrypted plaintext.
+ * Throws on wrong passphrase (integrity check fails).
+ */
+export async function decryptFile(
+	encryptedData: ArrayBuffer | Uint8Array,
+	key: CryptoKey,
+): Promise<ArrayBuffer> {
+	// Convert input to Uint8Array
+	const combined =
+		encryptedData instanceof Uint8Array
+			? encryptedData
+			: new Uint8Array(encryptedData);
+
+	// Extract IV (first 12 bytes) and ciphertext (rest)
+	const iv = combined.slice(0, 12);
+	const ciphertext = combined.slice(12);
+
+	const plaintext = await crypto.subtle.decrypt(
+		{ name: "AES-GCM", iv },
+		key,
+		ciphertext,
+	);
+
+	return plaintext;
+}

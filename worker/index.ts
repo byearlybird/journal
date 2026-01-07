@@ -1,6 +1,5 @@
 import { WorkerEntrypoint } from "cloudflare:workers";
 import { createClerkClient } from "@clerk/backend";
-import { pushPayloadSchema } from "../lib/sync-schema";
 
 interface Env {
 	journal_bucket: R2Bucket;
@@ -32,29 +31,25 @@ export default class extends WorkerEntrypoint<Env> {
 			});
 		}
 
-		const storageKey = `journal-${userId}`;
+		const storageKey = `journaldb-${userId}`;
 
 		switch (request.method) {
 			case "GET": {
 				const object = await this.env.journal_bucket.get(storageKey);
 
 				if (object === null) {
-					return new Response("", { status: 200 });
+					return new Response(null, { status: 204 });
 				}
 
-				const text = await object.text();
-				return new Response(JSON.stringify({ content: text }), {
-					headers: { "Content-Type": "application/json" },
+				return new Response(object.body, {
+					headers: { "Content-Type": "application/octet-stream" },
 				});
 			}
 			case "PUT": {
 				try {
-					const json = await request.json();
-					const validated = pushPayloadSchema.parse(json);
-					await this.env.journal_bucket.put(storageKey, validated.data);
-					return new Response(JSON.stringify({ success: true }), {
-						headers: { "Content-Type": "application/json" },
-					});
+					const arrayBuffer = await request.arrayBuffer();
+					await this.env.journal_bucket.put(storageKey, arrayBuffer);
+					return new Response(null, { status: 204 });
 				} catch (error) {
 					return new Response(
 						JSON.stringify({

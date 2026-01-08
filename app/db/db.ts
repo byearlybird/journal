@@ -5,6 +5,7 @@ import {
 	type Selectable,
 	type Updateable,
 } from "kysely";
+import type { DatabasePath } from "sqlocal";
 import { SQLocalKysely } from "sqlocal/kysely";
 
 // ColumnType<SelectType, InsertType, UpdateType>
@@ -24,12 +25,26 @@ export type Note = Selectable<NoteTable>;
 export type NewNote = Insertable<NoteTable>;
 export type NoteUpdate = Updateable<NoteTable>;
 
+export type SyncMetaTable = {
+	key: "latest_timestamp";
+	value: number;
+};
+
 export type Database = {
+	// sync_meta: SyncMetaTable;
 	note: NoteTable;
 };
 
-export const client = new SQLocalKysely("database.sqlite3");
+export const createDb = (databasePath: DatabasePath) => {
+	const client = new SQLocalKysely(databasePath);
+	const db = new Kysely<Database>({ dialect: client.dialect });
 
-export const db = new Kysely<Database>({ dialect: client.dialect });
+	return {
+		db,
+		client,
+	};
+};
+
+export const { db, client } = createDb("database.sqlite3");
 
 export type Db = typeof db;

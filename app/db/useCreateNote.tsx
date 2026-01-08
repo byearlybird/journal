@@ -1,26 +1,27 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { ulid } from "ulid";
 import type { NewNote } from "./db";
 import { useDb } from "./db-provider";
 
 export function useCreateNote() {
-	const { db } = useDb();
+	const { db, getEventstamp } = useDb();
 
 	const createNote = useCallback(
 		async (newNote: Pick<NewNote, "content">) => {
+			const eventstamp = await getEventstamp();
+
 			return db
 				.insertInto("note")
 				.values({
 					id: crypto.randomUUID(),
 					content: newNote.content,
-					eventstamp: ulid(),
+					eventstamp,
 					tombstone: 0,
 					created_at: new Date().toISOString(),
 				})
 				.execute();
 		},
-		[db],
+		[db, getEventstamp],
 	);
 
 	return useMutation({

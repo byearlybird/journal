@@ -25,13 +25,14 @@ export type Note = Selectable<NoteTable>;
 export type NewNote = Insertable<NoteTable>;
 export type NoteUpdate = Updateable<NoteTable>;
 
+// runtime insert not allowed, update only
 export type SyncMetaTable = {
-	key: "latest_timestamp";
-	value: number;
+	key: ColumnType<"clock_timestamp" | "clock_sequence", never, never>;
+	value: ColumnType<number, never, number | undefined>;
 };
 
 export type Database = {
-	// sync_meta: SyncMetaTable;
+	sync_meta: SyncMetaTable;
 	note: NoteTable;
 };
 
@@ -45,6 +46,6 @@ export const createDb = (databasePath: DatabasePath) => {
 	};
 };
 
-export const { db, client } = createDb("database.sqlite3");
+export const { db, client } = createDb("journal-local.db");
 
 export type Db = typeof db;

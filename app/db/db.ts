@@ -31,3 +31,5 @@ export type Database = {
 export const client = new SQLocalKysely("database.sqlite3");
 
 export const db = new Kysely<Database>({ dialect: client.dialect });
+
+export type Db = typeof db;

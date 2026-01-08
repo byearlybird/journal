@@ -1,7 +1,13 @@
-import type { Note } from "@app/store";
+import type { Note as DbNote } from "@app/db/db";
 import { format, parse, parseISO } from "date-fns";
 
-export function DayNotesItem({ notes, date }: { notes: Note[]; date: string }) {
+export function DayNotesItem({
+	notes,
+	date,
+}: {
+	notes: DbNote[];
+	date: string;
+}) {
 	// Parse date string (YYYY-MM-DD) as local date
 	const dateObj = parse(date, "yyyy-MM-dd", new Date());
 	return (
@@ -19,9 +25,9 @@ export function DayNotesItem({ notes, date }: { notes: Note[]; date: string }) {
 	);
 }
 
-function NoteItem({ note }: { note: Note }) {
+function NoteItem({ note }: { note: DbNote }) {
 	// Parse ISO string to Date object for consistent local timezone formatting
-	const createdAt = parseISO(note.createdAt);
+	const createdAt = parseISO(note.created_at);
 	return (
 		<div className="flex flex-col gap-2 py-4">
 			<time className="text-sm text-white/70">

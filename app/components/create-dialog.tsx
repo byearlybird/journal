@@ -1,4 +1,4 @@
-import { store } from "@app/store";
+import { useCreateNote } from "@app/db/useCreateNote";
 import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
 import { useStore } from "@nanostores/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
@@ -18,13 +18,14 @@ export function closeCreateDialog() {
 
 export function CreateDialog() {
 	let hasFocused = false;
+	const { mutate: createNote } = useCreateNote();
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const isOpen = useStore($isCreateDialogOpen);
 	const [content, setContent] = useState<string>("");
 
 	const handleSave = () => {
 		if (content.trim() === "") return;
-		store.notes.add({ content: content.trim() });
+		createNote({ content: content.trim() });
 		setContent("");
 		closeCreateDialog();
 	};

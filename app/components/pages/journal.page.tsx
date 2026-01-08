@@ -1,4 +1,5 @@
-import { useAllNotes, useTodayNotes } from "@app/store/queries";
+import { useAllNotes } from "@app/db/useAllNotes";
+import { useTodayNotes } from "@app/db/useTodayNotes";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
 import { useRef } from "react";
@@ -6,8 +7,8 @@ import { DayNotesItem } from "../day-notes-item";
 
 export function JournalPage() {
 	const scrollRef = useRef(null);
-	const todayNotes = useTodayNotes();
-	const allNotes = useAllNotes();
+	const { data: todayNotes = [] } = useTodayNotes();
+	const { data: allNotes = [] } = useAllNotes();
 
 	return (
 		<TabGroup defaultIndex={0}>
@@ -33,7 +34,7 @@ export function JournalPage() {
 					)}
 				</TabPanel>
 				<TabPanel className="flex flex-col gap-4 p-4">
-					{Object.entries(allNotes).map(([date, notes]) => (
+					{allNotes.map(({ date, notes }) => (
 						<DayNotesItem key={date} date={date} notes={notes} />
 					))}
 				</TabPanel>

@@ -1,18 +1,6 @@
 import { useStore } from "@nanostores/react";
-import { format, isToday, parse, parseISO } from "date-fns";
+import { format, parse, parseISO } from "date-fns";
 import { type Note, store } from ".";
-
-export const useTodayNotes = () =>
-	useStore(
-		store.query(["notes"], ({ notes }) =>
-			Array.from(notes.values())
-				.filter((note) => isToday(parseISO(note.createdAt)))
-				.sort(
-					(a, b) =>
-						parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime(),
-				),
-		),
-	);
 
 export type DateNotes = {
 	[date: string]: Note[];

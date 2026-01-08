@@ -1,6 +1,4 @@
-import { $router } from "@app/routes/_root";
-import { useStore } from "@nanostores/react";
-import { type ConfigFromRouter, getPagePath } from "@nanostores/router";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 import {
 	BookOpenIcon,
 	GearIcon,
@@ -10,15 +8,12 @@ import {
 import clsx from "clsx";
 import { openCreateDialog } from "./create-dialog";
 
-type RouterConfig = ConfigFromRouter<typeof $router>;
-type RouteName = keyof RouterConfig;
-
 export function Navbar() {
 	return (
 		<div className="fixed right-[max(var(--safe-right),0.5rem)] bottom-[max(var(--safe-bottom),0.5rem)] left-[max(var(--safe-left),0.5rem)] flex justify-between">
 			<nav className="flex gap-1 rounded-lg border bg-black/80 p-0.5 backdrop-blur">
-				<NavItem icon={BookOpenIcon} label="Journal" page="journal" />
-				<NavItem icon={GearIcon} label="Settings" page="settings" />
+				<NavItem icon={BookOpenIcon} label="Journal" to="/" />
+				<NavItem icon={GearIcon} label="Settings" to="/settings" />
 			</nav>
 			<button
 				type="button"
@@ -32,21 +27,20 @@ export function Navbar() {
 }
 
 function NavItem({
-	page,
+	to,
 	label,
 	icon: Icon,
 }: {
-	page: RouteName;
+	to: "/" | "/settings";
 	label: string;
 	icon: Icon;
 }) {
-	const currentPage = useStore($router);
-	const href = getPagePath($router, page);
-	const isActive = currentPage?.route === page;
+	const matchRoute = useMatchRoute();
+	const isActive = !!matchRoute({ to });
 
 	return (
-		<a
-			href={href}
+		<Link
+			to={to}
 			className={clsx(
 				"flex items-center gap-2 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-110",
 				isActive && "border bg-white/10 text-white backdrop-blur",
@@ -54,6 +48,6 @@ function NavItem({
 		>
 			<Icon className="size-4" />
 			{isActive ? label : null}
-		</a>
+		</Link>
 	);
 }

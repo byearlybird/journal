@@ -17,7 +17,7 @@ export async function merge(localDb: Db, dbFile: DbFile) {
 
 	await remoteMigrator.migrateToLatest();
 
-	localDb.transaction().execute(async (tx) => {
+	await localDb.transaction().execute(async (tx) => {
 		const remoteNotes = await remoteDb.selectFrom("note").selectAll().execute();
 		await tx
 			.insertInto("note")

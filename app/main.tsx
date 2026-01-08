@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./main.css";
+import { DbMigrator } from "@app/components/db-migrator";
 import { ENV } from "@app/env";
 import { Root } from "@app/routes/_root";
 import { load } from "@app/store/persistence";
@@ -13,7 +14,9 @@ await load();
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY}>
-			<Root />
+			<DbMigrator loading={<div>Loading...</div>}>
+				<Root />
+			</DbMigrator>
 		</ClerkProvider>
 	</StrictMode>,
 );

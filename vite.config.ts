@@ -3,13 +3,14 @@ import { fileURLToPath } from "node:url";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import sqlocal from "sqlocal/vite";
 import { defineConfig } from "vite";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react(), cloudflare(), tailwindcss()],
+	plugins: [react(), cloudflare(), tailwindcss(), sqlocal()],
 	resolve: {
 		alias: {
 			"@lib": path.resolve(__dirname, "./lib"),

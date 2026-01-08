@@ -22,9 +22,11 @@
 		"clsx": "^2.1.1",
 		"date-fns": "^4.1.0",
 		"idb-keyval": "^6.2.2",
+		"kysely": "^0.28.9",
 		"motion": "^12.23.26",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
+		"sqlocal": "^0.16.0",
 		"tailwindcss": "^4.1.18",
 		"zod": "^4.3.4"
 	},

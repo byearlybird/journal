@@ -12,8 +12,8 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { type Db, db } from "./db";
 import { advanceClock, makeStamp } from "./clock";
+import { type Db, db } from "./db";
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({

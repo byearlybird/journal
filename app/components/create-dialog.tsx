@@ -1,26 +1,25 @@
 import { useCreateNote } from "@app/db/useCreateNote";
 import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
-import { useStore } from "@nanostores/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
+import { Store, useStore } from "@tanstack/react-store";
 import { AnimatePresence, motion } from "motion/react";
-import { atom } from "nanostores";
 import { useRef, useState } from "react";
 
-export const $isCreateDialogOpen = atom(false);
+const createDialogStore = new Store<boolean>(false);
 
 export function openCreateDialog() {
-	$isCreateDialogOpen.set(true);
+	createDialogStore.setState(() => true);
 }
 
 export function closeCreateDialog() {
-	$isCreateDialogOpen.set(false);
+	createDialogStore.setState(() => false);
 }
 
 export function CreateDialog() {
 	let hasFocused = false;
 	const { mutate: createNote } = useCreateNote();
 	const inputRef = useRef<HTMLTextAreaElement>(null);
-	const isOpen = useStore($isCreateDialogOpen);
+	const isOpen = useStore(createDialogStore, (state) => state);
 	const [content, setContent] = useState<string>("");
 
 	const handleSave = () => {

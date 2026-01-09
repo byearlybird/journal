@@ -1,11 +1,10 @@
 import { useAuth } from "@clerk/clerk-react";
 import { deriveKey } from "@lib/crypto";
-import { useStore } from "@nanostores/react";
+import { Store, useStore } from "@tanstack/react-store";
 import * as idb from "idb-keyval";
-import { atom } from "nanostores";
 import { useEffect, useMemo, useRef } from "react";
 
-const $cryptoKey = atom<CryptoKey | null>(null);
+const cryptoKeyStore = new Store<CryptoKey | null>(null);
 
 // Keys
 const PREFIX = "journal";
@@ -29,11 +28,11 @@ async function clearPersistedCryptoKey(userId: string): Promise<void> {
 
 // Store functions
 export function getCryptoKey() {
-	return $cryptoKey.get();
+	return cryptoKeyStore.state;
 }
 
 export async function clearCryptoKey(userId: string) {
-	$cryptoKey.set(null);
+	cryptoKeyStore.setState(() => null);
 	await clearPersistedCryptoKey(userId);
 }
 
@@ -52,7 +51,7 @@ export async function deriveCryptoKey(
  * Sets the crypto key in the store and persists it to IndexedDB.
  */
 export async function setCryptoKey(userId: string, key: CryptoKey) {
-	$cryptoKey.set(key);
+	cryptoKeyStore.setState(() => key);
 	await persistCryptoKey(userId, key);
 }
 
@@ -68,7 +67,7 @@ export function useCryptoKeyInit() {
 		if (!isSignedIn || !userId) {
 			hasLoadedRef.current = false;
 			// Clear crypto key from memory when user signs out
-			$cryptoKey.set(null);
+			cryptoKeyStore.setState(() => null);
 			return;
 		}
 
@@ -78,7 +77,7 @@ export function useCryptoKeyInit() {
 			loadPersistedCryptoKey(userId)
 				.then((key) => {
 					if (key) {
-						$cryptoKey.set(key);
+						cryptoKeyStore.setState(() => key);
 					}
 				})
 				.catch((err) => {
@@ -90,7 +89,7 @@ export function useCryptoKeyInit() {
 
 export function useCryptoKey() {
 	const { isLoaded, isSignedIn } = useAuth();
-	const cryptoKey = useStore($cryptoKey);
+	const cryptoKey = useStore(cryptoKeyStore, (state) => state);
 
 	const isRequired = useMemo(() => {
 		return isSignedIn && cryptoKey === null;

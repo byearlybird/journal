@@ -12,13 +12,13 @@ import { SQLocalKysely } from "sqlocal/kysely";
 
 type MergableTable = {
 	id: ColumnType<string, string, never>;
-	eventstamp: string;
-	tombstone: ColumnType<0 | 1, 0 | 1, 0 | 1 | undefined>;
+	created_at: string;
+	updated_at: string;
+	deleted_at: string | null;
 };
 
 export type NoteTable = MergableTable & {
 	content: string;
-	created_at: string;
 };
 
 export type Note = Selectable<NoteTable>;

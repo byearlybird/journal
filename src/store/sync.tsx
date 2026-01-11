@@ -2,7 +2,7 @@ import { client, db } from "@app/db/db";
 import { merge } from "@app/db/merger";
 import { getCryptoKey } from "@app/store/crypto-key";
 import { useSession } from "@clerk/clerk-react";
-import { decryptFile, encryptFile } from "@lib/crypto";
+import { decryptFile, encryptFile } from "@app/utils/crypto";
 import { type QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 

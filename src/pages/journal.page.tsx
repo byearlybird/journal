@@ -1,5 +1,5 @@
-import { useAllNotes } from "@app/db/use-all-notes";
-import { useTodayNotes } from "@app/db/use-today-notes";
+import { useAllNotes } from "@app/hooks/use-all-notes";
+import { useTodayNotes } from "@app/hooks/use-today-notes";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
 import { useRef } from "react";

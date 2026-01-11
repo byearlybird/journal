@@ -5,8 +5,7 @@
 		"types": ["@cloudflare/workers-types/2023-07-01", "vite/client"],
 		"baseUrl": ".",
 		"paths": {
-			"@worker/*": ["worker/*"],
-			"@lib/*": ["lib/*"]
+			"@worker/*": ["worker/*"]
 		}
 	},
 	"include": ["worker"]

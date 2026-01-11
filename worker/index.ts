@@ -47,3 +47,4 @@ app.put("/api/journal", async (c) => {
 });
 
 export default app;
+

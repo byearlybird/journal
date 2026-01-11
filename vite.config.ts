@@ -13,8 +13,7 @@ export default defineConfig({
 	plugins: [react(), cloudflare(), tailwindcss(), sqlocal()],
 	resolve: {
 		alias: {
-			"@lib": path.resolve(__dirname, "./lib"),
-			"@app": path.resolve(__dirname, "./app"),
+			"@app": path.resolve(__dirname, "./src"),
 			"@worker": path.resolve(__dirname, "./worker"),
 		},
 	},

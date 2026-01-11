@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/clerk-react";
-import { deriveKey } from "@lib/crypto";
+import { deriveKey } from "@app/utils/crypto";
 import { useStore } from "@nanostores/react";
 import * as idb from "idb-keyval";
 import { atom } from "nanostores";

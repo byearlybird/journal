@@ -1,75 +1,49 @@
-import { WorkerEntrypoint } from "cloudflare:workers";
-import { createClerkClient } from "@clerk/backend";
+import { Hono } from "hono";
+import { clerkMiddleware, type AppEnv } from "./clerk-middleware";
 
-interface Env {
-	journal_bucket: R2Bucket;
-	CLERK_SECRET_KEY: string;
-	VITE_CLERK_PUBLISHABLE_KEY: string;
-}
+const app = new Hono<AppEnv>();
 
-export default class extends WorkerEntrypoint<Env> {
-	async fetch(request: Request) {
-		const clerkClient = createClerkClient({
-			secretKey: this.env.CLERK_SECRET_KEY,
-			publishableKey: this.env.VITE_CLERK_PUBLISHABLE_KEY,
-		});
+// Public health check endpoint
+app.get("/api/status", (c) => c.json({ status: "ok" }));
 
-		const requestState = await clerkClient.authenticateRequest(request);
+// Apply authentication middleware to all /api/* routes
+app.use("/api/*", clerkMiddleware());
 
-		if (!requestState.isAuthenticated) {
-			return new Response(JSON.stringify({ error: "Unauthorized" }), {
-				status: 401,
-				headers: { "Content-Type": "application/json" },
-			});
-		}
+// GET /api/journal - Read encrypted database
+app.get("/api/journal", async (c) => {
+  const userId = c.get("userId");
+  const storageKey = `${userId}:journal`;
 
-		const userId = requestState.toAuth()?.userId;
-		if (!userId) {
-			return new Response(JSON.stringify({ error: "No user ID" }), {
-				status: 401,
-				headers: { "Content-Type": "application/json" },
-			});
-		}
+  const object = await c.env.journal_bucket.get(storageKey);
 
-		const storageKey = `journaldb-${userId}`;
+  if (!object) {
+    return c.json({ error: "Not found" }, 404);
+  }
 
-		switch (request.method) {
-			case "GET": {
-				const object = await this.env.journal_bucket.get(storageKey);
+  return c.body(await object.arrayBuffer(), 200, {
+    "Content-Type": "application/octet-stream",
+  });
+});
 
-				if (object === null) {
-					return new Response(null, { status: 204 });
-				}
+// PUT /api/journal - Write encrypted database
+app.put("/api/journal", async (c) => {
+  const userId = c.get("userId");
+  const storageKey = `${userId}:journal`;
 
-				return new Response(object.body, {
-					headers: { "Content-Type": "application/octet-stream" },
-				});
-			}
-			case "PUT": {
-				try {
-					const arrayBuffer = await request.arrayBuffer();
-					await this.env.journal_bucket.put(storageKey, arrayBuffer);
-					return new Response(null, { status: 204 });
-				} catch (error) {
-					return new Response(
-						JSON.stringify({
-							error: "Invalid request body",
-							details: error instanceof Error ? error.message : String(error),
-						}),
-						{
-							status: 400,
-							headers: { "Content-Type": "application/json" },
-						},
-					);
-				}
-			}
-			default:
-				return new Response("Method Not Allowed", {
-					status: 405,
-					headers: {
-						Allow: "GET, PUT",
-					},
-				});
-		}
-	}
-}
+  try {
+    const arrayBuffer = await c.req.arrayBuffer();
+    await c.env.journal_bucket.put(storageKey, arrayBuffer);
+
+    return c.json({ success: true }, 200);
+  } catch (error) {
+    return c.json(
+      {
+        error: "Invalid request body",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      400,
+    );
+  }
+});
+
+export default app;

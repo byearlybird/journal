@@ -6,9 +6,6 @@
 		"not_found_handling": "single-page-application"
 	},
 	"main": "./worker/index.ts",
-	"vars": {
-		"VITE_CLERK_PUBLISHABLE_KEY": "pk_test_ZGFybGluZy1oZXJvbi00Mi5jbGVyay5hY2NvdW50cy5kZXYk"
-	},
 	"r2_buckets": [
 		{
 			"bucket_name": "journal-bucket",

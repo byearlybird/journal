@@ -53,7 +53,7 @@ export async function validateCryptoKey(
 			method: "GET",
 		});
 
-		if (res.status === 204 || res.status === 200) {
+		if (res.status === 404 || res.status === 200) {
 			const arrayBuffer = await res.arrayBuffer();
 			if (arrayBuffer.byteLength === 0) {
 				// No remote data yet, key is valid by default
@@ -83,7 +83,7 @@ async function pullFromRemote(cryptoKey: CryptoKey): Promise<boolean> {
 			method: "GET",
 		});
 
-		if (res.status === 204) {
+		if (res.status === 404) {
 			// No remote data yet, this is fine
 			return true;
 		}

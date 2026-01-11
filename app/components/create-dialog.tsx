@@ -1,4 +1,4 @@
-import { useCreateNote } from "@app/db/useCreateNote";
+import { useCreateNote } from "@app/db/use-create-note";
 import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
 import { useStore } from "@nanostores/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";

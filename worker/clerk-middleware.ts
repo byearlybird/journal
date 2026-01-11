@@ -1,4 +1,4 @@
-import { createClerkClient, type ClerkClient } from "@clerk/backend";
+import { type ClerkClient, createClerkClient } from "@clerk/backend";
 import { createMiddleware } from "hono/factory";
 
 // Define environment types for type-safe Hono context

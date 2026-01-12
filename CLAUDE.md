@@ -76,8 +76,7 @@ Project uses composite TypeScript setup with 4 config files:
 **Client-side database** (`app/db/`):
 - SQLite via `sqlocal` (WASM-based, runs in browser)
 - Kysely for type-safe query building
-- Schema: `note` table (id, content, created_at, eventstamp, tombstone)
-- `sync_meta` table tracks Lamport clock for conflict resolution
+- Schema: `note` table (id, content, created_at, updated_at, deleted_at)
 
 **Sync mechanism** (`app/store/sync.tsx`):
 - Polls remote every 10 seconds when signed in
@@ -85,14 +84,8 @@ Project uses composite TypeScript setup with 4 config files:
   1. Fetch encrypted database blob from R2
   2. Decrypt and merge into local database
   3. Encrypt local database and upload to R2
-- Uses eventstamps (Lamport timestamps) for last-write-wins conflict resolution
+- Uses `updated_at` timestamps for last-write-wins conflict resolution
 - Merge logic in `app/db/merger.ts` handles combining remote and local state
-
-**Eventstamps** (`app/db/clock.ts`):
-- Hybrid logical clock (HLC) implementation
-- Format: `{millisecondsSinceEpoch}-{sequence}`
-- Ensures total ordering of events across syncs
-- Stored in `sync_meta` table, advanced on each write
 
 **Migrations** (`app/db/migrations/`):
 - Kysely migrations manage schema evolution
@@ -125,7 +118,7 @@ R2 key format: `{userId}:journal`
 
 **Database context** (`app/db/db-provider.tsx`):
 - Wraps app in `DbProvider` + `QueryClientProvider`
-- Provides `useDb()` hook for database access and eventstamp generation
+- Provides `useDb()` hook for database access
 - Invalidates all queries on any mutation (acceptable for local-first data)
 
 ### Cloudflare Workers Configuration

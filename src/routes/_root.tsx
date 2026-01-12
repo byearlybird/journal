@@ -1,11 +1,9 @@
 import { CreateDialog } from "@app/components/create-dialog";
-import { CryptoKeyGuard } from "@app/components/crypto-key-guard";
 import { Navbar } from "@app/components/navbar";
-import { JournalPage } from "@app/components/pages/journal.page";
-import { NotFound } from "@app/components/pages/not-found.page";
-import { SettingsPage } from "@app/components/pages/settings.page";
 import { Sidebar } from "@app/components/sidebar";
-import { useCryptoKeyInit } from "@app/store/crypto-key";
+import { JournalPage } from "@app/pages/journal.page";
+import { NotFound } from "@app/pages/not-found.page";
+import { SettingsPage } from "@app/pages/settings.page";
 import { useSync } from "@app/store/sync";
 import { useStore } from "@nanostores/react";
 import { createRouter } from "@nanostores/router";
@@ -17,7 +15,6 @@ export const $router = createRouter({
 
 export function Root() {
 	useSync();
-	useCryptoKeyInit();
 
 	return (
 		<GlobalLayout>
@@ -52,11 +49,7 @@ function Content() {
 		case undefined:
 			return <NotFound />;
 		case "journal":
-			return (
-				<CryptoKeyGuard>
-					<JournalPage />
-				</CryptoKeyGuard>
-			);
+			return <JournalPage />;
 		case "settings":
 			return <SettingsPage />;
 		default:

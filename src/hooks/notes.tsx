@@ -1,4 +1,4 @@
-import type { NewNote } from "@app/db/db";
+import type { NewNote } from "@app/db";
 import { NotesService } from "@app/services";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -18,6 +18,6 @@ export function useNotesToday() {
 
 export function useCreateNote() {
 	return useMutation({
-		mutationFn: (note: NewNote) => NotesService.create(note),
+		mutationFn: (note: Pick<NewNote, "content">) => NotesService.create(note),
 	});
 }

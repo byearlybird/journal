@@ -1,3 +1,4 @@
+import type { R2Bucket } from "@cloudflare/workers-types";
 import { type ClerkClient, createClerkClient } from "@clerk/backend";
 import { createMiddleware } from "hono/factory";
 

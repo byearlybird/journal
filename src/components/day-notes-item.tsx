@@ -1,4 +1,4 @@
-import type { Note as DbNote } from "@app/db/db";
+import type { Note as DbNote } from "@app/db/schema";
 import { format, parse, parseISO } from "date-fns";
 
 export function DayNotesItem({

@@ -1,4 +1,4 @@
-import { db, type NewNote, type Note } from "@app/db/db";
+import { db, type NewNote, type Note } from "@app/db";
 import { format, parseISO } from "date-fns";
 import { sql } from "kysely";
 
@@ -7,7 +7,7 @@ export const NotesService = {
 		const notes = await db
 			.selectFrom("note")
 			.orderBy("created_at", "desc")
-			.where("deleted_at", "=", null)
+			.where("deleted_at", "is", null)
 			.selectAll()
 			.execute();
 
@@ -21,6 +21,8 @@ export const NotesService = {
 			}
 			grouped[date].push(note);
 		}
+
+		return grouped;
 	},
 	getToday: () => {
 		return db
@@ -31,17 +33,17 @@ export const NotesService = {
 			.selectAll()
 			.execute();
 	},
-	create: (note: NewNote) => {
+	create: (note: Pick<NewNote, "content">) => {
 		const now = new Date().toISOString();
-		return db
-			.insertInto("note")
-			.values({
-				id: crypto.randomUUID(),
-				content: note.content,
-				created_at: now,
-				updated_at: now,
-				deleted_at: null,
-			})
-			.execute();
+
+		const newNote: Note = {
+			id: crypto.randomUUID(),
+			content: note.content,
+			created_at: now,
+			updated_at: now,
+			deleted_at: null,
+		};
+
+		return db.insertInto("note").values(newNote).execute();
 	},
 };

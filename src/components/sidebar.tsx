@@ -1,5 +1,4 @@
 import { $router } from "@app/routes/_root";
-import { useCryptoKey } from "@app/store/crypto-key";
 import { useStore } from "@nanostores/react";
 import { type ConfigFromRouter, getPagePath } from "@nanostores/router";
 import {
@@ -14,16 +13,13 @@ import { openCreateDialog } from "./create-dialog";
 type RouterConfig = ConfigFromRouter<typeof $router>;
 type RouteName = keyof RouterConfig;
 export function Sidebar() {
-	const { isOkay } = useCryptoKey();
-
 	return (
 		<div className="flex h-full w-full flex-col border-r">
 			<div className="flex h-full flex-col gap-3 p-4">
 				<button
 					type="button"
 					onClick={() => openCreateDialog()}
-					disabled={!isOkay}
-					className="flex items-center gap-2 rounded-md px-1.5 py-1.5 transition-transform duration-100 ease-in-out active:scale-110 disabled:opacity-50"
+					className="flex items-center gap-2 rounded-md px-1.5 py-1.5 transition-transform duration-100 ease-in-out active:scale-110"
 				>
 					<span className="flex items-center justify-center rounded-full bg-yellow p-1 text-black">
 						<PencilSimpleLineIcon className="size-4" />

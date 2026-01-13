@@ -1,44 +1,31 @@
 import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
-import { useStore } from "@nanostores/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
-import { atom } from "nanostores";
 import { useRef, useState } from "react";
 import { useCreateNote } from "./use-notes";
 
-export const $isCreateDialogOpen = atom(false);
+type CreateDialogProps = {
+	open: boolean;
+	onClose: () => void;
+};
 
-export function openCreateDialog() {
-	$isCreateDialogOpen.set(true);
-}
-
-export function closeCreateDialog() {
-	$isCreateDialogOpen.set(false);
-}
-
-export function CreateDialog() {
+export function CreateDialog({ open, onClose }: CreateDialogProps) {
 	let hasFocused = false;
 	const { mutate: createNote } = useCreateNote();
 	const inputRef = useRef<HTMLTextAreaElement>(null);
-	const isOpen = useStore($isCreateDialogOpen);
 	const [content, setContent] = useState<string>("");
 
 	const handleSave = () => {
 		if (content.trim() === "") return;
 		createNote({ content: content.trim() });
 		setContent("");
-		closeCreateDialog();
+		onClose();
 	};
 
 	return (
 		<AnimatePresence>
-			{isOpen && (
-				<Dialog
-					static
-					open={isOpen}
-					onClose={closeCreateDialog}
-					className="relative z-50"
-				>
+			{open && (
+				<Dialog static open={open} onClose={onClose} className="relative z-50">
 					<motion.div
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
@@ -70,7 +57,7 @@ export function CreateDialog() {
 							<div className="right-0 left-0 flex justify-between gap-4 p-4">
 								<button
 									type="button"
-									onClick={closeCreateDialog}
+									onClick={onClose}
 									className="flex size-11 items-center justify-center rounded-full border"
 								>
 									<XIcon className="h-4 w-4" />

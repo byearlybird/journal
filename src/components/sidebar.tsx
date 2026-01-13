@@ -1,24 +1,19 @@
-import { openCreateDialog } from "@app/features/notes";
-import { $router } from "@app/routes/_root";
-import { useStore } from "@nanostores/react";
-import { type ConfigFromRouter, getPagePath } from "@nanostores/router";
-import {
-	BookOpenIcon,
-	GearIcon,
-	type Icon,
-	PencilSimpleLineIcon,
-} from "@phosphor-icons/react";
+import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
+import type { NavItemData } from "./navbar";
 
-type RouterConfig = ConfigFromRouter<typeof $router>;
-type RouteName = keyof RouterConfig;
-export function Sidebar() {
+type SidebarProps = {
+	navItems: NavItemData[];
+	onCreateClick: () => void;
+};
+
+export function Sidebar({ navItems, onCreateClick }: SidebarProps) {
 	return (
 		<div className="flex h-full w-full flex-col border-r">
 			<div className="flex h-full flex-col gap-3 p-4">
 				<button
 					type="button"
-					onClick={() => openCreateDialog()}
+					onClick={onCreateClick}
 					className="flex items-center gap-2 rounded-md px-1.5 py-1.5 transition-transform duration-100 ease-in-out active:scale-110"
 				>
 					<span className="flex items-center justify-center rounded-full bg-yellow p-1 text-black">
@@ -26,28 +21,21 @@ export function Sidebar() {
 					</span>
 					New entry
 				</button>
-				<NavItem page="journal" label="Journal" icon={BookOpenIcon} />
-				<div className="mt-auto">
-					<NavItem page="settings" label="Settings" icon={GearIcon} />
-				</div>
+				{navItems.map((item, index) =>
+					index === navItems.length - 1 ? (
+						<div key={item.href} className="mt-auto">
+							<NavItem {...item} />
+						</div>
+					) : (
+						<NavItem key={item.href} {...item} />
+					),
+				)}
 			</div>
 		</div>
 	);
 }
 
-function NavItem({
-	page,
-	label,
-	icon: Icon,
-}: {
-	page: RouteName;
-	label: string;
-	icon: Icon;
-}) {
-	const currentPage = useStore($router);
-	const href = getPagePath($router, page);
-	const isActive = currentPage?.route === page;
-
+function NavItem({ href, label, icon: Icon, isActive }: NavItemData) {
 	return (
 		<a
 			href={href}

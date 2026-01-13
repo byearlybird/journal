@@ -1,9 +1,8 @@
-import { Navbar, Sidebar } from "@app/components";
-import { CreateDialog } from "@app/features/notes";
 import { SyncProvider } from "@app/features/sync";
-import { JournalPage } from "@app/pages/journal.page";
-import { NotFound } from "@app/pages/not-found.page";
-import { SettingsPage } from "@app/pages/settings.page";
+import { AppLayout } from "@app/routes/app-layout";
+import { JournalPage } from "@app/routes/journal-page";
+import { NotFound } from "@app/routes/not-found-page";
+import { SettingsPage } from "@app/routes/settings-page";
 import { useStore } from "@nanostores/react";
 import { createRouter } from "@nanostores/router";
 
@@ -15,29 +14,10 @@ export const $router = createRouter({
 export function Root() {
 	return (
 		<SyncProvider>
-			<GlobalLayout>
+			<AppLayout>
 				<Content />
-			</GlobalLayout>
+			</AppLayout>
 		</SyncProvider>
-	);
-}
-
-function GlobalLayout({ children }: { children: React.ReactNode }) {
-	return (
-		<>
-			<div className="grid h-screen grid-cols-5">
-				<div className="hidden w-full md:block">
-					<Sidebar />
-				</div>
-				<div className="col-span-5 max-h-screen overflow-y-auto md:col-span-4">
-					{children}
-				</div>
-				<div className="md:hidden">
-					<Navbar />
-				</div>
-			</div>
-			<CreateDialog />
-		</>
 	);
 }
 

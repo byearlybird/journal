@@ -1,6 +1,6 @@
 import type { NewNote } from "@app/db";
-import { NotesService } from "@app/services";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { NotesService } from "./notes-service";
 
 export function useNotesGroupedByDate() {
 	return useQuery({

@@ -1,4 +1,6 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
+import { z } from "zod";
 import { type AppEnv, clerkMiddleware } from "./clerk-middleware";
 
 const app = new Hono<AppEnv>()
@@ -17,30 +19,29 @@ const app = new Hono<AppEnv>()
 			return c.json({ error: "Not found" }, 404);
 		}
 
-		return c.body(await object.arrayBuffer(), 200, {
-			"Content-Type": "application/octet-stream",
-		});
+		const data = await object.text();
+		return c.json({ data });
 	})
 	// PUT /api/journal - Write encrypted database
-	.put("/api/journal", async (c) => {
-		const userId = c.get("userId");
-		const storageKey = `${userId}:journal`;
+	.put(
+		"/api/journal",
+		zValidator(
+			"json",
+			z.object({
+				data: z.string(),
+			}),
+		),
+		async (c) => {
+			const userId = c.get("userId");
+			const storageKey = `${userId}:journal`;
 
-		try {
-			const arrayBuffer = await c.req.arrayBuffer();
-			await c.env.journal_bucket.put(storageKey, arrayBuffer);
+			const { data } = c.req.valid("json");
 
-			return c.json({ success: true }, 200);
-		} catch (error) {
-			return c.json(
-				{
-					error: "Invalid request body",
-					details: error instanceof Error ? error.message : String(error),
-				},
-				400,
-			);
-		}
-	});
+			await c.env.journal_bucket.put(storageKey, data);
+
+			return c.json({ success: true });
+		},
+	);
 
 export default app;
 export type AppType = typeof app;

@@ -1,5 +1,5 @@
-import type { R2Bucket } from "@cloudflare/workers-types";
 import { type ClerkClient, createClerkClient } from "@clerk/backend";
+import type { R2Bucket } from "@cloudflare/workers-types";
 import { createMiddleware } from "hono/factory";
 
 // Define environment types for type-safe Hono context

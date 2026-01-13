@@ -4,38 +4,33 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
-import { type Db, db } from "../db/db";
+import { useEffect, useState } from "react";
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
 	mutationCache: new MutationCache({
 		onSuccess: async () => {
-			// Invalidate all queries on any mutation. Should be fine because its all local data, inexpensive to re-fetch.
+			// Invalidate all queries on any mutation.
+			// Because all data is local, it's inexpensive to re-fetch.
 			queryClient.invalidateQueries();
 		},
 	}),
 });
 
 interface AppProviderProps {
-	loading: React.ReactNode;
+	loadingComponent: React.ReactNode;
+	errorComponent: React.ReactNode;
 	children: React.ReactNode;
 }
 
-const AppContext = createContext<{
-	db: Db;
-} | null>(null);
-
-export function useApp() {
-	const context = useContext(AppContext);
-	if (!context) {
-		throw new Error("useApp must be used within a AppProvider");
-	}
-	return context;
-}
-
-export function AppProvider({ loading, children }: AppProviderProps) {
+// TODO: Create Context to contain DB and/or Services for dependency injection.
+export function AppProvider({
+	loadingComponent,
+	errorComponent,
+	children,
+}: AppProviderProps) {
 	const [isInitializing, setIsInitializing] = useState(true);
+	const [error, setError] = useState<Error | null>(null);
 
 	useEffect(() => {
 		const runMigrations = async () => {
@@ -46,18 +41,22 @@ export function AppProvider({ loading, children }: AppProviderProps) {
 				const migrationError =
 					err instanceof Error ? err : new Error(String(err));
 
-				throw migrationError;
+				setError(migrationError);
 			}
 		};
 
 		runMigrations();
 	}, []);
 
+	if (error) {
+		return errorComponent;
+	}
+
+	if (isInitializing) {
+		return loadingComponent;
+	}
+
 	return (
-		<AppContext.Provider value={{ db }}>
-			<QueryClientProvider client={queryClient}>
-				{isInitializing ? loading : children}
-			</QueryClientProvider>
-		</AppContext.Provider>
+		<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 	);
 }

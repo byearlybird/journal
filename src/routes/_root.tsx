@@ -1,10 +1,9 @@
-import { CreateDialog } from "@app/components/create-dialog";
-import { Navbar } from "@app/components/navbar";
-import { Sidebar } from "@app/components/sidebar";
+import { Navbar, Sidebar } from "@app/components";
+import { CreateDialog } from "@app/features/notes";
+import { SyncProvider } from "@app/features/sync";
 import { JournalPage } from "@app/pages/journal.page";
 import { NotFound } from "@app/pages/not-found.page";
 import { SettingsPage } from "@app/pages/settings.page";
-import { useSync } from "@app/store/sync";
 import { useStore } from "@nanostores/react";
 import { createRouter } from "@nanostores/router";
 
@@ -14,12 +13,12 @@ export const $router = createRouter({
 });
 
 export function Root() {
-	useSync();
-
 	return (
-		<GlobalLayout>
-			<Content />
-		</GlobalLayout>
+		<SyncProvider>
+			<GlobalLayout>
+				<Content />
+			</GlobalLayout>
+		</SyncProvider>
 	);
 }
 

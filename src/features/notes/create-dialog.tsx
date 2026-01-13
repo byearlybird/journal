@@ -1,10 +1,10 @@
-import { useCreateNote } from "@app/hooks/notes";
 import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
 import { useStore } from "@nanostores/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { atom } from "nanostores";
 import { useRef, useState } from "react";
+import { useCreateNote } from "./use-notes";
 
 export const $isCreateDialogOpen = atom(false);
 

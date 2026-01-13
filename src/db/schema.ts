@@ -1,6 +1,5 @@
 import type { ColumnType, Insertable, Selectable, Updateable } from "kysely";
 
-// ColumnType<SelectType, InsertType, UpdateType>
 type MergableTable = {
 	id: ColumnType<string, string, never>;
 	created_at: string;

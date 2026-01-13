@@ -1,5 +1,8 @@
-import { DayNotesItem } from "@app/components/day-notes-item";
-import { useNotesGroupedByDate, useNotesToday } from "@app/hooks/notes";
+import {
+	DayNotesItem,
+	useNotesGroupedByDate,
+	useNotesToday,
+} from "@app/features/notes";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
 import { useRef } from "react";

@@ -1,3 +1,4 @@
+import { openCreateDialog } from "@app/features/notes";
 import { $router } from "@app/routes/_root";
 import { useStore } from "@nanostores/react";
 import { type ConfigFromRouter, getPagePath } from "@nanostores/router";
@@ -8,7 +9,6 @@ import {
 	PencilSimpleLineIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { openCreateDialog } from "./create-dialog";
 
 type RouterConfig = ConfigFromRouter<typeof $router>;
 type RouteName = keyof RouterConfig;

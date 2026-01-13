@@ -24,14 +24,16 @@ export const NotesService = {
 
 		return grouped;
 	},
-	getToday: () => {
-		return db
+	getToday: async () => {
+		const notes = await db
 			.selectFrom("note")
 			.where(sql`DATE(created_at)`, "=", sql`DATE('now')`)
-			.where("deleted_at", "=", null)
+			.where("deleted_at", "is", null)
 			.orderBy("created_at", "desc")
 			.selectAll()
 			.execute();
+
+		return notes;
 	},
 	create: (note: Pick<NewNote, "content">) => {
 		const now = new Date().toISOString();

@@ -3,7 +3,7 @@ import { dump, merge } from "@app/db/merger";
 import { hc } from "hono/client";
 import type { AppType } from "../../../worker/index";
 
-const client = hc<AppType>("/api/journal");
+const client = hc<AppType>("/");
 
 /**
  * Fetches encrypted data from remote server.
@@ -84,14 +84,18 @@ export async function syncPush(): Promise<boolean> {
 
 /**
  * Performs a full sync: pull remote changes, then push local changes.
- * Continues to push even if pull fails.
+ * Skips pushing if pull fails to avoid out-of-date overwrites.
  * Returns true if pull succeeded (caller may want to refresh UI).
  */
 export async function sync(): Promise<boolean> {
 	if (!navigator.onLine) return false;
 
 	const pullSucceeded = await syncPull();
-	await syncPush();
+
+	// Only push if pull succeeded to avoid conflicts
+	if (pullSucceeded) {
+		await syncPush();
+	}
 
 	return pullSucceeded;
 }

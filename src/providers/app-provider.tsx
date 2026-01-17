@@ -1,4 +1,4 @@
-import { migrator } from "@app/db/migrator";
+import { createPerister, store } from "@app/store/store";
 import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
@@ -19,24 +19,22 @@ interface AppProviderProps {
   children: React.ReactNode;
 }
 
+const perister = createPerister(store, "notes");
+
 // TODO: Create Context to contain DB and/or Services for dependency injection.
 export function AppProvider({ loadingComponent, errorComponent, children }: AppProviderProps) {
   const [isInitializing, setIsInitializing] = useState(true);
+  const [initPromise] = useState(() => perister.load());
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const runMigrations = async () => {
-      try {
-        await migrator.migrateToLatest();
+    initPromise
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
         setIsInitializing(false);
-      } catch (err) {
-        const migrationError = err instanceof Error ? err : new Error(String(err));
-
-        setError(migrationError);
-      }
-    };
-
-    runMigrations();
+      });
   }, []);
 
   if (error) {

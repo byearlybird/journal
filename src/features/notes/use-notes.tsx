@@ -1,4 +1,4 @@
-import type { NewNote } from "@app/db";
+import type { NewNote } from "@app/store/store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NotesService } from "./notes-service";
 

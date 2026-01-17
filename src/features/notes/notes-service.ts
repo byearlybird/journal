@@ -1,20 +1,16 @@
-import { db, type NewNote, type Note } from "@app/db";
-import { format, parseISO } from "date-fns";
-import { sql } from "kysely";
+import { store, type NewNote, type Note } from "@app/store/store";
+import { compareDesc, format, isToday, parseISO } from "date-fns";
 
 export const NotesService = {
-  getAllGroupedByDate: async () => {
-    const notes = await db
-      .selectFrom("note")
-      .orderBy("created_at", "desc")
-      .where("deleted_at", "is", null)
-      .selectAll()
-      .execute();
+  getAllGroupedByDate: () => {
+    const notes = store
+      .getAll("notes")
+      .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 
     const grouped: Record<string, Note[]> = {};
 
     for (const note of notes) {
-      const noteDate = parseISO(note.created_at);
+      const noteDate = parseISO(note.createdAt);
       const date = format(noteDate, "yyyy-MM-dd");
       if (!grouped[date]) {
         grouped[date] = [];
@@ -24,28 +20,15 @@ export const NotesService = {
 
     return grouped;
   },
-  getToday: async () => {
-    const notes = await db
-      .selectFrom("note")
-      .where(sql`DATE(created_at)`, "=", sql`DATE('now')`)
-      .where("deleted_at", "is", null)
-      .orderBy("created_at", "desc")
-      .selectAll()
-      .execute();
-
-    return notes;
+  getToday: () => {
+    return store
+      .getAll("notes", {
+        where: (note) => isToday(parseISO(note.createdAt)),
+      })
+      .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
   },
-  create: (note: Pick<NewNote, "content">) => {
-    const now = new Date().toISOString();
-
-    const newNote: Note = {
-      id: crypto.randomUUID(),
-      content: note.content,
-      created_at: now,
-      updated_at: now,
-      deleted_at: null,
-    };
-
-    return db.insertInto("note").values(newNote).execute();
+  create: (note: NewNote) => {
+    store.add("notes", note);
+    return Promise.resolve();
   },
 };

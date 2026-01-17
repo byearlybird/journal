@@ -1,5 +1,4 @@
-import { db } from "@app/db/db";
-import { dump, merge } from "@app/db/merger";
+import { store } from "@app/store/store";
 import { hc } from "hono/client";
 import type { AppType } from "../../../worker/index";
 
@@ -60,7 +59,7 @@ export async function syncPull(): Promise<boolean> {
   }
 
   try {
-    await merge(db, remoteData);
+    store.merge(JSON.parse(remoteData));
     return true;
   } catch (err) {
     console.error("Failed to merge remote data:", err);
@@ -74,10 +73,10 @@ export async function syncPull(): Promise<boolean> {
  */
 export async function syncPush(): Promise<boolean> {
   try {
-    const localData = await dump(db);
+    const localData = JSON.stringify(store.getSnapshot());
     return await uploadToRemote(localData);
   } catch (err) {
-    console.error("Failed to dump database:", err);
+    console.error("Failed to dump store:", err);
     return false;
   }
 }

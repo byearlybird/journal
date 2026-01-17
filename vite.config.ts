@@ -10,11 +10,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react(), cloudflare(), tailwindcss(), sqlocal()],
-	resolve: {
-		alias: {
-			"@app": path.resolve(__dirname, "./src"),
-			"@worker": path.resolve(__dirname, "./worker"),
-		},
-	},
+  plugins: [react(), cloudflare(), tailwindcss(), sqlocal()],
+  resolve: {
+    alias: {
+      "@app": path.resolve(__dirname, "./src"),
+      "@worker": path.resolve(__dirname, "./worker"),
+    },
+  },
 });

@@ -10,20 +10,20 @@ const client = hc<AppType>("/");
  * Returns null if fetch fails.
  */
 async function fetchFromRemote(): Promise<string | null> {
-	try {
-		const response = await client.api.journal.$get();
+  try {
+    const response = await client.api.journal.$get();
 
-		if (!response.ok) {
-			console.error("Failed to fetch from remote:", response.status);
-			return null;
-		}
+    if (!response.ok) {
+      console.error("Failed to fetch from remote:", response.status);
+      return null;
+    }
 
-		const data = await response.json();
-		return data.data;
-	} catch (err) {
-		console.error("Failed to fetch from remote:", err);
-		return null;
-	}
+    const data = await response.json();
+    return data.data;
+  } catch (err) {
+    console.error("Failed to fetch from remote:", err);
+    return null;
+  }
 }
 
 /**
@@ -31,21 +31,21 @@ async function fetchFromRemote(): Promise<string | null> {
  * Returns true if successful.
  */
 async function uploadToRemote(data: string): Promise<boolean> {
-	try {
-		const response = await client.api.journal.$put({
-			json: { data },
-		});
+  try {
+    const response = await client.api.journal.$put({
+      json: { data },
+    });
 
-		if (!response.ok) {
-			console.error("Failed to upload to remote:", response.status);
-			return false;
-		}
+    if (!response.ok) {
+      console.error("Failed to upload to remote:", response.status);
+      return false;
+    }
 
-		return true;
-	} catch (err) {
-		console.error("Failed to upload to remote:", err);
-		return false;
-	}
+    return true;
+  } catch (err) {
+    console.error("Failed to upload to remote:", err);
+    return false;
+  }
 }
 
 /**
@@ -53,19 +53,19 @@ async function uploadToRemote(data: string): Promise<boolean> {
  * Returns true if successful.
  */
 export async function syncPull(): Promise<boolean> {
-	const remoteData = await fetchFromRemote();
+  const remoteData = await fetchFromRemote();
 
-	if (!remoteData) {
-		return false;
-	}
+  if (!remoteData) {
+    return false;
+  }
 
-	try {
-		await merge(db, remoteData);
-		return true;
-	} catch (err) {
-		console.error("Failed to merge remote data:", err);
-		return false;
-	}
+  try {
+    await merge(db, remoteData);
+    return true;
+  } catch (err) {
+    console.error("Failed to merge remote data:", err);
+    return false;
+  }
 }
 
 /**
@@ -73,13 +73,13 @@ export async function syncPull(): Promise<boolean> {
  * Returns true if successful.
  */
 export async function syncPush(): Promise<boolean> {
-	try {
-		const localData = await dump(db);
-		return await uploadToRemote(localData);
-	} catch (err) {
-		console.error("Failed to dump database:", err);
-		return false;
-	}
+  try {
+    const localData = await dump(db);
+    return await uploadToRemote(localData);
+  } catch (err) {
+    console.error("Failed to dump database:", err);
+    return false;
+  }
 }
 
 /**
@@ -88,14 +88,14 @@ export async function syncPush(): Promise<boolean> {
  * Returns true if pull succeeded (caller may want to refresh UI).
  */
 export async function sync(): Promise<boolean> {
-	if (!navigator.onLine) return false;
+  if (!navigator.onLine) return false;
 
-	const pullSucceeded = await syncPull();
+  const pullSucceeded = await syncPull();
 
-	// Only push if pull succeeded to avoid conflicts
-	if (pullSucceeded) {
-		await syncPush();
-	}
+  // Only push if pull succeeded to avoid conflicts
+  if (pullSucceeded) {
+    await syncPush();
+  }
 
-	return pullSucceeded;
+  return pullSucceeded;
 }

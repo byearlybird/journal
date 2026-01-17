@@ -2,50 +2,50 @@
 @import "tailwindcss";
 
 @theme {
-	/* Fonts */
-	--font-sans: "Karla", sans-serif;
-	--font-serif: "Lora", serif;
+  /* Fonts */
+  --font-sans: "Karla", sans-serif;
+  --font-serif: "Lora", serif;
 
-	/* Colors */
-	--color-*: initial;
+  /* Colors */
+  --color-*: initial;
 
-	--color-black: #191919;
-	--color-graphite: #262625;
-	--color-white: #fafaf7;
-	--color-yellow: #c1c05c;
+  --color-black: #191919;
+  --color-graphite: #262625;
+  --color-white: #fafaf7;
+  --color-yellow: #c1c05c;
 
-	/* Radii */
-	--radius-*: initial;
-	--radius-sm: 8px; /* inputs, buttons */
-	--radius-md: 12px; /* cards */
-	--radius-lg: 16px; /* modals */
-	--radius-full: 9999px;
+  /* Radii */
+  --radius-*: initial;
+  --radius-sm: 8px; /* inputs, buttons */
+  --radius-md: 12px; /* cards */
+  --radius-lg: 16px; /* modals */
+  --radius-full: 9999px;
 }
 
 /* Safe area CSS variables (not theme, just standard vars) */
 :root {
-	--safe-top: env(safe-area-inset-top, 0px);
-	--safe-bottom: env(safe-area-inset-bottom, 0px);
-	--safe-left: env(safe-area-inset-left, 0px);
-	--safe-right: env(safe-area-inset-right, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 @layer base {
-	html {
-		background-color: var(--color-graphite);
-		font-family: var(--font-sans);
-		color: color-mix(in oklab, var(--color-white) 90%, transparent);
-	}
+  html {
+    background-color: var(--color-graphite);
+    font-family: var(--font-sans);
+    color: color-mix(in oklab, var(--color-white) 90%, transparent);
+  }
 
-	body {
-		position: relative;
-	}
+  body {
+    position: relative;
+  }
 
-	#root {
-		isolation: isolate;
-	}
+  #root {
+    isolation: isolate;
+  }
 
-	* {
-		@apply divide-white/10 border-white/10;
-	}
+  * {
+    @apply divide-white/10 border-white/10;
+  }
 }

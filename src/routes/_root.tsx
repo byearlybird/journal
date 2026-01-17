@@ -7,31 +7,31 @@ import { useStore } from "@nanostores/react";
 import { createRouter } from "@nanostores/router";
 
 export const $router = createRouter({
-	journal: "/",
-	settings: "/settings",
+  journal: "/",
+  settings: "/settings",
 });
 
 export function Root() {
-	return (
-		<SyncProvider>
-			<AppLayout>
-				<Content />
-			</AppLayout>
-		</SyncProvider>
-	);
+  return (
+    <SyncProvider>
+      <AppLayout>
+        <Content />
+      </AppLayout>
+    </SyncProvider>
+  );
 }
 
 function Content() {
-	const page = useStore($router);
+  const page = useStore($router);
 
-	switch (page?.route) {
-		case undefined:
-			return <NotFound />;
-		case "journal":
-			return <JournalPage />;
-		case "settings":
-			return <SettingsPage />;
-		default:
-			return null;
-	}
+  switch (page?.route) {
+    case undefined:
+      return <NotFound />;
+    case "journal":
+      return <JournalPage />;
+    case "settings":
+      return <SettingsPage />;
+    default:
+      return null;
+  }
 }

@@ -9,17 +9,16 @@ A journaling application with end-to-end encryption, client-side SQLite storage,
 ## Commands
 
 ### Development
+
 - Start dev server: `bun run dev` - Runs Vite dev server on localhost
-- Format/lint: `bun run check` - Runs Biome formatter/linter with auto-fix
+- Lint: `bun run lint` - Runs oxlint
+- Format: `bun run fmt` - Runs oxfmt formatter
 
 ### Build & Deploy
+
 - Production build: `bun run build` - Compiles TypeScript and builds both client (Vite) and worker (Wrangler)
 - Preview build: `bun run preview` - Preview production build locally
 - Deploy: Use Wrangler commands for Cloudflare Workers deployment
-
-### Linting
-- Biome is configured with tab indentation, double quotes, and React recommended rules
-- Uses `useSortedClasses` for Tailwind class ordering
 
 ## Architecture
 
@@ -44,6 +43,7 @@ A journaling application with end-to-end encryption, client-side SQLite storage,
 ### Path Aliases
 
 TypeScript path aliases configured in `vite.config.ts`:
+
 - `@app/*` → `./app/*`
 - `@worker/*` → `./worker/*`
 - `@lib/*` → `./lib/*`
@@ -51,6 +51,7 @@ TypeScript path aliases configured in `vite.config.ts`:
 ### TypeScript Configuration
 
 Project uses composite TypeScript setup with 4 config files:
+
 - `tsconfig.json` - Root references file
 - `tsconfig.app.json` - Client app config
 - `tsconfig.worker.json` - Worker config
@@ -67,6 +68,7 @@ Project uses composite TypeScript setup with 4 config files:
 4. Worker only handles opaque encrypted blobs in R2
 
 **Crypto utilities** (`lib/crypto.ts`):
+
 - `deriveKey()` - PBKDF2 key derivation from passphrase
 - `encrypt()/decrypt()` - Text encryption/decryption
 - `encryptFile()/decryptFile()` - Binary data encryption (for database files)
@@ -74,11 +76,13 @@ Project uses composite TypeScript setup with 4 config files:
 ### Database & Sync
 
 **Client-side database** (`app/db/`):
+
 - SQLite via `sqlocal` (WASM-based, runs in browser)
 - Kysely for type-safe query building
 - Schema: `note` table (id, content, created_at, updated_at, deleted_at)
 
 **Sync mechanism** (`app/store/sync.tsx`):
+
 - Polls remote every 10 seconds when signed in
 - Pull-merge-push strategy:
   1. Fetch encrypted database blob from R2
@@ -88,6 +92,7 @@ Project uses composite TypeScript setup with 4 config files:
 - Merge logic in `app/db/merger.ts` handles combining remote and local state
 
 **Migrations** (`app/db/migrations/`):
+
 - Kysely migrations manage schema evolution
 - Run automatically on app load via `DbProvider`
 - Add new migrations as `YYYY-MM-DD-description.ts` in `app/db/migrations/`
@@ -95,6 +100,7 @@ Project uses composite TypeScript setup with 4 config files:
 ### Authentication
 
 **Clerk integration**:
+
 - Client uses `@clerk/clerk-react` with `ClerkProvider` in `app/main.tsx`
 - Worker middleware (`worker/clerk-middleware.ts`) validates session tokens
 - Middleware extracts `userId` and attaches to Hono context
@@ -103,6 +109,7 @@ Project uses composite TypeScript setup with 4 config files:
 ### API Endpoints
 
 Worker exposes:
+
 - `GET /api/status` - Public health check
 - `GET /api/journal` - Download encrypted database for current user
 - `PUT /api/journal` - Upload encrypted database for current user
@@ -112,11 +119,13 @@ R2 key format: `{userId}:journal`
 ### State Management
 
 **Client state** (`app/store/`):
+
 - `crypto-key.tsx` - Stores derived encryption key in memory (nanostore atom)
 - `sync.tsx` - Handles background sync polling and crypto key validation
 - TanStack Query manages server state and mutations
 
 **Database context** (`app/db/db-provider.tsx`):
+
 - Wraps app in `DbProvider` + `QueryClientProvider`
 - Provides `useDb()` hook for database access
 - Invalidates all queries on any mutation (acceptable for local-first data)
@@ -124,11 +133,13 @@ R2 key format: `{userId}:journal`
 ### Cloudflare Workers Configuration
 
 **`wrangler.jsonc`**:
+
 - Worker entry point: `worker/index.ts`
 - R2 bucket binding: `journal_bucket`
 - Assets serve as SPA (single-page-application routing)
 
 **Environment variables** (`.env`/`.dev.vars`):
+
 - `VITE_CLERK_PUBLISHABLE_KEY` - Clerk public key
 - `CLERK_SECRET_KEY` - Clerk secret key (worker only)
 

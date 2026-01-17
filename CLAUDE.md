@@ -10,14 +10,14 @@ A journaling application with end-to-end encryption, client-side SQLite storage,
 
 ### Development
 
-- Start dev server: `bun run dev` - Runs Vite dev server on localhost
-- Lint: `bun run lint` - Runs oxlint
-- Format: `bun run fmt` - Runs oxfmt formatter
+- Start dev server: `pnpm dev` - Runs Vite dev server on localhost
+- Lint: `pnpm lint` - Runs oxlint
+- Format: `pnpm fmt` - Runs oxfmt formatter
 
 ### Build & Deploy
 
-- Production build: `bun run build` - Compiles TypeScript and builds both client (Vite) and worker (Wrangler)
-- Preview build: `bun run preview` - Preview production build locally
+- Production build: `pnpm build` - Compiles TypeScript and builds both client (Vite) and worker (Wrangler)
+- Preview build: `pnpm preview` - Preview production build locally
 - Deploy: Use Wrangler commands for Cloudflare Workers deployment
 
 ## Architecture

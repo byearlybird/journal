@@ -8,13 +8,14 @@ A journaling app.
 - `app/` - Client web-app code
 - `lib/` - Shared and runtime-agnostic code
 
-## Development (Bun)
+## Development
 
-- Install deps: `bun install`
-- Run locally: `bun run dev`
-- Format/lint (writes fixes): `bun run check`
+- Install deps: `pnpm install`
+- Run locally: `pnpm dev`
+- Lint: `pnpm lint`
+- Format: `pnpm fmt`
 
 ## Build
 
-- Production build: `bun run build`
-- Preview build: `bun run preview`
+- Production build: `pnpm build`
+- Preview build: `pnpm preview`

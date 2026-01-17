@@ -8,29 +8,30 @@
 - `dist/`: Build output (generated; do not edit by hand).
 - `.wrangler/`: Local Wrangler state/logs (generated; safe to delete).
 
-## Build, Test, and Development Commands (Bun Only)
+## Build, Test, and Development Commands
 
-Always use Bun for installs and scripts (no npm/pnpm/yarn).
+Always use pnpm for installs and scripts.
 
-- Install dependencies: `bun install`
-- Run dev server: `bun run dev`
-- Typecheck + build: `bun run build` (runs `tsc -b` then `vite build`)
-- Preview production build: `bun run preview`
-- Format/lint (writes fixes): `bun run check` (Biome)
+- Install dependencies: `pnpm install`
+- Run dev server: `pnpm dev`
+- Typecheck + build: `pnpm build` (runs `tsc -b` then `vite build`)
+- Preview production build: `pnpm preview`
+- Lint: `pnpm lint` (oxlint)
+- Format: `pnpm fmt` (oxfmt)
 
 ## Coding Style & Naming Conventions
 
 - Language: TypeScript (ESM) + React.
-- Formatting/linting: Biome (`biome.json`) with tab indentation and double quotes.
-- Prefer small, focused modules; keep UI in `src/` and Worker-only logic in `worker/`.
-- CSS Modules use `*.module.css`; generated typings (`*.d.ts`) are committed—regenerate by running the build if needed.
+- Formatting/linting: oxlint and oxfmt with consistent code style.
+- Prefer small, focused modules; keep UI in `app/` and Worker-only logic in `worker/`.
+- CSS: Tailwind CSS v4 for styling.
 
 ## Testing Guidelines
 
 No automated test setup is currently configured in this repo.
 
-- If you add tests, prefer Bun’s runner (`bun test`) and name files `*.test.ts` / `*.test.tsx`.
-- Place tests next to code (e.g. `src/foo.test.ts`) unless a dedicated test directory is introduced.
+- If you add tests, prefer vitest and name files `*.test.ts` / `*.test.tsx`.
+- Place tests next to code (e.g. `app/foo.test.ts`) unless a dedicated test directory is introduced.
 
 ## Commit & Pull Request Guidelines
 

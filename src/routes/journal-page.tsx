@@ -5,8 +5,8 @@ import { useRef } from "react";
 
 export function JournalPage() {
   const scrollRef = useRef(null);
-  const { data: todayNotes = [] } = useNotesToday();
-  const { data: allNotes = {} } = useNotesGroupedByDate();
+  const todayNotes = useNotesToday();
+  const allNotes = useNotesGroupedByDate();
 
   return (
     <TabGroup defaultIndex={0}>

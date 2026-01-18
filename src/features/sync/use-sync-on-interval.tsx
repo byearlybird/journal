@@ -18,7 +18,11 @@ export function useSyncOnInterval() {
     }
 
     intervalRef.current = setInterval(() => {
-      sync();
+      sync().then((result) => {
+        if (!result.ok) {
+          console.error("Sync failed:", result.error);
+        }
+      });
     }, POLL_REMOTE_INTERVAL_MS);
 
     return () => {

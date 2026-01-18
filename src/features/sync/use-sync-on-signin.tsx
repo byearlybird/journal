@@ -6,8 +6,12 @@ export function useSyncOnSignin() {
   const { isSignedIn } = useSession();
 
   useEffect(() => {
-    if (isSignedIn) {
-      sync();
-    }
+    if (!isSignedIn) return;
+
+    sync().then((result) => {
+      if (!result.ok) {
+        console.error("Sync failed:", result.error);
+      }
+    });
   }, [isSignedIn]);
 }

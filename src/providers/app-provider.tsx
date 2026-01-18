@@ -1,17 +1,5 @@
-import { migrator } from "@app/db/migrator";
-import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createPerister, store } from "@app/store";
 import { useEffect, useState } from "react";
-
-// Create a QueryClient instance
-const queryClient = new QueryClient({
-  mutationCache: new MutationCache({
-    onSuccess: async () => {
-      // Invalidate all queries on any mutation.
-      // Because all data is local, it's inexpensive to re-fetch.
-      queryClient.invalidateQueries();
-    },
-  }),
-});
 
 interface AppProviderProps {
   loadingComponent: React.ReactNode;
@@ -19,24 +7,21 @@ interface AppProviderProps {
   children: React.ReactNode;
 }
 
-// TODO: Create Context to contain DB and/or Services for dependency injection.
+const persister = createPerister(store, "notes");
+
 export function AppProvider({ loadingComponent, errorComponent, children }: AppProviderProps) {
   const [isInitializing, setIsInitializing] = useState(true);
+  const [initPromise] = useState(() => persister.load());
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const runMigrations = async () => {
-      try {
-        await migrator.migrateToLatest();
+    initPromise
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
         setIsInitializing(false);
-      } catch (err) {
-        const migrationError = err instanceof Error ? err : new Error(String(err));
-
-        setError(migrationError);
-      }
-    };
-
-    runMigrations();
+      });
   }, []);
 
   if (error) {
@@ -47,5 +32,5 @@ export function AppProvider({ loadingComponent, errorComponent, children }: AppP
     return loadingComponent;
   }
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return children;
 }

@@ -1,9 +1,14 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { DayNotesItem, useNotesGroupedByDate, useNotesToday } from "@app/features/notes";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
 import { useRef } from "react";
 
-export function JournalPage() {
+export const Route = createFileRoute("/")({
+  component: JournalPage,
+});
+
+function JournalPage() {
   const scrollRef = useRef(null);
   const todayNotes = useNotesToday();
   const allNotes = useNotesGroupedByDate();

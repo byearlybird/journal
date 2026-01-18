@@ -1,27 +1,46 @@
 import { Navbar, type NavItemData, Sidebar } from "@app/components";
 import { CreateDialog } from "@app/features/notes";
-import { $router } from "@app/routes/_root";
-import { useStore } from "@nanostores/react";
-import { getPagePath } from "@nanostores/router";
+import { useRouterState } from "@tanstack/react-router";
 import { BookOpenIcon, GearIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { SyncProvider } from "@app/features/sync";
 
-export function AppLayout({ children }: { children: React.ReactNode }) {
-  const currentPage = useStore($router);
+export const Route = createRootRoute({
+  component: RootComponent,
+  notFoundComponent: NotFoundComponent,
+});
+
+function RootComponent() {
+  return (
+    <SyncProvider>
+      <AppLayout>
+        <Outlet />
+      </AppLayout>
+    </SyncProvider>
+  );
+}
+
+function NotFoundComponent() {
+  return <div className="mx-auto max-w-3xl p-4 text-white">404 - Page not found</div>;
+}
+
+function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const navItems: NavItemData[] = [
     {
-      href: getPagePath($router, "journal"),
+      href: "/",
       label: "Journal",
       icon: BookOpenIcon,
-      isActive: currentPage?.route === "journal",
+      isActive: pathname === "/",
     },
     {
-      href: getPagePath($router, "settings"),
+      href: "/settings",
       label: "Settings",
       icon: GearIcon,
-      isActive: currentPage?.route === "settings",
+      isActive: pathname === "/settings",
     },
   ];
 

@@ -27,3 +27,4 @@ dist-ssr
 .dev.vars*
 *.module.css.d.ts
 .env
+src/routeTree.gen.ts

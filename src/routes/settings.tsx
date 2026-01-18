@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import {
   SignInButton as ClerkSignInButton,
   SignOutButton as ClerkSignOutButton,
@@ -6,7 +7,11 @@ import {
 } from "@clerk/clerk-react";
 import { SignInIcon, SignOutIcon } from "@phosphor-icons/react";
 
-export function SettingsPage() {
+export const Route = createFileRoute("/settings")({
+  component: SettingsPage,
+});
+
+function SettingsPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-4 p-4">
       <article className="grid grid-cols-2 items-center rounded-md border p-4">

@@ -1,18 +1,29 @@
 import { ENV } from "@app/env";
-import { Root } from "@app/routes/_root";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ErrorComponent, Loading } from "./components";
 import { AppProvider } from "./providers";
+import { routeTree } from "./routeTree.gen";
 import "./main.css";
+
+// Create router instance
+const router = createRouter({ routeTree });
+
+// TypeScript: Register router type
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 // biome-ignore lint/style/noNonNullAssertion: we know the element is always present
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY}>
       <AppProvider loadingComponent={<AppLoading />} errorComponent={<AppError />}>
-        <Root />
+        <RouterProvider router={router} />
       </AppProvider>
     </ClerkProvider>
   </StrictMode>,

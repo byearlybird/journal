@@ -21,6 +21,13 @@ export function CreateDialog({ open, onClose }: CreateDialogProps) {
   const [entryType, setEntryType] = useState<EntryType>("note");
   const [keepOpen, setKeepOpen] = useState(false);
 
+  const handleClose = () => {
+    setContent("");
+    setEntryType("note");
+    setKeepOpen(false);
+    onClose();
+  };
+
   const handleSave = () => {
     if (content.trim() === "") return;
 
@@ -32,14 +39,14 @@ export function CreateDialog({ open, onClose }: CreateDialogProps) {
 
     setContent("");
     if (!keepOpen) {
-      onClose();
+      handleClose();
     }
   };
 
   return (
     <AnimatePresence>
       {open && (
-        <Dialog static open={open} onClose={onClose} className="relative z-50">
+        <Dialog static open={open} onClose={handleClose} className="relative z-50">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

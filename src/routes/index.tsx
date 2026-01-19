@@ -9,7 +9,6 @@ import {
 } from "@app/features/tasks";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
-import { Pill } from "@app/components/pill";
 
 export const Route = createFileRoute("/")({
   component: JournalPage,
@@ -20,16 +19,20 @@ function JournalPage() {
   const todayTasks = useTasksToday();
   const pastDueTasks = useIncompletePastDueTasks();
   const allEntries = useEntriesGroupedByDate();
-  const { mutate: updateTaskStatus } = useUpdateTaskStatus();
+  const updateTaskStatus = useUpdateTaskStatus();
 
   return (
-    <TabGroup defaultIndex={0} className="max-w-6xl">
+    <TabGroup defaultIndex={0}>
       <TabList className={"sticky top-0 z-10 flex gap-4 bg-graphite/80 px-4 py-2 backdrop-blur"}>
-        <Tab as={Pill}>Today</Tab>
-        <Tab as={Pill}>All Entries</Tab>
+        <Tab className="rounded-full px-3.5 py-2 text-white/70 transition-all active:scale-95 data-selected:bg-black/90 data-selected:text-white/90">
+          Today
+        </Tab>
+        <Tab className="rounded-full px-3.5 py-2 text-white/70 transition-all active:scale-95 data-selected:bg-black/90 data-selected:text-white/90">
+          All Entries
+        </Tab>
       </TabList>
       <TabPanels>
-        <TabPanel className="px-4 py-2">
+        <TabPanel className="px-4 py-2 max-w-6xl">
           <div className="flex flex-col-reverse gap-4 lg:flex-row">
             {/* Notes section - left on large screens, bottom on small screens */}
             <div className="flex-1">
@@ -63,7 +66,7 @@ function JournalPage() {
             )}
           </div>
         </TabPanel>
-        <TabPanel className="flex flex-col gap-4 p-4">
+        <TabPanel className="flex flex-col gap-4 p-4 max-w-3xl">
           {Object.entries(allEntries).map(([date, entries]) => (
             <DayEntriesItem key={date} date={date} entries={entries} />
           ))}

@@ -59,17 +59,13 @@ export function useIncompletePastDueTasks() {
 }
 
 export function useCreateTask() {
-  const createTask = useCallback((task: Pick<NewTask, "content">) => {
+  return useCallback((task: Pick<NewTask, "content">) => {
     store.add("tasks", task);
   }, []);
-
-  return { mutate: createTask };
 }
 
 export function useUpdateTaskStatus() {
-  const updateTaskStatus = useCallback((id: string, status: Task["status"]) => {
+  return useCallback((id: string, status: Task["status"]) => {
     store.update("tasks", id, { status });
   }, []);
-
-  return { mutate: updateTaskStatus };
 }

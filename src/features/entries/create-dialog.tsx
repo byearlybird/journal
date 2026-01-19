@@ -1,17 +1,16 @@
-import { cx } from "cva";
+import clsx from "clsx";
 import { Button, Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useCreateNote } from "../notes/use-notes";
 import { useCreateTask } from "../tasks/use-tasks";
-import { Pill } from "@app/components/pill";
 import { Switch } from "@app/components/switch";
 import type { EntryType } from "./types";
 
 export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { mutate: createNote } = useCreateNote();
-  const { mutate: createTask } = useCreateTask();
+  const createNote = useCreateNote();
+  const createTask = useCreateTask();
   const [content, setContent] = useState<string>("");
   const [entryType, setEntryType] = useState<EntryType>("note");
   const [keepOpen, setKeepOpen] = useState(false);
@@ -137,7 +136,7 @@ function ToolbarButton({
     <Button
       type="button"
       onClick={onClick}
-      className={cx(
+      className={clsx(
         "flex px-2.5 py-1.5 items-center justify-center rounded-lg text-white/50 data-active:scale-95 transition-all",
         selected && "bg-black/70 text-white/90",
       )}

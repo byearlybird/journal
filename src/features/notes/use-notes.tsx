@@ -55,9 +55,7 @@ export function useNotesToday() {
 }
 
 export function useCreateNote() {
-  const createNote = useCallback((note: Pick<NewNote, "content">) => {
+  return useCallback((note: Pick<NewNote, "content">) => {
     store.add("notes", note);
   }, []);
-
-  return { mutate: createNote };
 }

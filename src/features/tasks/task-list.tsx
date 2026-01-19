@@ -30,6 +30,7 @@ function TaskItem({ task, onStatusChange }: TaskItemProps) {
 
   return (
     <div className="flex gap-3 py-2">
+      {/* TODO: use checkbox from headlessui */}
       <button
         type="button"
         onClick={toggleComplete}

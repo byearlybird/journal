@@ -36,12 +36,24 @@ const getIncompleteTasks = createMemoizedSelector((): Task[] => {
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
 
+const getIncompletePastDueTasks = createMemoizedSelector((): Task[] => {
+  return store
+    .getAll("tasks", {
+      where: (task) => task.status === "incomplete" && !isToday(parseISO(task.createdAt))
+    })
+    .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
+});
+
 export function useTasksToday() {
   return useSyncExternalStore(subscribe, getTasksToday);
 }
 
 export function useIncompleteTasks() {
   return useSyncExternalStore(subscribe, getIncompleteTasks);
+}
+
+export function useIncompletePastDueTasks() {
+  return useSyncExternalStore(subscribe, getIncompletePastDueTasks);
 }
 
 export function useCreateTask() {

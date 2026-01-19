@@ -1,7 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DayNotesItem, useNotesToday } from "@app/features/notes";
 import { useEntriesGroupedByDate, DayEntriesItem } from "@app/features/entries";
-import { TaskList, useTasksToday, useUpdateTaskStatus } from "@app/features/tasks";
+import {
+  TaskList,
+  useTasksToday,
+  useIncompletePastDueTasks,
+  useUpdateTaskStatus,
+} from "@app/features/tasks";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
 import { useRef } from "react";
@@ -15,6 +20,7 @@ function JournalPage() {
   const scrollRef = useRef(null);
   const todayNotes = useNotesToday();
   const todayTasks = useTasksToday();
+  const pastDueTasks = useIncompletePastDueTasks();
   const allEntries = useEntriesGroupedByDate();
   const { mutate: updateTaskStatus } = useUpdateTaskStatus();
 
@@ -26,6 +32,12 @@ function JournalPage() {
       </TabList>
       <TabPanels ref={scrollRef}>
         <TabPanel className="flex flex-col gap-4 px-4 py-2">
+          {pastDueTasks.length > 0 && (
+            <div className="flex flex-col gap-2 rounded-md border p-3">
+              <h2 className="text-sm font-medium text-white/50">From previous days</h2>
+              <TaskList tasks={pastDueTasks} onStatusChange={updateTaskStatus} />
+            </div>
+          )}
           {todayTasks.length > 0 && (
             <div className="flex flex-col gap-2 rounded-md border p-3">
               <TaskList tasks={todayTasks} onStatusChange={updateTaskStatus} />
@@ -34,7 +46,8 @@ function JournalPage() {
           {todayNotes.length > 0 ? (
             <DayNotesItem date={format(new Date(), "yyyy-MM-dd")} notes={todayNotes} />
           ) : (
-            todayTasks.length === 0 && (
+            todayTasks.length === 0 &&
+            pastDueTasks.length === 0 && (
               <div className="flex size-full flex-col items-center justify-center">
                 <p className="p-6 text-sm text-white/50">No entries yet today</p>
               </div>

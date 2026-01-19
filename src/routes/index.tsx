@@ -48,15 +48,15 @@ function JournalPage() {
             {/* Tasks section - right on large screens, top on small screens */}
             {(pastDueTasks.length > 0 || todayTasks.length > 0) && (
               <div className="flex w-full flex-col gap-4 lg:w-80 lg:shrink-0">
+                {todayTasks.length > 0 && (
+                  <div className="flex flex-col gap-2 rounded-md border p-3">
+                    <TaskList tasks={todayTasks} onStatusChange={updateTaskStatus} />
+                  </div>
+                )}
                 {pastDueTasks.length > 0 && (
                   <div className="flex flex-col gap-2 rounded-md border p-3">
                     <h2 className="text-sm font-medium text-white/50">From previous days</h2>
                     <TaskList tasks={pastDueTasks} onStatusChange={updateTaskStatus} />
-                  </div>
-                )}
-                {todayTasks.length > 0 && (
-                  <div className="flex flex-col gap-2 rounded-md border p-3">
-                    <TaskList tasks={todayTasks} onStatusChange={updateTaskStatus} />
                   </div>
                 )}
               </div>

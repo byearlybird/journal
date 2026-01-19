@@ -1,4 +1,5 @@
-import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
+import { cx } from "cva";
+import { Button, Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
@@ -111,14 +112,37 @@ function Toolbar({
   return (
     <div className="flex items-center justify-between p-2">
       <div className="flex w-fit rounded-full shrink-0 gap-2">
-        <Pill selected={entryType === "note"} onClick={() => onEntryTypeChange("note")}>
+        <ToolbarButton selected={entryType === "note"} onClick={() => onEntryTypeChange("note")}>
           Note
-        </Pill>
-        <Pill selected={entryType === "task"} onClick={() => onEntryTypeChange("task")}>
+        </ToolbarButton>
+        <ToolbarButton selected={entryType === "task"} onClick={() => onEntryTypeChange("task")}>
           Task
-        </Pill>
+        </ToolbarButton>
       </div>
       <Switch checked={keepOpen} onChange={onToggleKeepOpen} label="Keep open" />
     </div>
+  );
+}
+
+function ToolbarButton({
+  children,
+  selected,
+  onClick,
+}: {
+  children: React.ReactNode;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <Button
+      type="button"
+      onClick={onClick}
+      className={cx(
+        "flex px-2.5 py-1.5 items-center justify-center rounded-lg text-white/50 data-active:scale-95 transition-all",
+        selected && "bg-black/70 text-white/90",
+      )}
+    >
+      {children}
+    </Button>
   );
 }

@@ -40,7 +40,7 @@ const getEntriesGroupedByDate = createMemoizedSelector((): Record<string, Entry[
 
   // Combine and sort by createdAt descending
   const allEntries = [...noteEntries, ...taskEntries].sort((a, b) =>
-    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt))
+    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
   );
 
   // Group by date
@@ -72,7 +72,7 @@ const getEntriesToday = createMemoizedSelector((): Entry[] => {
 
   // Combine and sort by createdAt descending
   return [...noteEntries, ...taskEntries].sort((a, b) =>
-    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt))
+    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
   );
 });
 

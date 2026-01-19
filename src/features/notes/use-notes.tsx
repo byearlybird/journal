@@ -4,8 +4,10 @@ import { compareDesc, format, isToday, parseISO } from "date-fns";
 
 // Track store version for memoization
 let storeVersion = 0;
-store.onChange(() => {
-  storeVersion++;
+store.onChange((e) => {
+  if (e.collection === "notes") {
+    storeVersion++;
+  }
 });
 
 const subscribe = (callback: () => void) => store.onChange(callback);

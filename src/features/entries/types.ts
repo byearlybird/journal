@@ -1,5 +1,6 @@
 import type { Note, Task } from "@app/store";
 
+export type EntryType = "note" | "task";
 export type NoteEntry = Note & { type: "note" };
 export type TaskEntry = Task & { type: "task" };
 export type Entry = NoteEntry | TaskEntry;

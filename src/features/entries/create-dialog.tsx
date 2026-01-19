@@ -6,15 +6,9 @@ import { useCreateNote } from "../notes/use-notes";
 import { useCreateTask } from "../tasks/use-tasks";
 import { Pill } from "@app/components/pill";
 import { Switch } from "@app/components/switch";
+import type { EntryType } from "./types";
 
-type CreateDialogProps = {
-  open: boolean;
-  onClose: () => void;
-};
-
-type EntryType = "note" | "task";
-
-export function CreateDialog({ open, onClose }: CreateDialogProps) {
+export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { mutate: createNote } = useCreateNote();
   const { mutate: createTask } = useCreateTask();
   const [content, setContent] = useState<string>("");
@@ -43,6 +37,10 @@ export function CreateDialog({ open, onClose }: CreateDialogProps) {
     }
   };
 
+  const toggleKeepOpen = () => {
+    setKeepOpen(!keepOpen);
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -62,17 +60,12 @@ export function CreateDialog({ open, onClose }: CreateDialogProps) {
               className="flex h-1/2 w-full max-w-2xl flex-col overflow-y-auto rounded-lg border bg-graphite"
             >
               <DialogTitle className="sr-only">Create a new entry</DialogTitle>
-              <div className="flex items-center justify-between p-2">
-                <div className="flex w-fit rounded-full shrink-0 gap-2">
-                  <Pill selected={entryType === "note"} onClick={() => setEntryType("note")}>
-                    Note
-                  </Pill>
-                  <Pill selected={entryType === "task"} onClick={() => setEntryType("task")}>
-                    Task
-                  </Pill>
-                </div>
-                <Switch checked={keepOpen} onChange={setKeepOpen} label="Keep open" />
-              </div>
+              <Toolbar
+                entryType={entryType}
+                keepOpen={keepOpen}
+                onEntryTypeChange={setEntryType}
+                onToggleKeepOpen={toggleKeepOpen}
+              />
               <Textarea
                 placeholder="What's on your mind?"
                 value={content}
@@ -101,5 +94,31 @@ export function CreateDialog({ open, onClose }: CreateDialogProps) {
         </Dialog>
       )}
     </AnimatePresence>
+  );
+}
+
+function Toolbar({
+  entryType,
+  keepOpen,
+  onEntryTypeChange,
+  onToggleKeepOpen,
+}: {
+  entryType: EntryType;
+  keepOpen: boolean;
+  onEntryTypeChange: (type: EntryType) => void;
+  onToggleKeepOpen: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between p-2">
+      <div className="flex w-fit rounded-full shrink-0 gap-2">
+        <Pill selected={entryType === "note"} onClick={() => onEntryTypeChange("note")}>
+          Note
+        </Pill>
+        <Pill selected={entryType === "task"} onClick={() => onEntryTypeChange("task")}>
+          Task
+        </Pill>
+      </div>
+      <Switch checked={keepOpen} onChange={onToggleKeepOpen} label="Keep open" />
+    </div>
   );
 }

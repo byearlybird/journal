@@ -9,7 +9,6 @@ import {
 } from "@app/features/tasks";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
-import { useRef } from "react";
 import { Pill } from "@app/components/pill";
 
 export const Route = createFileRoute("/")({
@@ -17,7 +16,6 @@ export const Route = createFileRoute("/")({
 });
 
 function JournalPage() {
-  const scrollRef = useRef(null);
   const todayNotes = useNotesToday();
   const todayTasks = useTasksToday();
   const pastDueTasks = useIncompletePastDueTasks();
@@ -30,7 +28,7 @@ function JournalPage() {
         <Tab as={Pill}>Today</Tab>
         <Tab as={Pill}>All Entries</Tab>
       </TabList>
-      <TabPanels ref={scrollRef}>
+      <TabPanels>
         <TabPanel className="flex flex-col gap-4 px-4 py-2">
           {pastDueTasks.length > 0 && (
             <div className="flex flex-col gap-2 rounded-md border p-3">

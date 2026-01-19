@@ -1,8 +1,7 @@
 import type { Entry } from "./types";
 import { isNoteEntry, isTaskEntry } from "./types";
 import { format, parse, parseISO } from "date-fns";
-import { useUpdateTaskStatus } from "./use-entries";
-import { TaskCheckbox } from "@app/features/tasks/task-checkbox";
+import { useUpdateTaskStatus, TaskItem } from "@app/features/tasks";
 
 export function DayEntriesItem({ entries, date }: { entries: Entry[]; date: string }) {
   // Parse date string (YYYY-MM-DD) as local date
@@ -40,7 +39,7 @@ function EntryItem({ entry }: { entry: Entry }) {
     return (
       <div className="flex flex-col gap-2 py-4">
         <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>
-        <TaskCheckbox task={entry} onStatusChange={updateTaskStatus} />
+        <TaskItem task={entry} onStatusChange={updateTaskStatus} />
       </div>
     );
   }

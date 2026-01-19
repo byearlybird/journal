@@ -3,7 +3,7 @@ import type { Task } from "@app/store";
 import { CheckIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 
-export function TaskCheckbox({
+export function TaskItem({
   task,
   onStatusChange,
 }: {

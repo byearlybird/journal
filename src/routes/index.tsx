@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DayNotesItem, useNotesToday } from "@app/features/notes";
 import { useEntriesGroupedByDate, DayEntriesItem } from "@app/features/entries";
 import {
-  TaskList,
+  TaskItem,
   useTasksToday,
   useIncompletePastDueTasks,
   useUpdateTaskStatus,
@@ -53,13 +53,25 @@ function JournalPage() {
               <div className="flex w-full flex-col gap-4 lg:w-80 lg:shrink-0">
                 {todayTasks.length > 0 && (
                   <div className="flex flex-col gap-2 rounded-md border p-3">
-                    <TaskList tasks={todayTasks} onStatusChange={updateTaskStatus} />
+                    <div className="flex flex-col gap-2 divide-y divide-dashed divide-white/10">
+                      {todayTasks.map((task) => (
+                        <div key={task.id} className="py-2">
+                          <TaskItem task={task} onStatusChange={updateTaskStatus} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
                 {pastDueTasks.length > 0 && (
                   <div className="flex flex-col gap-2 rounded-md border p-3">
                     <h2 className="text-sm font-medium text-white/50">From previous days</h2>
-                    <TaskList tasks={pastDueTasks} onStatusChange={updateTaskStatus} />
+                    <div className="flex flex-col gap-2 divide-y divide-dashed divide-white/10">
+                      {pastDueTasks.map((task) => (
+                        <div key={task.id} className="py-2">
+                          <TaskItem task={task} onStatusChange={updateTaskStatus} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

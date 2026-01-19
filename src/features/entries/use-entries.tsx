@@ -1,61 +1,40 @@
-import { useSyncExternalStore } from "react";
 import { store } from "@app/store";
 import { compareDesc, format, isToday, parseISO } from "date-fns";
+import { createStoreSelector } from "@app/utils/store-selectors";
 import type { Entry } from "./types";
 
-// Track store version for memoization
-let storeVersion = 0;
-store.onChange((e) => {
-  if (e.collection === "notes" || e.collection === "tasks") {
-    storeVersion++;
-  }
-});
+export const useEntriesGroupedByDate = createStoreSelector(
+  ["notes", "tasks"],
+  (): Record<string, Entry[]> => {
+    // Get all notes and add type discriminator
+    const noteEntries: Entry[] = store.getAll("notes").map((note) => ({
+      ...note,
+      type: "note" as const,
+    }));
 
-const subscribe = (callback: () => void) => store.onChange(callback);
+    // Get all tasks and add type discriminator
+    const taskEntries: Entry[] = store.getAll("tasks").map((task) => ({
+      ...task,
+      type: "task" as const,
+    }));
 
-// Memoize getSnapshot results to avoid infinite loops
-function createMemoizedSelector<T>(selector: () => T) {
-  let cachedVersion = storeVersion;
-  let cachedResult = selector();
+    // Combine and sort by createdAt descending
+    const allEntries = [...noteEntries, ...taskEntries].sort((a, b) =>
+      compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
+    );
 
-  return () => {
-    if (storeVersion !== cachedVersion) {
-      cachedVersion = storeVersion;
-      cachedResult = selector();
+    // Group by date
+    const grouped: Record<string, Entry[]> = {};
+    for (const entry of allEntries) {
+      const date = format(parseISO(entry.createdAt), "yyyy-MM-dd");
+      grouped[date] ??= [];
+      grouped[date].push(entry);
     }
-    return cachedResult;
-  };
-}
+    return grouped;
+  },
+);
 
-const getEntriesGroupedByDate = createMemoizedSelector((): Record<string, Entry[]> => {
-  // Get all notes and add type discriminator
-  const noteEntries: Entry[] = store.getAll("notes").map((note) => ({
-    ...note,
-    type: "note" as const,
-  }));
-
-  // Get all tasks and add type discriminator
-  const taskEntries: Entry[] = store.getAll("tasks").map((task) => ({
-    ...task,
-    type: "task" as const,
-  }));
-
-  // Combine and sort by createdAt descending
-  const allEntries = [...noteEntries, ...taskEntries].sort((a, b) =>
-    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
-  );
-
-  // Group by date
-  const grouped: Record<string, Entry[]> = {};
-  for (const entry of allEntries) {
-    const date = format(parseISO(entry.createdAt), "yyyy-MM-dd");
-    grouped[date] ??= [];
-    grouped[date].push(entry);
-  }
-  return grouped;
-});
-
-const getEntriesToday = createMemoizedSelector((): Entry[] => {
+export const useEntriesToday = createStoreSelector(["notes", "tasks"], (): Entry[] => {
   // Get today's notes
   const noteEntries: Entry[] = store
     .getAll("notes", { where: (note) => isToday(parseISO(note.createdAt)) })
@@ -77,15 +56,3 @@ const getEntriesToday = createMemoizedSelector((): Entry[] => {
     compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
   );
 });
-
-export function useEntriesGroupedByDate() {
-  return useSyncExternalStore(subscribe, getEntriesGroupedByDate);
-}
-
-export function useEntriesToday() {
-  return useSyncExternalStore(subscribe, getEntriesToday);
-}
-
-// Re-export mutation hooks
-export { useCreateNote } from "@app/features/notes/use-notes";
-export { useCreateTask, useUpdateTaskStatus } from "@app/features/tasks/use-tasks";

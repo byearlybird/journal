@@ -3,8 +3,8 @@ import { Button, Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { useCreateNote } from "../notes/use-notes";
-import { useCreateTask } from "../tasks/use-tasks";
+import { useCreateNote } from "@app/features/notes";
+import { useCreateTask } from "@app/features/tasks";
 import { Switch } from "@app/components/switch";
 import type { EntryType } from "./types";
 

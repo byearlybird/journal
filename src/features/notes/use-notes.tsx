@@ -1,32 +1,9 @@
-import { useSyncExternalStore, useCallback } from "react";
+import { useCallback } from "react";
 import { store, type Note, type NewNote } from "@app/store";
 import { compareDesc, format, isToday, parseISO } from "date-fns";
+import { createStoreSelector } from "@app/utils/store-selectors";
 
-// Track store version for memoization
-let storeVersion = 0;
-store.onChange((e) => {
-  if (e.collection === "notes") {
-    storeVersion++;
-  }
-});
-
-const subscribe = (callback: () => void) => store.onChange(callback);
-
-// Memoize getSnapshot results to avoid infinite loops
-function createMemoizedSelector<T>(selector: () => T) {
-  let cachedVersion = storeVersion;
-  let cachedResult = selector();
-
-  return () => {
-    if (storeVersion !== cachedVersion) {
-      cachedVersion = storeVersion;
-      cachedResult = selector();
-    }
-    return cachedResult;
-  };
-}
-
-const getNotesGroupedByDate = createMemoizedSelector((): Record<string, Note[]> => {
+export const useNotesGroupedByDate = createStoreSelector("notes", (): Record<string, Note[]> => {
   const notes = store
     .getAll("notes")
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
@@ -40,19 +17,11 @@ const getNotesGroupedByDate = createMemoizedSelector((): Record<string, Note[]> 
   return grouped;
 });
 
-const getNotesToday = createMemoizedSelector((): Note[] => {
+export const useNotesToday = createStoreSelector("notes", (): Note[] => {
   return store
     .getAll("notes", { where: (note) => isToday(parseISO(note.createdAt)) })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
-
-export function useNotesGroupedByDate() {
-  return useSyncExternalStore(subscribe, getNotesGroupedByDate);
-}
-
-export function useNotesToday() {
-  return useSyncExternalStore(subscribe, getNotesToday);
-}
 
 export function useCreateNote() {
   return useCallback((note: Pick<NewNote, "content">) => {

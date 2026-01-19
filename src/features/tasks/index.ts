@@ -1,3 +1,2 @@
 export * from "./use-tasks";
-export * from "./task-list";
-export * from "./task-checkbox";
+export * from "./task-item";

@@ -1,62 +1,27 @@
-import { useSyncExternalStore, useCallback } from "react";
+import { useCallback } from "react";
 import { store, type Task, type NewTask } from "@app/store";
 import { compareDesc, isToday, parseISO } from "date-fns";
+import { createStoreSelector } from "@app/utils/store-selectors";
 
-// Track store version for memoization
-let storeVersion = 0;
-store.onChange((e) => {
-  if (e.collection === "tasks") {
-    storeVersion++;
-  }
-});
-
-const subscribe = (callback: () => void) => store.onChange(callback);
-
-// Memoize getSnapshot results to avoid infinite loops
-function createMemoizedSelector<T>(selector: () => T) {
-  let cachedVersion = storeVersion;
-  let cachedResult = selector();
-
-  return () => {
-    if (storeVersion !== cachedVersion) {
-      cachedVersion = storeVersion;
-      cachedResult = selector();
-    }
-    return cachedResult;
-  };
-}
-
-const getTasksToday = createMemoizedSelector((): Task[] => {
+export const useTasksToday = createStoreSelector("tasks", (): Task[] => {
   return store
     .getAll("tasks", { where: (task) => isToday(parseISO(task.createdAt)) })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
 
-const getIncompleteTasks = createMemoizedSelector((): Task[] => {
+export const useIncompleteTasks = createStoreSelector("tasks", (): Task[] => {
   return store
     .getAll("tasks", { where: (task) => task.status === "incomplete" })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
 
-const getIncompletePastDueTasks = createMemoizedSelector((): Task[] => {
+export const useIncompletePastDueTasks = createStoreSelector("tasks", (): Task[] => {
   return store
     .getAll("tasks", {
-      where: (task) => task.status === "incomplete" && !isToday(parseISO(task.createdAt))
+      where: (task) => task.status === "incomplete" && !isToday(parseISO(task.createdAt)),
     })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
-
-export function useTasksToday() {
-  return useSyncExternalStore(subscribe, getTasksToday);
-}
-
-export function useIncompleteTasks() {
-  return useSyncExternalStore(subscribe, getIncompleteTasks);
-}
-
-export function useIncompletePastDueTasks() {
-  return useSyncExternalStore(subscribe, getIncompletePastDueTasks);
-}
 
 export function useCreateTask() {
   return useCallback((task: Pick<NewTask, "content">) => {

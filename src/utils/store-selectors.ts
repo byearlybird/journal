@@ -13,6 +13,7 @@ export function createStoreSelector<T>(
   selector: () => T
 ) {
   let version = 0;
+  let cachedVersion = -1;
   let cached = selector();
 
   const collectionSet = new Set(
@@ -28,8 +29,8 @@ export function createStoreSelector<T>(
   const subscribe = (callback: () => void) => store.onChange(callback);
 
   const getSnapshot = () => {
-    const currentVersion = version;
-    if (cached === undefined || currentVersion !== version) {
+    if (version !== cachedVersion) {
+      cachedVersion = version;
       cached = selector();
     }
     return cached;

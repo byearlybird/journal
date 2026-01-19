@@ -25,7 +25,7 @@ function NoteItem({ note }: { note: Note }) {
   return (
     <div className="flex flex-col gap-2 py-4">
       <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>
-      <p>{note.content}</p>
+      <p className="leading-relaxed">{note.content}</p>
     </div>
   );
 }

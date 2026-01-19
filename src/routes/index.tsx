@@ -23,7 +23,7 @@ function JournalPage() {
   const { mutate: updateTaskStatus } = useUpdateTaskStatus();
 
   return (
-    <TabGroup defaultIndex={0}>
+    <TabGroup defaultIndex={0} className="max-w-3xl">
       <TabList className={"sticky top-0 z-10 flex gap-4 bg-graphite/80 px-4 py-2 backdrop-blur"}>
         <Tab as={Pill}>Today</Tab>
         <Tab as={Pill}>All Entries</Tab>

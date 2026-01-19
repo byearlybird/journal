@@ -31,7 +31,7 @@ function EntryItem({ entry }: { entry: Entry }) {
     return (
       <div className="flex flex-col gap-2 py-4">
         <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>
-        <p>{entry.content}</p>
+        <p className="leading-relaxed">{entry.content}</p>
       </div>
     );
   }

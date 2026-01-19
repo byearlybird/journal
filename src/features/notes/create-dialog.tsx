@@ -1,25 +1,39 @@
 import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useCreateNote } from "./use-notes";
+import { useCreateTask } from "@app/features/tasks";
+import { Pill } from "@app/components/pill";
+import { Switch } from "@app/components/switch";
 
 type CreateDialogProps = {
   open: boolean;
   onClose: () => void;
 };
 
+type EntryType = "note" | "task";
+
 export function CreateDialog({ open, onClose }: CreateDialogProps) {
-  let hasFocused = false;
   const { mutate: createNote } = useCreateNote();
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { mutate: createTask } = useCreateTask();
   const [content, setContent] = useState<string>("");
+  const [entryType, setEntryType] = useState<EntryType>("note");
+  const [keepOpen, setKeepOpen] = useState(false);
 
   const handleSave = () => {
     if (content.trim() === "") return;
-    createNote({ content: content.trim() });
+
+    if (entryType === "note") {
+      createNote({ content: content.trim() });
+    } else if (entryType === "task") {
+      createTask({ content: content.trim() });
+    }
+
     setContent("");
-    onClose();
+    if (!keepOpen) {
+      onClose();
+    }
   };
 
   return (
@@ -30,7 +44,7 @@ export function CreateDialog({ open, onClose }: CreateDialogProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50"
+            className="fixed inset-0 bg-black/70"
           />
           <div className="fixed inset-x-0 top-0 flex h-svh w-screen justify-center p-2">
             <DialogPanel
@@ -38,23 +52,27 @@ export function CreateDialog({ open, onClose }: CreateDialogProps) {
               initial={{ opacity: 0, y: -100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -100 }}
-              onAnimationComplete={() => {
-                if (!hasFocused) {
-                  inputRef.current?.focus();
-                  hasFocused = true;
-                }
-              }}
-              className="flex h-1/2 w-full max-w-2xl flex-col space-y-4 overflow-y-auto rounded-lg border bg-graphite"
+              className="flex h-1/2 w-full max-w-2xl flex-col overflow-y-auto rounded-lg border bg-graphite"
             >
               <DialogTitle className="sr-only">Create a new entry</DialogTitle>
+              <div className="flex items-center justify-between p-2">
+                <div className="flex w-fit rounded-full shrink-0 gap-2">
+                  <Pill selected={entryType === "note"} onClick={() => setEntryType("note")}>
+                    Note
+                  </Pill>
+                  <Pill selected={entryType === "task"} onClick={() => setEntryType("task")}>
+                    Task
+                  </Pill>
+                </div>
+                <Switch checked={keepOpen} onChange={setKeepOpen} label="Keep open" />
+              </div>
               <Textarea
-                ref={inputRef}
                 placeholder="What's on your mind?"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="scrollbar-hide h-full w-full resize-none p-4 placeholder:text-white/50 focus:outline-none"
+                className="scrollbar-hide h-full border-t border-dotted w-full resize-none p-4 placeholder:text-white/50 focus:outline-none"
               />
-              <div className="right-0 left-0 flex justify-between gap-4 p-4">
+              <div className="flex justify-between gap-4 p-2">
                 <button
                   type="button"
                   onClick={onClose}

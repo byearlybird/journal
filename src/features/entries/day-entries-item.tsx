@@ -1,7 +1,9 @@
+import { Checkbox, Field, Label } from "@headlessui/react";
 import type { Entry } from "./types";
 import { isNoteEntry, isTaskEntry } from "./types";
 import { format, parse, parseISO } from "date-fns";
 import { CheckIcon } from "@phosphor-icons/react";
+import { cx } from "cva";
 import { useUpdateTaskStatus } from "./use-entries";
 
 export function DayEntriesItem({ entries, date }: { entries: Entry[]; date: string }) {
@@ -39,23 +41,25 @@ function EntryItem({ entry }: { entry: Entry }) {
   if (isTaskEntry(entry)) {
     const isComplete = entry.status === "complete";
 
-    const toggleComplete = () => {
-      updateTaskStatus(entry.id, isComplete ? "incomplete" : "complete");
+    const handleChange = (checked: boolean) => {
+      updateTaskStatus(entry.id, checked ? "complete" : "incomplete");
     };
 
     return (
       <div className="flex flex-col gap-2 py-4">
         <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={toggleComplete}
-            className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full border border-white/30 transition-all hover:border-white/50"
+        <Field className="flex gap-3 items-center">
+          <Checkbox
+            checked={isComplete}
+            onChange={handleChange}
+            className="group flex size-5 shrink-0 items-center justify-center rounded-full border border-white/30 transition-all hover:border-white/50 data-checked:border-white/50"
           >
             {isComplete && <CheckIcon className="size-3" weight="bold" />}
-          </button>
-          <p className={isComplete ? "text-white/50 line-through" : ""}>{entry.content}</p>
-        </div>
+          </Checkbox>
+          <Label className={cx(isComplete ? "text-white/50 line-through" : "text-white/90")}>
+            {entry.content}
+          </Label>
+        </Field>
       </div>
     );
   }

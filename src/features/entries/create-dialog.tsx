@@ -2,8 +2,8 @@ import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { useCreateNote } from "./use-notes";
-import { useCreateTask } from "@app/features/tasks";
+import { useCreateNote } from "../notes/use-notes";
+import { useCreateTask } from "../tasks/use-tasks";
 import { Pill } from "@app/components/pill";
 import { Switch } from "@app/components/switch";
 

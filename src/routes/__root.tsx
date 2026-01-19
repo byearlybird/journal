@@ -1,5 +1,5 @@
 import { Navbar, type NavItemData, Sidebar } from "@app/components";
-import { CreateDialog } from "@app/features/notes";
+import { CreateDialog } from "@app/features/entries";
 import { useRouterState } from "@tanstack/react-router";
 import { BookOpenIcon, GearIcon } from "@phosphor-icons/react";
 import { useState } from "react";

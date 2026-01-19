@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DayNotesItem, useNotesGroupedByDate, useNotesToday } from "@app/features/notes";
+import { DayNotesItem, useNotesToday } from "@app/features/notes";
+import { useEntriesGroupedByDate, DayEntriesItem } from "@app/features/entries";
 import { TaskList, useTasksToday, useUpdateTaskStatus } from "@app/features/tasks";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
@@ -14,7 +15,7 @@ function JournalPage() {
   const scrollRef = useRef(null);
   const todayNotes = useNotesToday();
   const todayTasks = useTasksToday();
-  const allNotes = useNotesGroupedByDate();
+  const allEntries = useEntriesGroupedByDate();
   const { mutate: updateTaskStatus } = useUpdateTaskStatus();
 
   return (
@@ -41,8 +42,8 @@ function JournalPage() {
           )}
         </TabPanel>
         <TabPanel className="flex flex-col gap-4 p-4">
-          {Object.entries(allNotes).map(([date, notes]) => (
-            <DayNotesItem key={date} date={date} notes={notes} />
+          {Object.entries(allEntries).map(([date, entries]) => (
+            <DayEntriesItem key={date} date={date} entries={entries} />
           ))}
         </TabPanel>
       </TabPanels>

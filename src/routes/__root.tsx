@@ -47,11 +47,11 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="grid h-screen grid-cols-5">
-        <div className="hidden w-full md:block">
+        <div className="hidden w-full lg:block">
           <Sidebar navItems={navItems} onCreateClick={() => setIsCreateDialogOpen(true)} />
         </div>
-        <div className="col-span-5 max-h-screen overflow-y-auto md:col-span-4">{children}</div>
-        <div className="md:hidden">
+        <div className="col-span-5 max-h-screen overflow-y-auto lg:col-span-4">{children}</div>
+        <div className="lg:hidden">
           <Navbar navItems={navItems} onCreateClick={() => setIsCreateDialogOpen(true)} />
         </div>
       </div>

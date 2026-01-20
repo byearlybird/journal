@@ -1,7 +1,6 @@
 import { Checkbox, Field, Label } from "@headlessui/react";
 import type { Task } from "@app/store";
 import { CheckIcon } from "@phosphor-icons/react";
-import clsx from "clsx";
 
 export function TaskItem({
   task,
@@ -25,7 +24,7 @@ export function TaskItem({
       >
         {isComplete && <CheckIcon className="size-3" weight="bold" />}
       </Checkbox>
-      <Label className={clsx(isComplete ? "text-white/50 line-through" : "text-white/90")}>
+      <Label className={isComplete ? "text-white/50 line-through" : "text-white/90"}>
         {task.content}
       </Label>
     </Field>

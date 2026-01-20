@@ -1,7 +1,7 @@
 import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import clsx from "clsx";
 import type { NavItemData } from "./navbar";
+import { cx } from "cva";
 
 type SidebarProps = {
   navItems: NavItemData[];
@@ -40,8 +40,8 @@ function NavItem({ href, label, icon: Icon, isActive }: NavItemData) {
   return (
     <Link
       to={href}
-      className={clsx(
-        "flex items-center gap-3 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-95",
+      className={cx(
+        "flex itemcxs-center gap-3 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-95",
         isActive && "border bg-white/10 text-white backdrop-blur",
       )}
     >

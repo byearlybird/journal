@@ -1,6 +1,6 @@
 import { type Icon, PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import clsx from "clsx";
+import { cx } from "cva";
 
 export type NavItemData = {
   href: string;
@@ -37,7 +37,7 @@ function NavItem({ href, label, icon: Icon, isActive }: NavItemData) {
   return (
     <Link
       to={href}
-      className={clsx(
+      className={cx(
         "flex items-center gap-2 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-95",
         isActive && "border bg-white/10 text-white backdrop-blur",
       )}

@@ -1,4 +1,4 @@
-import { Navbar, type NavItemData, Sidebar } from "@app/components";
+import { Navbar, type NavItemData } from "@app/components";
 import { CreateDialog } from "@app/features/entries";
 import { useRouterState } from "@tanstack/react-router";
 import { BookOpenIcon, GearIcon } from "@phosphor-icons/react";
@@ -46,14 +46,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div className="grid h-screen grid-cols-5">
-        <div className="hidden w-full lg:block">
-          <Sidebar navItems={navItems} onCreateClick={() => setIsCreateDialogOpen(true)} />
-        </div>
-        <div className="col-span-5 max-h-screen overflow-y-auto lg:col-span-4">{children}</div>
-        <div className="lg:hidden">
-          <Navbar navItems={navItems} onCreateClick={() => setIsCreateDialogOpen(true)} />
-        </div>
+      <div className="flex h-screen flex-col max-w-2xl mx-auto">
+        <div className="flex-1 overflow-y-auto pb-20">{children}</div>
+        <Navbar navItems={navItems} onCreateClick={() => setIsCreateDialogOpen(true)} />
       </div>
       <CreateDialog open={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
     </>

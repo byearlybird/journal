@@ -31,7 +31,7 @@ createRoot(document.getElementById("root")!).render(
 
 function AppLoading() {
   return (
-    <main className="flex size-full h-screen items-center justify-center">
+    <main className="flex h-screen items-center justify-center">
       <Loading />
     </main>
   );

@@ -6,6 +6,7 @@ import {
   SignedOut,
 } from "@clerk/clerk-react";
 import { SignInIcon, SignOutIcon } from "@phosphor-icons/react";
+import { card } from "@app/styles/card";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/settings")({
 function SettingsPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-4 p-4">
-      <article className="grid grid-cols-2 items-center rounded-md border p-4">
+      <article className={card({ className: "grid grid-cols-2 items-center" })}>
         <h2 className="col-span-2 font-medium">Account</h2>
         <SignedOut>
           <span className="text-sm text-white/70">Sign in to sync your data across devices</span>

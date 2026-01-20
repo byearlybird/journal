@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DayNotesItem, useNotesToday } from "@app/features/notes";
 import { useEntriesGroupedByDate, DayEntriesItem } from "@app/features/entries";
-import {
-  TaskItem,
-  useTasksToday,
-  useIncompletePastDueTasks,
-  useUpdateTaskStatus,
-} from "@app/features/tasks";
+import { useTasksToday, useIncompletePastDueTasks } from "@app/features/tasks";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { format } from "date-fns";
 

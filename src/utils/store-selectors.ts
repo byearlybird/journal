@@ -8,17 +8,12 @@ import { store } from "@app/store";
  * @param selector - Function that computes the derived value from the store
  * @returns Hook that subscribes to store changes and returns the memoized value
  */
-export function createStoreSelector<T>(
-  collections: string | string[],
-  selector: () => T
-) {
+export function createStoreSelector<T>(collections: string | string[], selector: () => T) {
   let version = 0;
   let cachedVersion = -1;
   let cached = selector();
 
-  const collectionSet = new Set(
-    Array.isArray(collections) ? collections : [collections]
-  );
+  const collectionSet = new Set(Array.isArray(collections) ? collections : [collections]);
 
   store.onChange((e) => {
     if (collectionSet.has(e.collection)) {

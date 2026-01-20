@@ -19,7 +19,6 @@ function JournalPage() {
   const todayTasks = useTasksToday();
   const pastDueTasks = useIncompletePastDueTasks();
   const allEntries = useEntriesGroupedByDate();
-  const updateTaskStatus = useUpdateTaskStatus();
 
   return (
     <TabGroup defaultIndex={0}>
@@ -32,37 +31,8 @@ function JournalPage() {
         </Tab>
       </TabList>
       <TabPanels>
-        <TabPanel className="px-4 py-2 max-w-6xl">
-          <div className="flex flex-col gap-4">
-            {/* Tasks section */}
-            {(pastDueTasks.length > 0 || todayTasks.length > 0) && (
-              <div className="flex w-full flex-col gap-4">
-                {todayTasks.length > 0 && (
-                  <div className="flex flex-col gap-2 rounded-md border p-3">
-                    <div className="flex flex-col gap-2 divide-y divide-dashed divide-white/10">
-                      {todayTasks.map((task) => (
-                        <div key={task.id} className="py-2">
-                          <TaskItem task={task} onStatusChange={updateTaskStatus} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {pastDueTasks.length > 0 && (
-                  <div className="flex flex-col gap-2 rounded-md border p-3">
-                    <h2 className="text-sm font-medium text-white/50">From previous days</h2>
-                    <div className="flex flex-col gap-2 divide-y divide-dashed divide-white/10">
-                      {pastDueTasks.map((task) => (
-                        <div key={task.id} className="py-2">
-                          <TaskItem task={task} onStatusChange={updateTaskStatus} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
+        <TabPanel className="px-4 py-2">
+          <div className="flex flex-col">
             {/* Notes section */}
             <div>
               {todayNotes.length > 0 ? (
@@ -78,7 +48,7 @@ function JournalPage() {
             </div>
           </div>
         </TabPanel>
-        <TabPanel className="flex flex-col gap-4 p-4 max-w-3xl">
+        <TabPanel className="flex flex-col p-4">
           {Object.entries(allEntries).map(([date, entries]) => (
             <DayEntriesItem key={date} date={date} entries={entries} />
           ))}

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@byearlybird/starling':
-        specifier: ^0.15.0
-        version: 0.15.0(typescript@5.9.3)
+        specifier: ^0.18.0
+        version: 0.18.0(typescript@5.9.3)
       '@clerk/backend':
         specifier: ^2.29.0
         version: 2.29.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -198,8 +198,8 @@ packages:
     resolution: {integrity: sha512-qQ5m48eI/MFLQ5PxQj4PFaprjyCTLI37ElWMmNs0K8Lk3dVeOdNpB3ks8jc7yM5CDmVC73eMVk/trk3fgmrUpA==}
     engines: {node: '>=6.9.0'}
 
-  '@byearlybird/starling@0.15.0':
-    resolution: {integrity: sha512-hUEFe9Qwdxhet19beYFwmFCV+jaZ87ZsNZXVGDo95CPG/xX8vv7jyanMwMojHnWMehU+f2bJCaNMMYh9SWYTmQ==}
+  '@byearlybird/starling@0.18.0':
+    resolution: {integrity: sha512-ya2Ia8gUsiVmXVT/1g2MvpSxWbyOKyp1odAfH+EWQDI+hsahtbaA9x44ze4Gxo3IpyQncAHFYeXm1JHjC+chOA==}
     peerDependencies:
       typescript: ^5
 
@@ -2142,7 +2142,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@byearlybird/starling@0.15.0(typescript@5.9.3)':
+  '@byearlybird/starling@0.18.0(typescript@5.9.3)':
     dependencies:
       '@standard-schema/spec': 1.1.0
       typescript: 5.9.3

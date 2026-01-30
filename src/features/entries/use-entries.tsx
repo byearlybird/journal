@@ -7,13 +7,13 @@ export const useEntriesGroupedByDate = createStoreSelector(
   ["notes", "tasks"],
   (): Record<string, Entry[]> => {
     // Get all notes and add type discriminator
-    const noteEntries: Entry[] = store.getAll("notes").map((note) => ({
+    const noteEntries: Entry[] = store.list("notes").map((note) => ({
       ...note,
       type: "note" as const,
     }));
 
     // Get all tasks and add type discriminator
-    const taskEntries: Entry[] = store.getAll("tasks").map((task) => ({
+    const taskEntries: Entry[] = store.list("tasks").map((task) => ({
       ...task,
       type: "task" as const,
     }));
@@ -37,18 +37,18 @@ export const useEntriesGroupedByDate = createStoreSelector(
 export const useEntriesToday = createStoreSelector(["notes", "tasks"], (): Entry[] => {
   // Get today's notes
   const noteEntries: Entry[] = store
-    .getAll("notes", { where: (note) => isToday(parseISO(note.createdAt)) })
+    .list("notes", { where: (note) => isToday(parseISO(note.createdAt)) })
     .map((note) => ({
       ...note,
-      type: "note" as const,
+      type: "note",
     }));
 
   // Get today's tasks
   const taskEntries: Entry[] = store
-    .getAll("tasks", { where: (task) => isToday(parseISO(task.createdAt)) })
+    .list("tasks", { where: (task) => isToday(parseISO(task.createdAt)) })
     .map((task) => ({
       ...task,
-      type: "task" as const,
+      type: "task",
     }));
 
   // Combine and sort by createdAt descending

@@ -94,7 +94,7 @@ export async function syncPull(): Promise<Result<void, string>> {
  */
 export async function syncPush(): Promise<Result<void, string>> {
   try {
-    const localData = JSON.stringify(store.getSnapshot());
+    const localData = JSON.stringify(store.getState());
     return await uploadToRemote(localData);
   } catch (error) {
     console.error("Failed to dump store:", error);

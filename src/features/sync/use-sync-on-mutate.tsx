@@ -7,7 +7,7 @@ export function useSyncOnMutate() {
   const { isSignedIn } = useSession();
 
   useEffect(() => {
-    const unsubscribe = store.onChange(() => {
+    const unsubscribe = store.subscribe(() => {
       // Skip if already syncing to prevent infinite loop
       if (getIsSyncing()) {
         return;

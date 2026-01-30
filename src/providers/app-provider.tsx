@@ -1,4 +1,5 @@
-import { createPerister, store } from "@app/store";
+import { store } from "@app/store";
+import { IdbPersister } from "@byearlybird/starling";
 import { useEffect, useState } from "react";
 
 interface AppProviderProps {
@@ -7,11 +8,13 @@ interface AppProviderProps {
   children: React.ReactNode;
 }
 
-const persister = createPerister(store, "notes");
+const persister = new IdbPersister(store, {
+  key: "journal",
+});
 
 export function AppProvider({ loadingComponent, errorComponent, children }: AppProviderProps) {
   const [isInitializing, setIsInitializing] = useState(true);
-  const [initPromise] = useState(() => persister.load());
+  const [initPromise] = useState(() => persister.init());
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {

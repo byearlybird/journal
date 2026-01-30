@@ -1,15 +1,7 @@
-import { createStore } from "@byearlybird/starling";
+import { define, Store } from "@byearlybird/starling";
 import { noteSchema, taskSchema } from "./schema";
 
-export const store = createStore({
-  collections: {
-    notes: {
-      schema: noteSchema,
-      keyPath: "id",
-    },
-    tasks: {
-      schema: taskSchema,
-      keyPath: "id",
-    },
-  },
+export const store = new Store({
+  notes: define(noteSchema, (d) => d.id),
+  tasks: define(taskSchema, (d) => d.id),
 });

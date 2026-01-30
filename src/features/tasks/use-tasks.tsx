@@ -5,19 +5,19 @@ import { createStoreSelector } from "@app/utils/store-selectors";
 
 export const useTasksToday = createStoreSelector("tasks", (): Task[] => {
   return store
-    .getAll("tasks", { where: (task) => isToday(parseISO(task.createdAt)) })
+    .list("tasks", { where: (task) => isToday(parseISO(task.createdAt)) })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
 
 export const useIncompleteTasks = createStoreSelector("tasks", (): Task[] => {
   return store
-    .getAll("tasks", { where: (task) => task.status === "incomplete" })
+    .list("tasks", { where: (task) => task.status === "incomplete" })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
 
 export const useIncompletePastDueTasks = createStoreSelector("tasks", (): Task[] => {
   return store
-    .getAll("tasks", {
+    .list("tasks", {
       where: (task) => task.status === "incomplete" && !isToday(parseISO(task.createdAt)),
     })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
@@ -25,12 +25,12 @@ export const useIncompletePastDueTasks = createStoreSelector("tasks", (): Task[]
 
 export function useCreateTask() {
   return useCallback((task: Pick<NewTask, "content">) => {
-    store.add("tasks", task);
+    store.put("tasks", { ...task, scope: "daily" });
   }, []);
 }
 
 export function useUpdateTaskStatus() {
   return useCallback((id: string, status: Task["status"]) => {
-    store.update("tasks", id, { status });
+    store.patch("tasks", id, { status });
   }, []);
 }

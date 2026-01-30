@@ -15,13 +15,15 @@ export function createStoreSelector<T>(collections: string | string[], selector:
 
   const collectionSet = new Set(Array.isArray(collections) ? collections : [collections]);
 
-  store.onChange((e) => {
-    if (collectionSet.has(e.collection)) {
+  store.subscribe((e) => {
+    const dirtyCollections = new Set<string>(Object.keys(e));
+    const matches = collectionSet.intersection(dirtyCollections);
+    if (matches.size > 0) {
       version++;
     }
   });
 
-  const subscribe = (callback: () => void) => store.onChange(callback);
+  const subscribe = (callback: () => void) => store.subscribe(callback);
 
   const getSnapshot = () => {
     if (version !== cachedVersion) {

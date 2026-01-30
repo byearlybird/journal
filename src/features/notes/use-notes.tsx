@@ -5,7 +5,7 @@ import { createStoreSelector } from "@app/utils/store-selectors";
 
 export const useNotesGroupedByDate = createStoreSelector("notes", (): Record<string, Note[]> => {
   const notes = store
-    .getAll("notes")
+    .list("notes")
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 
   const grouped: Record<string, Note[]> = {};
@@ -19,12 +19,12 @@ export const useNotesGroupedByDate = createStoreSelector("notes", (): Record<str
 
 export const useNotesToday = createStoreSelector("notes", (): Note[] => {
   return store
-    .getAll("notes", { where: (note) => isToday(parseISO(note.createdAt)) })
+    .list("notes", { where: (note) => isToday(parseISO(note.createdAt)) })
     .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 });
 
 export function useCreateNote() {
   return useCallback((note: Pick<NewNote, "content">) => {
-    store.add("notes", note);
+    store.put("notes", { ...note, scope: "daily", category: "log" });
   }, []);
 }

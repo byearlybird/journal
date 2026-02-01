@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A journaling application with end-to-end encryption, client-side SQLite storage, and sync via Cloudflare Workers + R2. Users authenticate via Clerk and derive encryption keys from a passphrase (never sent to server).
+A journaling application with end-to-end encryption, client-side SQLite storage, and sync via a separate API server. Users authenticate via Clerk and derive encryption keys from a passphrase (never sent to server).
+
+This repository contains only the client-side SPA. The API server is in a separate repository.
 
 ## Commands
 
@@ -19,9 +21,9 @@ A journaling application with end-to-end encryption, client-side SQLite storage,
 
 ### Build & Deploy
 
-- Production build: `pnpm build` - Compiles TypeScript and builds both client (Vite) and worker (Wrangler)
+- Production build: `pnpm build` - Builds the client SPA with Vite
 - Preview build: `pnpm preview` - Preview production build locally
-- Deploy: Use Wrangler commands for Cloudflare Workers deployment
+- Deploy: Deploy the built SPA to your hosting provider
 
 ### Testing
 
@@ -29,28 +31,21 @@ No automated test setup is currently configured. If adding tests, prefer vitest 
 
 ## Architecture
 
-### Two-Layer Structure
+### Client SPA
 
-1. **`src/`** - Client web application (React + Vite)
-   - Runs in the browser
-   - Uses SQLite via `sqlocal` (WASM-based client-side database)
-   - React 19, TanStack Query for data management
-   - Tailwind CSS v4 for styling
-   - Entry point: `src/main.tsx`
-
-2. **`worker/`** - Cloudflare Worker (Hono server)
-   - Runs on Cloudflare's edge
-   - Handles API requests at `/api/*`
-   - Stores encrypted database blobs in R2
-   - Clerk authentication middleware protects all `/api/*` routes
-   - Entry point: `worker/index.ts`
+**`src/`** - Client web application (React + Vite)
+- Runs in the browser
+- Uses SQLite via `sqlocal` (WASM-based client-side database)
+- React 19, TanStack Query for data management
+- Tailwind CSS v4 for styling
+- Entry point: `src/main.tsx`
+- Communicates with a separate API server at `/api/*` endpoints
 
 ### Path Aliases
 
 TypeScript path aliases configured in `vite.config.ts`:
 
 - `@app/*` → `./src/*`
-- `@worker/*` → `./worker/*`
 
 ### TypeScript Configuration
 
@@ -58,7 +53,6 @@ Project uses composite TypeScript setup:
 
 - `tsconfig.json` - Root references file
 - `tsconfig.app.json` - Client app config
-- `tsconfig.worker.json` - Worker config
 - `tsconfig.node.json` - Node build scripts config
 
 ### End-to-End Encryption
@@ -68,7 +62,7 @@ Project uses composite TypeScript setup:
 1. User provides a passphrase in the client
 2. Client derives AES-GCM key via PBKDF2 (100k iterations, userId as salt)
 3. All journal data is encrypted client-side before storage or sync
-4. Worker only handles opaque encrypted blobs in R2
+4. API server only handles opaque encrypted blobs
 
 **Crypto utilities** (`src/utils/crypto.ts`):
 
@@ -94,13 +88,14 @@ Project uses composite TypeScript setup:
   - On mutation (immediate sync after data changes)
   - On sign-in (initial sync when user authenticates)
 - Pull-merge-push strategy (`src/features/sync/client.ts`):
-  1. Fetch encrypted database blob from R2
+  1. Fetch encrypted database blob from API server (`GET /api/journal`)
   2. Decrypt and merge into local database
-  3. Encrypt local database and upload to R2
+  3. Encrypt local database and upload to API server (`PUT /api/journal`)
 - Uses `updated_at` timestamps for last-write-wins conflict resolution
 - Merge logic in `src/db/merger.ts` handles combining remote and local state
 - Data format: JSON with `notes` array and `schema_version` field
 - Skips push if pull fails to avoid out-of-date overwrites
+- Uses standard fetch API for server communication
 
 **Migrations** (`src/db/migrations/`):
 
@@ -114,19 +109,17 @@ Project uses composite TypeScript setup:
 **Clerk integration**:
 
 - Client uses `@clerk/clerk-react` with `ClerkProvider` in `src/main.tsx`
-- Worker middleware (`worker/clerk-middleware.ts`) validates session tokens
-- Middleware extracts `userId` and attaches to Hono context
-- All `/api/*` routes are protected except `/api/status`
+- Session tokens are sent with API requests to the separate API server
+- API server validates session tokens and protects `/api/*` routes
 
 ### API Endpoints
 
-Worker exposes:
+The client expects the following API endpoints from the separate API server:
 
-- `GET /api/status` - Public health check
 - `GET /api/journal` - Download encrypted database for current user
 - `PUT /api/journal` - Upload encrypted database for current user
 
-R2 storage key format: `{userId}:journal`
+These endpoints are implemented in a separate API server repository.
 
 ### State Management
 
@@ -137,25 +130,17 @@ R2 storage key format: `{userId}:journal`
 - All queries auto-invalidate on any mutation (acceptable for local-first data)
 - `SyncProvider` orchestrates background sync via custom hooks
 
-### Cloudflare Workers Configuration
+### Environment Variables
 
-**`wrangler.jsonc`**:
-
-- Worker entry point: `worker/index.ts`
-- R2 bucket binding: `journal_bucket` (bucket name: `journal-bucket`)
-- Assets serve as SPA (single-page-application routing)
-
-**Environment variables** (`.env`/`.dev.vars`):
+**Environment variables** (`.env`):
 
 - `VITE_CLERK_PUBLISHABLE_KEY` - Clerk public key (client)
-- `CLERK_SECRET_KEY` - Clerk secret key (worker only)
 
 ### Code Style
 
 - Language: TypeScript (ESM) + React
 - Formatting/linting: oxlint and oxfmt
 - Prefer small, focused modules
-- Keep UI in `src/` and Worker-only logic in `worker/`
 - CSS: Tailwind CSS v4 for styling
 
 ### Commit Conventions
@@ -164,8 +149,6 @@ Commit messages follow lightweight Conventional Commits: `feat:`, `fix:`, `chore
 
 ## Key Files
 
-- `worker/index.ts` - Hono server with journal API
-- `worker/clerk-middleware.ts` - Authentication middleware
 - `src/utils/crypto.ts` - Encryption/decryption utilities
 - `src/db/db.ts` - Database schema and client setup
 - `src/db/merger.ts` - Conflict-free merge logic (dump/merge functions)

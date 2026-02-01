@@ -1,9 +1,11 @@
+import { fetch } from "@tauri-apps/plugin-http";
+import { API_BASE_URL } from "@app/config/api";
 import { store } from "@app/store";
 import { type Result, err, ok } from "@app/utils/result";
-import { hc } from "hono/client";
-import type { AppType } from "../../../worker/index";
 
-const client = hc<AppType>("/");
+// API response types
+type JournalGetResponse = { data: string };
+type JournalPutRequest = { data: string };
 
 // Flag to prevent infinite loop when syncing triggers store changes
 let isSyncing = false;
@@ -22,7 +24,12 @@ export function getIsSyncing(): boolean {
  */
 async function fetchFromRemote(): Promise<Result<string | null, string>> {
   try {
-    const response = await client.api.journal.$get();
+    const response = await fetch(`${API_BASE_URL}/api/journal`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       // 404 means no remote data yet - this is valid for new users
@@ -35,7 +42,7 @@ async function fetchFromRemote(): Promise<Result<string | null, string>> {
       return err(`HTTP ${response.status}`);
     }
 
-    const json = await response.json();
+    const json = (await response.json()) as JournalGetResponse;
     return ok(json.data);
   } catch (error) {
     console.error("Failed to fetch from remote:", error);
@@ -48,8 +55,13 @@ async function fetchFromRemote(): Promise<Result<string | null, string>> {
  */
 async function uploadToRemote(data: string): Promise<Result<void, string>> {
   try {
-    const response = await client.api.journal.$put({
-      json: { data },
+    const body: JournalPutRequest = { data };
+    const response = await fetch(`${API_BASE_URL}/api/journal`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

@@ -23,8 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-.wrangler
-.dev.vars*
 *.module.css.d.ts
 .env
 src/routeTree.gen.ts

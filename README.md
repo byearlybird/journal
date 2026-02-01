@@ -4,8 +4,7 @@ A journaling app.
 
 ## Project Structure
 
-- `worker/` - Cloudflare Worker runtime (server-side) code
-- `src/` - Client web-app code
+- `src/` - Client web-app code (SPA)
 
 ## Development
 

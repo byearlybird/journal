@@ -26,3 +26,6 @@ dist-ssr
 *.module.css.d.ts
 .env
 src/routeTree.gen.ts
+
+*storybook.log
+storybook-static

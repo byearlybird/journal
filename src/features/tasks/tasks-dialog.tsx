@@ -28,7 +28,7 @@ export function TasksDialog({ open, onClose }: { open: boolean; onClose: () => v
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/70"
           />
-          <div className="fixed inset-x-0 bottom-0 flex h-svh w-screen items-end justify-center p-2">
+          <div className="fixed inset-x-0 bottom-0 flex h-svh w-screen items-end justify-center p-2 pb-safe-bottom">
             <DialogPanel
               as={motion.div}
               initial={{ opacity: 0, y: 100 }}

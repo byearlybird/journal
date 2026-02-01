@@ -14,11 +14,9 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <SyncProvider>
-      <AppLayout>
-        <Outlet />
-      </AppLayout>
-    </SyncProvider>
+    <AppLayout>
+      <Outlet />
+    </AppLayout>
   );
 }
 

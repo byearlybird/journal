@@ -26,9 +26,9 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
     if (content.trim() === "") return;
 
     if (entryType === "note") {
-      createNote({ content: content.trim() });
+      createNote.mutate({ content: content.trim() });
     } else if (entryType === "task") {
-      createTask({ content: content.trim() });
+      createTask.mutate({ content: content.trim() });
     }
 
     setContent("");

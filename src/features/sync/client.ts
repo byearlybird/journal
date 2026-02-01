@@ -1,6 +1,6 @@
 import { fetch } from "@tauri-apps/plugin-http";
-import { API_BASE_URL } from "@app/config/api";
-import { store } from "@app/store";
+import { ENV } from "@app/env";
+import { dumpDatabase, mergeIntoDatabase } from "@app/db";
 import { type Result, err, ok } from "@app/utils/result";
 
 // API response types
@@ -24,7 +24,7 @@ export function getIsSyncing(): boolean {
  */
 async function fetchFromRemote(): Promise<Result<string | null, string>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/journal`, {
+    const response = await fetch(`${ENV.VITE_API_BASE_URL}/api/journal`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ async function fetchFromRemote(): Promise<Result<string | null, string>> {
 async function uploadToRemote(data: string): Promise<Result<void, string>> {
   try {
     const body: JournalPutRequest = { data };
-    const response = await fetch(`${API_BASE_URL}/api/journal`, {
+    const response = await fetch(`${ENV.VITE_API_BASE_URL}/api/journal`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export async function syncPull(): Promise<Result<void, string>> {
   }
 
   try {
-    store.merge(JSON.parse(result.data));
+    await mergeIntoDatabase(JSON.parse(result.data));
     return ok(undefined);
   } catch (error) {
     console.error("Failed to merge remote data:", error);
@@ -106,10 +106,11 @@ export async function syncPull(): Promise<Result<void, string>> {
  */
 export async function syncPush(): Promise<Result<void, string>> {
   try {
-    const localData = JSON.stringify(store.getState());
+    const dump = await dumpDatabase();
+    const localData = JSON.stringify(dump);
     return await uploadToRemote(localData);
   } catch (error) {
-    console.error("Failed to dump store:", error);
+    console.error("Failed to dump database:", error);
     return err(error instanceof Error ? error.message : "Failed to dump");
   }
 }

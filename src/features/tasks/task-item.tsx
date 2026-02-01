@@ -1,5 +1,5 @@
 import { Checkbox, Field, Label } from "@headlessui/react";
-import type { Task } from "@app/store";
+import type { Task } from "@app/db";
 import { CheckIcon } from "@phosphor-icons/react";
 
 export function TaskItem({

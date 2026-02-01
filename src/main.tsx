@@ -4,9 +4,10 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ErrorComponent, Loading } from "./components";
-import { AppProvider } from "./providers";
+import { DatabaseProvider } from "./db";
 import { routeTree } from "./routeTree.gen";
 import "./main.css";
+import { SyncProvider } from "./features/sync/sync-provider";
 
 // Create router instance
 const router = createRouter({ routeTree });
@@ -22,9 +23,11 @@ declare module "@tanstack/react-router" {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY}>
-      <AppProvider loadingComponent={<AppLoading />} errorComponent={<AppError />}>
-        <RouterProvider router={router} />
-      </AppProvider>
+      <DatabaseProvider loadingComponent={<AppLoading />} errorComponent={<AppError />}>
+        <SyncProvider>
+          <RouterProvider router={router} />
+        </SyncProvider>
+      </DatabaseProvider>
     </ClerkProvider>
   </StrictMode>,
 );

@@ -34,6 +34,7 @@ No automated test setup is currently configured. If adding tests, prefer vitest 
 ### Client SPA
 
 **`src/`** - Client web application (React + Vite)
+
 - Runs in the browser
 - Uses SQLite via `sqlocal` (WASM-based client-side database)
 - React 19, TanStack Query for data management

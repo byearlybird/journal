@@ -1,7 +1,8 @@
 import type { Entry } from "./types";
+import type { Task } from "@app/db";
 import { isNoteEntry, isTaskEntry } from "./types";
 import { format, parse, parseISO } from "date-fns";
-import { useUpdateTaskStatus, TaskItem } from "@app/features/tasks";
+import { TaskItem, useUpdateTaskStatus } from "@app/features/tasks";
 import { card } from "@app/styles/card";
 
 export function DayEntriesItem({ entries, date }: { entries: Entry[]; date: string }) {
@@ -25,7 +26,11 @@ export function DayEntriesItem({ entries, date }: { entries: Entry[]; date: stri
 function EntryItem({ entry }: { entry: Entry }) {
   const updateTaskStatus = useUpdateTaskStatus();
   // Parse ISO string to Date object for consistent local timezone formatting
-  const createdAt = parseISO(entry.createdAt);
+  const createdAt = parseISO(entry.created_at);
+
+  const handleStatusChange = (id: string, status: Task["status"]) => {
+    updateTaskStatus.mutate({ id, status });
+  };
 
   if (isNoteEntry(entry)) {
     return (
@@ -40,7 +45,7 @@ function EntryItem({ entry }: { entry: Entry }) {
     return (
       <div className="flex flex-col gap-2 py-4">
         <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>
-        <TaskItem task={entry} onStatusChange={updateTaskStatus} />
+        <TaskItem task={entry} onStatusChange={handleStatusChange} />
       </div>
     );
   }

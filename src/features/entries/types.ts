@@ -1,4 +1,4 @@
-import type { Note, Task } from "@app/store";
+import type { Note, Task } from "@app/db";
 
 export type EntryType = "note" | "task";
 export type NoteEntry = Note & { type: "note" };

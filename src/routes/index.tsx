@@ -10,10 +10,10 @@ export const Route = createFileRoute("/")({
 });
 
 function JournalPage() {
-  const todayNotes = useNotesToday();
-  const todayTasks = useTasksToday();
-  const pastDueTasks = useIncompletePastDueTasks();
-  const allEntries = useEntriesGroupedByDate();
+  const { data: todayNotes = [] } = useNotesToday();
+  const { data: todayTasks = [] } = useTasksToday();
+  const { data: pastDueTasks = [] } = useIncompletePastDueTasks();
+  const { data: allEntries = {} } = useEntriesGroupedByDate();
 
   return (
     <TabGroup defaultIndex={0}>

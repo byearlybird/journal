@@ -7,11 +7,16 @@ import {
   useIncompletePastDueTasks,
   useUpdateTaskStatus,
 } from "@app/features/tasks";
+import type { Task } from "@app/db";
 
 export function TasksDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const todayTasks = useTasksToday();
-  const pastDueTasks = useIncompletePastDueTasks();
+  const { data: todayTasks = [] } = useTasksToday();
+  const { data: pastDueTasks = [] } = useIncompletePastDueTasks();
   const updateTaskStatus = useUpdateTaskStatus();
+
+  const handleStatusChange = (id: string, status: Task["status"]) => {
+    updateTaskStatus.mutate({ id, status });
+  };
 
   return (
     <AnimatePresence>
@@ -49,7 +54,7 @@ export function TasksDialog({ open, onClose }: { open: boolean; onClose: () => v
                         <div className="flex flex-col gap-2 divide-y divide-dashed divide-white/10">
                           {todayTasks.map((task) => (
                             <div key={task.id} className="py-2">
-                              <TaskItem task={task} onStatusChange={updateTaskStatus} />
+                              <TaskItem task={task} onStatusChange={handleStatusChange} />
                             </div>
                           ))}
                         </div>
@@ -61,7 +66,7 @@ export function TasksDialog({ open, onClose }: { open: boolean; onClose: () => v
                         <div className="flex flex-col gap-2 divide-y divide-dashed divide-white/10">
                           {pastDueTasks.map((task) => (
                             <div key={task.id} className="py-2">
-                              <TaskItem task={task} onStatusChange={updateTaskStatus} />
+                              <TaskItem task={task} onStatusChange={handleStatusChange} />
                             </div>
                           ))}
                         </div>

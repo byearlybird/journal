@@ -1,4 +1,4 @@
-import type { Note } from "@app/store";
+import type { Note } from "@app/db";
 import { format, parse, parseISO } from "date-fns";
 import { card } from "@app/styles/card";
 
@@ -22,7 +22,7 @@ export function DayNotesItem({ notes, date }: { notes: Note[]; date: string }) {
 
 function NoteItem({ note }: { note: Note }) {
   // Parse ISO string to Date object for consistent local timezone formatting
-  const createdAt = parseISO(note.createdAt);
+  const createdAt = parseISO(note.created_at);
   return (
     <div className="flex flex-col gap-2 py-4">
       <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>

@@ -1,58 +1,71 @@
-import { store } from "@app/store";
+import { notesRepo, tasksRepo } from "@app/db";
+import { useQuery } from "@tanstack/react-query";
 import { compareDesc, format, isToday, parseISO } from "date-fns";
-import { createStoreSelector } from "@app/utils/store-selectors";
 import type { Entry } from "./types";
 
-export const useEntriesGroupedByDate = createStoreSelector(
-  ["notes", "tasks"],
-  (): Record<string, Entry[]> => {
-    // Get all notes and add type discriminator
-    const noteEntries: Entry[] = store.list("notes").map((note) => ({
-      ...note,
-      type: "note" as const,
-    }));
+const ENTRIES_QUERY_KEY = ["entries"];
 
-    // Get all tasks and add type discriminator
-    const taskEntries: Entry[] = store.list("tasks").map((task) => ({
-      ...task,
-      type: "task" as const,
-    }));
+export function useEntriesGroupedByDate() {
+  return useQuery({
+    queryKey: ENTRIES_QUERY_KEY,
+    queryFn: async (): Promise<Record<string, Entry[]>> => {
+      const [notes, tasks] = await Promise.all([notesRepo.findAll(), tasksRepo.findAll()]);
 
-    // Combine and sort by createdAt descending
-    const allEntries = [...noteEntries, ...taskEntries].sort((a, b) =>
-      compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
-    );
+      // Get all notes and add type discriminator
+      const noteEntries: Entry[] = notes.map((note) => ({
+        ...note,
+        type: "note" as const,
+      }));
 
-    // Group by date
-    const grouped: Record<string, Entry[]> = {};
-    for (const entry of allEntries) {
-      const date = format(parseISO(entry.createdAt), "yyyy-MM-dd");
-      grouped[date] ??= [];
-      grouped[date].push(entry);
-    }
-    return grouped;
-  },
-);
+      // Get all tasks and add type discriminator
+      const taskEntries: Entry[] = tasks.map((task) => ({
+        ...task,
+        type: "task" as const,
+      }));
 
-export const useEntriesToday = createStoreSelector(["notes", "tasks"], (): Entry[] => {
-  // Get today's notes
-  const noteEntries: Entry[] = store
-    .list("notes", { where: (note) => isToday(parseISO(note.createdAt)) })
-    .map((note) => ({
-      ...note,
-      type: "note",
-    }));
+      // Combine and sort by created_at descending
+      const allEntries = [...noteEntries, ...taskEntries].sort((a, b) =>
+        compareDesc(parseISO(a.created_at), parseISO(b.created_at)),
+      );
 
-  // Get today's tasks
-  const taskEntries: Entry[] = store
-    .list("tasks", { where: (task) => isToday(parseISO(task.createdAt)) })
-    .map((task) => ({
-      ...task,
-      type: "task",
-    }));
+      // Group by date
+      const grouped: Record<string, Entry[]> = {};
+      for (const entry of allEntries) {
+        const date = format(parseISO(entry.created_at), "yyyy-MM-dd");
+        grouped[date] ??= [];
+        grouped[date].push(entry);
+      }
+      return grouped;
+    },
+  });
+}
 
-  // Combine and sort by createdAt descending
-  return [...noteEntries, ...taskEntries].sort((a, b) =>
-    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
-  );
-});
+export function useEntriesToday() {
+  return useQuery({
+    queryKey: [...ENTRIES_QUERY_KEY, "today"],
+    queryFn: async (): Promise<Entry[]> => {
+      const [notes, tasks] = await Promise.all([notesRepo.findAll(), tasksRepo.findAll()]);
+
+      // Get today's notes
+      const noteEntries: Entry[] = notes
+        .filter((note) => isToday(parseISO(note.created_at)))
+        .map((note) => ({
+          ...note,
+          type: "note" as const,
+        }));
+
+      // Get today's tasks
+      const taskEntries: Entry[] = tasks
+        .filter((task) => isToday(parseISO(task.created_at)))
+        .map((task) => ({
+          ...task,
+          type: "task" as const,
+        }));
+
+      // Combine and sort by created_at descending
+      return [...noteEntries, ...taskEntries].sort((a, b) =>
+        compareDesc(parseISO(a.created_at), parseISO(b.created_at)),
+      );
+    },
+  });
+}

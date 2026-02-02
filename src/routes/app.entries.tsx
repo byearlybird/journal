@@ -1,7 +1,7 @@
 import { DayEntriesItem, useEntriesGroupedByDate } from "@app/features/entries";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/all-entries")({
+export const Route = createFileRoute("/app/entries")({
   component: RouteComponent,
 });
 

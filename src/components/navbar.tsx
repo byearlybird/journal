@@ -15,13 +15,11 @@ type NavbarProps = {
 
 export function Navbar({ navItems }: NavbarProps) {
   return (
-    <div className="fixed left-[max(var(--safe-left),0.5rem)] bottom-[max(var(--safe-bottom),0.5rem)]">
-      <nav className="flex gap-1 rounded-lg border bg-black/80 p-0.5 backdrop-blur">
-        {navItems.map((item) => (
-          <NavItem key={item.href} {...item} />
-        ))}
-      </nav>
-    </div>
+    <nav className="flex gap-1 rounded-lg border bg-black/80 p-0.5 backdrop-blur">
+      {navItems.map((item) => (
+        <NavItem key={item.href} {...item} />
+      ))}
+    </nav>
   );
 }
 

@@ -1,21 +1,27 @@
-import { ActionNavbar, Navbar, type NavItemData } from "@app/components";
-import { CreateDialog } from "@app/features/entries";
-import { TasksDialog } from "@app/features/tasks";
-import { useRouterState } from "@tanstack/react-router";
-import { BookOpenIcon, GearIcon, ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
-import { useState } from "react";
+import { ENV } from "@app/env";
+import { ErrorComponent, Loading } from "@app/components";
+import { ClerkProvider } from "@clerk/clerk-react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { migrator } from "@app/db";
 
 export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
+  errorComponent: AppError,
+  pendingComponent: AppLoading,
+  loader: () => {
+    return migrator.migrateToLatest();
+  },
 });
 
 function RootComponent() {
   return (
-    <AppLayout>
-      <Outlet />
-    </AppLayout>
+    <ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY} standardBrowser={false}>
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }
 
@@ -23,38 +29,32 @@ function NotFoundComponent() {
   return <div className="mx-auto max-w-2xl p-4 text-white">404 - Page not found</div>;
 }
 
-function AppLayout({ children }: { children: React.ReactNode }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isPushpinDialogOpen, setIsPushpinDialogOpen] = useState(false);
-
-  const navItems: NavItemData[] = [
-    {
-      href: "/",
-      label: "Today",
-      icon: SunHorizonIcon,
-      isActive: pathname === "/",
-    },
-    {
-      href: "/all-entries",
-      label: "All Entries",
-      icon: ListBulletsIcon,
-      isActive: pathname === "/all-entries",
-    },
-  ];
-
+function AppLoading() {
   return (
-    <>
-      <div className="flex h-screen flex-col max-w-2xl mx-auto pt-safe-top">
-        <div className="flex-1 overflow-y-auto pb-20">{children}</div>
-        <Navbar navItems={navItems} />
-        <ActionNavbar
-          onCreateClick={() => setIsCreateDialogOpen(true)}
-          onPushpinClick={() => setIsPushpinDialogOpen(true)}
-        />
-      </div>
-      <CreateDialog open={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
-      <TasksDialog open={isPushpinDialogOpen} onClose={() => setIsPushpinDialogOpen(false)} />
-    </>
+    <main className="flex h-screen items-center justify-center">
+      <Loading />
+    </main>
   );
 }
+
+function AppError() {
+  return (
+    <main className="flex size-full h-screen items-center justify-center">
+      <ErrorComponent />
+    </main>
+  );
+}
+
+const queryClient = new QueryClient({
+  mutationCache: new MutationCache({
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  }),
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60, // 1 minute
+      refetchOnWindowFocus: false,
+    },
+  },
+});

@@ -9,7 +9,7 @@ function RouteComponent() {
   const { data: allEntries = {} } = useEntriesGroupedByDate();
 
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col px-4 pt-2 divide-y divide-dashed *:not-first:pt-8">
       {Object.entries(allEntries).map(([date, entries]) => (
         <DayEntriesItem key={date} date={date} entries={entries} />
       ))}

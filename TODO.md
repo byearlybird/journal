@@ -1,2 +1,4 @@
 - [x] pull date formatting methods out into named utils -- i.e. format(dateObj, "MMM d") -> formatMonthDate
 - [ ] replace all existing headless-ui components with base-ui ones
+- [ ] full screen note detail view
+- [ ] full screen task detail view

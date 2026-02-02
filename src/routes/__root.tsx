@@ -2,10 +2,9 @@ import { ActionNavbar, Navbar, type NavItemData } from "@app/components";
 import { CreateDialog } from "@app/features/entries";
 import { TasksDialog } from "@app/features/tasks";
 import { useRouterState } from "@tanstack/react-router";
-import { BookOpenIcon, GearIcon } from "@phosphor-icons/react";
+import { BookOpenIcon, GearIcon, ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { SyncProvider } from "@app/features/sync";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -32,15 +31,15 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems: NavItemData[] = [
     {
       href: "/",
-      label: "Journal",
-      icon: BookOpenIcon,
+      label: "Today",
+      icon: SunHorizonIcon,
       isActive: pathname === "/",
     },
     {
-      href: "/settings",
-      label: "Settings",
-      icon: GearIcon,
-      isActive: pathname === "/settings",
+      href: "/all-entries",
+      label: "All Entries",
+      icon: ListBulletsIcon,
+      isActive: pathname === "/all-entries",
     },
   ];
 

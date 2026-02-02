@@ -7,7 +7,6 @@ import { ErrorComponent, Loading } from "./components";
 import { DatabaseProvider } from "./db";
 import { routeTree } from "./routeTree.gen";
 import "./main.css";
-import { SyncProvider } from "./features/sync/sync-provider";
 
 // Create router instance
 const router = createRouter({ routeTree });
@@ -22,11 +21,9 @@ declare module "@tanstack/react-router" {
 // biome-ignore lint/style/noNonNullAssertion: we know the element is always present
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY}>
+    <ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY} standardBrowser={false}>
       <DatabaseProvider loadingComponent={<AppLoading />} errorComponent={<AppError />}>
-        <SyncProvider>
-          <RouterProvider router={router} />
-        </SyncProvider>
+        <RouterProvider router={router} />
       </DatabaseProvider>
     </ClerkProvider>
   </StrictMode>,

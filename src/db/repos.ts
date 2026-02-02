@@ -44,10 +44,6 @@ export const notesRepo = {
       .where("id", "=", id)
       .execute();
   },
-
-  async hardDelete(id: string): Promise<void> {
-    await db.deleteFrom("notes").where("id", "=", id).execute();
-  },
 };
 
 // Tasks repository
@@ -92,9 +88,5 @@ export const tasksRepo = {
       .set({ is_deleted: 1, updated_at: new Date().toISOString() })
       .where("id", "=", id)
       .execute();
-  },
-
-  async hardDelete(id: string): Promise<void> {
-    await db.deleteFrom("tasks").where("id", "=", id).execute();
   },
 };

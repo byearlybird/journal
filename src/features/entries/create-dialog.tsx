@@ -1,24 +1,20 @@
 import { cx } from "cva";
 import { Button, Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
-import { CheckIcon, XIcon } from "@phosphor-icons/react";
+import { CheckIcon, CircleIcon, SquareIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useCreateNote } from "@app/features/notes";
 import { useCreateTask } from "@app/features/tasks";
-import { Switch } from "@app/components/switch";
-import type { EntryType } from "./types";
 
 export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const createNote = useCreateNote();
   const createTask = useCreateTask();
   const [content, setContent] = useState<string>("");
-  const [entryType, setEntryType] = useState<EntryType>("note");
-  const [keepOpen, setKeepOpen] = useState(false);
+  const [entryType, setEntryType] = useState<"note" | "task">("note");
 
   const handleClose = () => {
     setContent("");
     setEntryType("note");
-    setKeepOpen(false);
     onClose();
   };
 
@@ -32,13 +28,7 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
     }
 
     setContent("");
-    if (!keepOpen) {
-      handleClose();
-    }
-  };
-
-  const toggleKeepOpen = () => {
-    setKeepOpen(!keepOpen);
+    handleClose();
   };
 
   return (
@@ -60,12 +50,7 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
               className="flex h-1/2 w-full max-w-2xl flex-col overflow-y-auto rounded-lg border bg-graphite"
             >
               <DialogTitle className="sr-only">Create a new entry</DialogTitle>
-              <Toolbar
-                entryType={entryType}
-                keepOpen={keepOpen}
-                onEntryTypeChange={setEntryType}
-                onToggleKeepOpen={toggleKeepOpen}
-              />
+              <Toolbar entryType={entryType} onEntryTypeChange={setEntryType} />
               <Textarea
                 placeholder="What's on your mind?"
                 value={content}
@@ -99,26 +84,23 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
 
 function Toolbar({
   entryType,
-  keepOpen,
   onEntryTypeChange,
-  onToggleKeepOpen,
 }: {
-  entryType: EntryType;
-  keepOpen: boolean;
-  onEntryTypeChange: (type: EntryType) => void;
-  onToggleKeepOpen: () => void;
+  entryType: "note" | "task";
+  onEntryTypeChange: (type: "note" | "task") => void;
 }) {
   return (
     <div className="flex items-center justify-between p-2">
       <div className="flex w-fit rounded-full shrink-0 gap-2">
         <ToolbarButton selected={entryType === "note"} onClick={() => onEntryTypeChange("note")}>
+          <SquareIcon className="size-4" />
           Note
         </ToolbarButton>
         <ToolbarButton selected={entryType === "task"} onClick={() => onEntryTypeChange("task")}>
+          <CircleIcon className="size-4" />
           Task
         </ToolbarButton>
       </div>
-      <Switch checked={keepOpen} onChange={onToggleKeepOpen} label="Keep open" />
     </div>
   );
 }
@@ -137,7 +119,7 @@ function ToolbarButton({
       type="button"
       onClick={onClick}
       className={cx(
-        "flex px-2.5 py-1.5 items-center justify-center rounded-lg text-white/50 data-active:scale-95 transition-all",
+        "flex px-2.5 py-1.5 gap-2 items-center justify-center rounded-lg text-white/50 data-active:scale-95 transition-all",
         selected && "bg-black/70 text-white/90",
       )}
     >

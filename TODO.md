@@ -1,1 +1,2 @@
-- [ ] pull date formatting methods out into named utils -- i.e. format(dateObj, "MMM d") -> formatMonthDate
+- [x] pull date formatting methods out into named utils -- i.e. format(dateObj, "MMM d") -> formatMonthDate
+- [ ] replace all existing headless-ui components with base-ui ones

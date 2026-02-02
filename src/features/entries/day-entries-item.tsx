@@ -1,54 +1,16 @@
-import type { Entry } from "./types";
-import type { Task } from "@app/db";
-import { isNoteEntry, isTaskEntry } from "./types";
-import { format, parse, parseISO } from "date-fns";
-import { TaskItem, useUpdateTaskStatus } from "@app/features/tasks";
-import { card } from "@app/styles/card";
+import type { TimelineItem } from "./types";
+import { formatMonthDate, formatDayOfWeek } from "@app/utils/date-utils";
+import { Timeline } from "./timeline";
+import { parseISO } from "date-fns";
 
-export function DayEntriesItem({ entries, date }: { entries: Entry[]; date: string }) {
-  // Parse date string (YYYY-MM-DD) as local date
-  const dateObj = parse(date, "yyyy-MM-dd", new Date());
+export function DayEntriesItem({ entries, date }: { entries: TimelineItem[]; date: string }) {
   return (
-    <article className={card({ className: "flex flex-col gap-2" })}>
+    <article className="flex flex-col gap-4">
       <span className="flex items-baseline gap-3">
-        <time className="font-medium text-lg">{format(dateObj, "MMM d")}</time>
-        <span className="text-sm text-white/70">{format(dateObj, "EEE")}</span>
+        <time className="font-medium text-lg">{formatMonthDate(parseISO(date))}</time>
+        <span className="text-sm text-white/70">{formatDayOfWeek(parseISO(date))}</span>
       </span>
-      <div className="flex flex-col gap-2 divide-y divide-dashed divide-white/10">
-        {entries.map((entry) => (
-          <EntryItem key={entry.id} entry={entry} />
-        ))}
-      </div>
+      <Timeline size="compact" entries={entries} />
     </article>
   );
-}
-
-function EntryItem({ entry }: { entry: Entry }) {
-  const updateTaskStatus = useUpdateTaskStatus();
-  // Parse ISO string to Date object for consistent local timezone formatting
-  const createdAt = parseISO(entry.created_at);
-
-  const handleStatusChange = (id: string, status: Task["status"]) => {
-    updateTaskStatus.mutate({ id, status });
-  };
-
-  if (isNoteEntry(entry)) {
-    return (
-      <div className="flex flex-col gap-2 py-4">
-        <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>
-        <p className="leading-relaxed">{entry.content}</p>
-      </div>
-    );
-  }
-
-  if (isTaskEntry(entry)) {
-    return (
-      <div className="flex flex-col gap-2 py-4">
-        <time className="text-sm text-white/70">{format(createdAt, "h:mm a")}</time>
-        <TaskItem task={entry} onStatusChange={handleStatusChange} />
-      </div>
-    );
-  }
-
-  return null;
 }

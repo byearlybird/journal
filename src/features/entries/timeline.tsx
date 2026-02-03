@@ -2,23 +2,18 @@ import { formatTime } from "@app/utils/date-utils";
 import { CheckCircleIcon, CircleIcon, SquareIcon } from "@phosphor-icons/react";
 import type { TimelineItem } from "./types";
 import { Button as BaseButton } from "@base-ui/react";
-import { useRouter } from "@tanstack/react-router";
 
 export function Timeline({
   entries,
   size = "default",
+  onEntryClick,
 }: {
   entries: TimelineItem[];
   size?: "default" | "compact";
+  onEntryClick?: (entry: TimelineItem) => void;
 }) {
-  const router = useRouter();
-
   const handleClick = (entry: TimelineItem) => {
-    if (entry.type === "note") {
-      router.navigate({ to: "/note/$id", params: { id: entry.id } });
-    } else if (entry.type === "task") {
-      router.navigate({ to: "/task/$id", params: { id: entry.id } });
-    }
+    onEntryClick?.(entry);
   };
 
   return (

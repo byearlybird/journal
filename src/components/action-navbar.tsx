@@ -1,14 +1,16 @@
 import { LightningIcon, PenNibIcon } from "@phosphor-icons/react";
-import { useIncompleteTasks } from "@app/features/tasks";
 
 type ActionNavbarProps = {
+  incompleteTasksCount: number;
   onCreateClick: () => void;
   onPushpinClick: () => void;
 };
 
-export function ActionNavbar({ onCreateClick, onPushpinClick }: ActionNavbarProps) {
-  const { data: incompleteTasks = [] } = useIncompleteTasks();
-
+export function ActionNavbar({
+  incompleteTasksCount,
+  onCreateClick,
+  onPushpinClick,
+}: ActionNavbarProps) {
   return (
     <div className="fixed right-[max(var(--safe-right),0.5rem)] bottom-[max(var(--safe-bottom),0.5rem)]">
       <div className="flex gap-1 rounded-lg border bg-black/80 p-0.5 backdrop-blur">
@@ -19,7 +21,7 @@ export function ActionNavbar({ onCreateClick, onPushpinClick }: ActionNavbarProp
         >
           <LightningIcon
             className="size-5"
-            weight={incompleteTasks.length > 0 ? "fill" : "regular"}
+            weight={incompleteTasksCount > 0 ? "fill" : "regular"}
           />
         </button>
         <button

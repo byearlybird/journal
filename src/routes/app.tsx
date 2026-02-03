@@ -1,25 +1,39 @@
 import { ActionNavbar, Navbar, type NavItemData } from "@app/components";
+import { tasksRepo, type Task } from "@app/db";
 import { CreateDialog } from "@app/features/entries";
 import { TasksDialog } from "@app/features/tasks";
-import { useRouterState } from "@tanstack/react-router";
+import { compareDesc, parseISO } from "date-fns";
 import { ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
+  loader: async () => {
+    const tasks = await tasksRepo.findAll();
+    const incompleteTasks = tasks
+      .filter((task) => task.status === "incomplete")
+      .sort((a, b) => compareDesc(parseISO(a.created_at), parseISO(b.created_at)));
+    return { incompleteTasks };
+  },
 });
 
 function RouteComponent() {
+  const { incompleteTasks } = Route.useLoaderData();
   return (
-    <AppLayout>
+    <AppLayout incompleteTasks={incompleteTasks}>
       <Outlet />
     </AppLayout>
   );
 }
 
-function AppLayout({ children }: { children: React.ReactNode }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+function AppLayout({
+  children,
+  incompleteTasks,
+}: {
+  children: React.ReactNode;
+  incompleteTasks: Task[];
+}) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isPushpinDialogOpen, setIsPushpinDialogOpen] = useState(false);
 
@@ -28,13 +42,11 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       href: "/app",
       label: "Today",
       icon: SunHorizonIcon,
-      isActive: pathname === "/app",
     },
     {
       href: "/app/entries",
       label: "All Entries",
       icon: ListBulletsIcon,
-      isActive: pathname === "/app/entries",
     },
   ];
 
@@ -46,12 +58,17 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           <Navbar navItems={navItems} />
         </div>
         <ActionNavbar
+          incompleteTasksCount={incompleteTasks.length}
           onCreateClick={() => setIsCreateDialogOpen(true)}
           onPushpinClick={() => setIsPushpinDialogOpen(true)}
         />
       </div>
       <CreateDialog open={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
-      <TasksDialog open={isPushpinDialogOpen} onClose={() => setIsPushpinDialogOpen(false)} />
+      <TasksDialog
+        incompleteTasks={incompleteTasks}
+        open={isPushpinDialogOpen}
+        onClose={() => setIsPushpinDialogOpen(false)}
+      />
     </>
   );
 }

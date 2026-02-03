@@ -2,7 +2,6 @@ import { ENV } from "@app/env";
 import { ErrorComponent, Loading } from "@app/components";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { migrator } from "@app/db";
 
 export const Route = createRootRoute({
@@ -18,9 +17,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY} standardBrowser={false}>
-      <QueryClientProvider client={queryClient}>
-        <Outlet />
-      </QueryClientProvider>
+      <Outlet />
     </ClerkProvider>
   );
 }
@@ -44,17 +41,3 @@ function AppError() {
     </main>
   );
 }
-
-const queryClient = new QueryClient({
-  mutationCache: new MutationCache({
-    onSuccess: () => {
-      queryClient.invalidateQueries();
-    },
-  }),
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60, // 1 minute
-      refetchOnWindowFocus: false,
-    },
-  },
-});

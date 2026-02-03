@@ -1,14 +1,15 @@
 import { notesRepo, type NewNote } from "@app/db";
-import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
 
 export function useCreateNote() {
-  return useMutation({
-    mutationFn: async (note: Pick<NewNote, "content">) => {
-      return await notesRepo.create({
-        content: note.content,
-        scope: "daily",
-        category: "log",
-      });
-    },
-  });
+  const router = useRouter();
+
+  return async (note: Pick<NewNote, "content">) => {
+    await notesRepo.create({
+      content: note.content,
+      scope: "daily",
+      category: "log",
+    });
+    await router.invalidate();
+  };
 }

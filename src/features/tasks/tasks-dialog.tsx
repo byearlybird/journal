@@ -1,15 +1,22 @@
+import type { Task } from "@app/db";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
-import { TaskItem, useIncompleteTasks, useUpdateTaskStatus } from "@app/features/tasks";
-import type { Task } from "@app/db";
+import { TaskItem, useUpdateTaskStatus } from "@app/features/tasks";
 
-export function TasksDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { data: incompleteTasks = [] } = useIncompleteTasks();
+export function TasksDialog({
+  incompleteTasks,
+  open,
+  onClose,
+}: {
+  incompleteTasks: Task[];
+  open: boolean;
+  onClose: () => void;
+}) {
   const updateTaskStatus = useUpdateTaskStatus();
 
   const handleStatusChange = (id: string, status: Task["status"]) => {
-    updateTaskStatus.mutate({ id, status });
+    updateTaskStatus({ id, status });
   };
 
   return (

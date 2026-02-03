@@ -14,7 +14,7 @@ type NavbarProps = {
 
 export function Navbar({ navItems }: NavbarProps) {
   return (
-    <nav className="flex gap-1 rounded-lg border bg-black/80 p-0.5 backdrop-blur">
+    <nav className="flex gap-1 rounded-lg border bg-slate-dark p-0.5 backdrop-blur">
       {navItems.map((item) => (
         <NavItem key={item.href} {...item} />
       ))}
@@ -36,7 +36,7 @@ function NavItem({ href, label, icon: Icon }: NavItemData) {
       onClick={handleClick}
       className={cx(
         "flex items-center gap-2 rounded-md px-3 py-2 transition-transform duration-100 ease-in-out active:scale-95 [&>svg]:size-4",
-        isActive && "border bg-white/10 text-white backdrop-blur",
+        isActive && "border bg-slate-light text-ivory-light backdrop-blur",
       )}
     >
       <Icon className="size-4" />

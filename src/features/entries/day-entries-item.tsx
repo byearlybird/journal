@@ -16,7 +16,7 @@ export function DayEntriesItem({
     <article className="flex flex-col gap-4">
       <span className="flex items-baseline gap-3">
         <time className="font-medium text-lg">{formatMonthDate(parseISO(date))}</time>
-        <span className="text-sm text-white/70">{formatDayOfWeek(parseISO(date))}</span>
+        <span className="text-sm text-cloud-light">{formatDayOfWeek(parseISO(date))}</span>
       </span>
       <Timeline size="compact" entries={entries} onEntryClick={onEntryClick} />
     </article>

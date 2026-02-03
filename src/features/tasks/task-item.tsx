@@ -20,11 +20,11 @@ export function TaskItem({
       <Checkbox
         checked={isComplete}
         onChange={handleChange}
-        className="group flex size-5 shrink-0 items-center justify-center rounded-full border border-white/30 transition-all hover:border-white/50 data-checked:border-white/50"
+        className="group flex size-5 shrink-0 items-center justify-center rounded-full border border-cloud-dark transition-all hover:border-cloud-light data-checked:border-cloud-light"
       >
         {isComplete && <CheckIcon className="size-3" weight="bold" />}
       </Checkbox>
-      <Label className={isComplete ? "text-white/50 line-through" : "text-white/90"}>
+      <Label className={isComplete ? "text-cloud-medium line-through" : "text-ivory-light"}>
         {task.content}
       </Label>
     </Field>

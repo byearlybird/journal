@@ -23,14 +23,14 @@ export function Timeline({
           {/* Left side: dot and line */}
           <div className="flex flex-col items-center">
             {entry.type === "note" ? (
-              <SquareIcon className="size-4 text-white/50" />
+              <SquareIcon className="size-4 text-cloud-medium" />
             ) : entry.status === "complete" ? (
-              <CheckCircleIcon className="size-4 text-white/50" />
+              <CheckCircleIcon className="size-4 text-cloud-medium" />
             ) : (
-              <CircleIcon className="size-4 text-white/50" />
+              <CircleIcon className="size-4 text-cloud-medium" />
             )}
             {index < entries.length - 1 && (
-              <div className="w-px flex-1 border-r border-white/10 border-dotted my-1" />
+              <div className="w-px flex-1 border-r border-slate-light border-dotted my-1" />
             )}
           </div>
 
@@ -41,7 +41,7 @@ export function Timeline({
             onClick={() => handleClick(entry)}
             className={size === "compact" ? "flex-1 pb-4 min-h-16" : "flex-1 pb-4 min-h-20"}
           >
-            <div className={size === "compact" ? "text-xs text-white/50" : "text-sm text-white/50"}>
+            <div className={size === "compact" ? "text-xs text-cloud-medium" : "text-sm text-cloud-medium"}>
               {formatTime(entry.created_at)}
             </div>
             <div className={size === "compact" ? "mt-2 text-sm line-clamp-2" : "mt-2"}>

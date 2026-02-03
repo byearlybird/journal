@@ -23,7 +23,7 @@ function RootComponent() {
 }
 
 function NotFoundComponent() {
-  return <div className="mx-auto max-w-2xl p-4 text-white">404 - Page not found</div>;
+  return <div className="mx-auto max-w-2xl p-4 text-ivory-light">404 - Page not found</div>;
 }
 
 function AppLoading() {

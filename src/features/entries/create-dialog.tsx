@@ -39,7 +39,7 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70"
+            className="fixed inset-0 bg-slate-dark/80"
           />
           <div className="fixed inset-x-0 top-0 flex h-svh w-screen justify-center p-2 pt-safe-top">
             <DialogPanel
@@ -47,7 +47,7 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
               initial={{ opacity: 0, y: -100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -100 }}
-              className="flex h-1/2 w-full max-w-2xl flex-col overflow-y-auto rounded-lg border bg-graphite"
+              className="flex h-1/2 w-full max-w-2xl flex-col overflow-y-auto rounded-lg border bg-slate-medium"
             >
               <DialogTitle className="sr-only">Create a new entry</DialogTitle>
               <Toolbar entryType={entryType} onEntryTypeChange={setEntryType} />
@@ -55,7 +55,7 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
                 placeholder="What's on your mind?"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="scrollbar-hide h-full border-t border-dotted w-full resize-none p-4 placeholder:text-white/50 focus:outline-none"
+                className="scrollbar-hide h-full border-t border-dotted w-full resize-none p-4 placeholder:text-cloud-medium focus:outline-none"
               />
               <div className="flex justify-between gap-4 p-2">
                 <button
@@ -68,7 +68,7 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
                 <button
                   disabled={content.trim() === ""}
                   type="button"
-                  className="flex size-11 items-center justify-center rounded-full bg-yellow text-black disabled:opacity-50"
+                  className="flex size-11 items-center justify-center rounded-full bg-gold-dark text-black disabled:opacity-50"
                   onClick={handleSave}
                 >
                   <CheckIcon className="h-4 w-4" />
@@ -119,8 +119,8 @@ function ToolbarButton({
       type="button"
       onClick={onClick}
       className={cx(
-        "flex px-2.5 py-1.5 gap-2 items-center justify-center rounded-lg text-white/50 data-active:scale-95 transition-all",
-        selected && "bg-black/70 text-white/90",
+        "flex px-2.5 py-1.5 gap-2 items-center justify-center rounded-lg text-cloud-medium data-active:scale-95 transition-all",
+        selected && "bg-slate-dark text-ivory-light",
       )}
     >
       {children}

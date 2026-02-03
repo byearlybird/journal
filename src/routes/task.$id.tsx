@@ -37,6 +37,10 @@ function RouteComponent() {
     updateTaskStatus({ id: task.id, status: "canceled" });
   };
 
+  const handleReset = () => {
+    updateTaskStatus({ id: task.id, status: "incomplete" });
+  };
+
   const handleBack = () => {
     if (from === "index") {
       navigate({ to: "/app" });
@@ -68,27 +72,37 @@ function RouteComponent() {
       </header>
       {/* Content area */}
       <main className="flex-1 px-4 pb-4">
-        <div className="rounded-md border border-white/10 bg-white/5 p-4">{task.content}</div>
+        <div className="rounded-md border border-slate-light bg-slate-light p-4">{task.content}</div>
       </main>
-      {/* Action section - incomplete only */}
-      {task.status === "incomplete" && (
-        <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
+      {/* Controls section */}
+      <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
+        {task.status === "incomplete" ? (
+          <>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="flex-1 rounded-md border border-slate-light bg-slate-light py-3 font-medium transition-transform active:scale-95 disabled:opacity-50"
+            >
+              Cancel task
+            </button>
+            <button
+              type="button"
+              onClick={handleComplete}
+              className="flex-1 rounded-md bg-gold-dark py-3 font-medium text-black transition-transform active:scale-95 disabled:opacity-50"
+            >
+              Complete
+            </button>
+          </>
+        ) : (
           <button
             type="button"
-            onClick={handleCancel}
-            className="flex-1 rounded-md border border-white/20 bg-white/5 py-3 font-medium transition-transform active:scale-95 disabled:opacity-50"
+            onClick={handleReset}
+            className="w-full rounded-md border border-slate-light bg-slate-light py-3 font-medium transition-transform active:scale-95 disabled:opacity-50"
           >
-            Cancel task
+            {task.status === "complete" ? "Complete" : "Canceled"}
           </button>
-          <button
-            type="button"
-            onClick={handleComplete}
-            className="flex-1 rounded-md bg-yellow-500 py-3 font-medium text-black transition-transform active:scale-95 disabled:opacity-50"
-          >
-            Complete
-          </button>
-        </section>
-      )}
+        )}
+      </section>
     </div>
   );
 }

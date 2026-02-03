@@ -17,10 +17,33 @@
   /* Colors */
   --color-*: initial;
 
-  --color-black: #191919;
-  --color-graphite: #262625;
-  --color-white: #fafaf7;
-  --color-yellow: #c1c05c;
+  /* Slate */
+  --color-slate-dark: #191919;
+  --color-slate-medium: #262625;
+  --color-slate-light: #40403E;
+
+  /* Cloud */
+  --color-cloud-dark: #666663;
+  --color-cloud-medium: #91918D;
+  --color-cloud-light: #BFBFBA;
+
+  /* Ivory */
+  --color-ivory-dark: #E5E4DF;
+  --color-ivory-medium: #F0F0EB;
+  --color-ivory-light: #FAFAF7;
+
+  /* Warm tones */
+  --color-gold-dark: #FADA5E;
+  --color-gold-medium: #FBE488;
+  --color-gold-light: #FCECB0;
+
+  /* Base */
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+
+  /* Semantic */
+  --color-focus: #4DA4F2;
+  --color-error: #E54D43;
 
   /* Radii */
   --radius-*: initial;
@@ -38,9 +61,9 @@
 
 @layer base {
   html {
-    background-color: var(--color-graphite);
+    background-color: var(--color-slate-medium);
     font-family: var(--font-sans);
-    color: color-mix(in oklab, var(--color-white) 90%, transparent);
+    color: var(--color-ivory-dark);
   }
 
   body {
@@ -52,11 +75,20 @@
   }
 
   * {
-    @apply divide-white/10 border-white/10 select-none;
+    @apply divide-slate-light border-slate-light select-none;
     ::-webkit-scrollbar {
       display: none;
     }
     scrollbar-width: none;
     -ms-overflow-style: none;
+  }
+
+  button:focus-visible,
+  [href]:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-focus);
   }
 }

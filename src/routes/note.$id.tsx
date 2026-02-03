@@ -58,7 +58,7 @@ function RouteComponent() {
       </header>
       {/* Content area */}
       <main className="flex-1 px-4 pb-4">
-        <div className="rounded-md border border-white/10 bg-white/5 p-4">{note.content}</div>
+        <div className="rounded-md border border-slate-light bg-slate-light p-4">{note.content}</div>
       </main>
     </div>
   );

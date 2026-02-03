@@ -27,13 +27,13 @@ function JournalPage() {
 
   return (
     <div className="px-4 py-2 space-y-4">
-      <h1 className="text-2xl font-bold sticky flex items-baseline top-0 backdrop-blur-md bg-graphite py-1 gap-2">
+      <h1 className="text-2xl font-bold sticky flex items-baseline top-0 backdrop-blur-md bg-slate-medium py-1 gap-2">
         {formatMonthDate(new Date())}
-        <span className="text-sm text-white/70">{formatDayOfWeek(new Date())}</span>
+        <span className="text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
       </h1>
       {empty ? (
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-white/70 text-center pt-10">No entries yet today</p>
+          <p className="text-sm text-cloud-light text-center pt-10">No entries yet today</p>
         </div>
       ) : (
         <Timeline entries={entries} onEntryClick={handleEntryClick} />

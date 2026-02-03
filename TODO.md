@@ -1,5 +1,8 @@
 - [x] pull date formatting methods out into named utils -- i.e. format(dateObj, "MMM d") -> formatMonthDate
 - [ ] replace all existing headless-ui components with base-ui ones
-- [ ] full screen note detail view
-- [ ] full screen task detail view
+- [x] full screen note detail view
+- [x] full screen task detail view
+- [ ] edit note content
+- [ ] edit task content
 - [ ] review app for touch-friendliness (touch target sizes, keyboard shifting viewport, etc)
+- [ ] delay task disappearance from quick drawer

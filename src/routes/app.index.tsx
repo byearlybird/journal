@@ -38,7 +38,7 @@ function JournalPage() {
   return (
     <div className="px-4 py-2 space-y-4">
       <h1 className="text-2xl font-bold sticky flex items-baseline top-0 backdrop-blur-md bg-slate-medium py-1 gap-2">
-        {formatMonthDate(new Date())}
+        <span className="font-extrabold">{formatMonthDate(new Date())}</span>
         <span className="text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
       </h1>
       {empty ? (

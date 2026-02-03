@@ -11,13 +11,14 @@ const button = cva({
     variant: {
       gold: "bg-gold-dark text-black",
       slate: "bg-slate-light text-ivory-light",
+      ivory: "bg-ivory-light text-slate-dark",
     },
     size: {
       md: "py-3 px-4 font-medium",
     },
   },
   defaultVariants: {
-    variant: "gold",
+    variant: "ivory",
     size: "md",
   },
 });

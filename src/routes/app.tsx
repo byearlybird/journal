@@ -54,7 +54,7 @@ function AppLayout({
     <>
       <div className="flex h-screen flex-col max-w-2xl mx-auto pt-safe-top">
         <div className="flex-1 overflow-y-auto pb-20">{children}</div>
-        <div className="fixed left-[max(var(--safe-left),0.5rem)] bottom-[max(var(--safe-bottom),0.5rem)]">
+        <div className="fixed left-[max(var(--safe-left),1rem)] bottom-[max(var(--safe-bottom),1rem)]">
           <Navbar navItems={navItems} />
         </div>
         <ActionNavbar

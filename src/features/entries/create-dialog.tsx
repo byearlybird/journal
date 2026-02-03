@@ -1,6 +1,8 @@
 import { cx } from "cva";
-import { Button, Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
-import { CheckIcon, CircleIcon, SquareIcon, XIcon } from "@phosphor-icons/react";
+import { Button as BaseButton } from "@base-ui/react";
+import { Button } from "@app/components/button";
+import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
+import { CircleIcon, SquareIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useCreateNote } from "@app/features/notes";
@@ -51,28 +53,19 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
             >
               <DialogTitle className="sr-only">Create a new entry</DialogTitle>
               <Toolbar entryType={entryType} onEntryTypeChange={setEntryType} />
-              <Textarea
+              <textarea
                 placeholder="What's on your mind?"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="scrollbar-hide h-full border-t border-dotted w-full resize-none p-4 placeholder:text-cloud-medium focus:outline-none"
+                className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-4 placeholder:text-cloud-medium focus:outline-none focus-visible:outline-none focus-visible:shadow-none focus:border-none focus:border-0"
               />
               <div className="flex justify-between gap-4 p-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="flex size-11 items-center justify-center rounded-full border"
-                >
-                  <XIcon className="h-4 w-4" />
-                </button>
-                <button
-                  disabled={content.trim() === ""}
-                  type="button"
-                  className="flex size-11 items-center justify-center rounded-full bg-gold-dark text-black disabled:opacity-50"
-                  onClick={handleSave}
-                >
-                  <CheckIcon className="h-4 w-4" />
-                </button>
+                <Button onClick={onClose} variant="slate">
+                  Cancel
+                </Button>
+                <Button disabled={content.trim() === ""} onClick={handleSave} variant="gold">
+                  Save
+                </Button>
               </div>
             </DialogPanel>
           </div>
@@ -115,15 +108,15 @@ function ToolbarButton({
   onClick: () => void;
 }) {
   return (
-    <Button
+    <BaseButton
       type="button"
       onClick={onClick}
       className={cx(
-        "flex px-2.5 py-1.5 gap-2 items-center justify-center rounded-lg text-cloud-medium data-active:scale-95 transition-all",
+        "flex px-2.5 py-1.5 gap-2 items-center justify-center rounded-lg text-cloud-medium data-active:scale-105 transition-all",
         selected && "bg-slate-dark text-ivory-light",
       )}
     >
       {children}
-    </Button>
+    </BaseButton>
   );
 }

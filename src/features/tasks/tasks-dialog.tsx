@@ -35,14 +35,14 @@ export function TasksDialog({
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
-              className="relative flex h-1/2 w-full max-w-2xl flex-col rounded-lg border bg-slate-medium overflow-clip"
+              className="relative flex h-3/4 w-full max-w-2xl flex-col rounded-lg border bg-slate-medium overflow-clip"
             >
-              <div className="sticky top-0 z-10 flex items-center justify-between bg-slate-medium px-4 py-2">
+              <div className="sticky top-0 z-10 flex items-center justify-between bg-slate-medium p-2">
                 {/* <DialogTitle className="text-ivory-light">Tasks</DialogTitle> */}
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex size-8 items-center justify-center rounded-full border bg-slate-medium text-ivory-light transition-transform duration-100 ease-in-out active:scale-95"
+                  className="flex size-8 ms-auto items-center justify-center rounded-full border bg-slate-medium text-ivory-light transition-transform duration-100 ease-in-out active:scale-105"
                 >
                   <XIcon className="h-4 w-4" />
                 </button>

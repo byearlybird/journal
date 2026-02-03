@@ -66,7 +66,7 @@ function RouteComponent() {
         <button
           type="button"
           onClick={handleBack}
-          className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-95"
+          className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-105"
           aria-label="Go back"
         >
           <CaretLeftIcon className="size-6" />

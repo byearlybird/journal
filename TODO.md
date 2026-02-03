@@ -2,3 +2,4 @@
 - [ ] replace all existing headless-ui components with base-ui ones
 - [ ] full screen note detail view
 - [ ] full screen task detail view
+- [ ] review app for touch-friendliness (touch target sizes, keyboard shifting viewport, etc)

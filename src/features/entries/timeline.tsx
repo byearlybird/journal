@@ -41,7 +41,11 @@ export function Timeline({
             onClick={() => handleClick(entry)}
             className={size === "compact" ? "flex-1 pb-4 min-h-16" : "flex-1 pb-4 min-h-20"}
           >
-            <div className={size === "compact" ? "text-xs text-cloud-medium" : "text-sm text-cloud-medium"}>
+            <div
+              className={
+                size === "compact" ? "text-xs text-cloud-medium" : "text-sm text-cloud-medium"
+              }
+            >
               {formatTime(entry.created_at)}
             </div>
             <div className={size === "compact" ? "mt-2 text-sm line-clamp-2" : "mt-2"}>

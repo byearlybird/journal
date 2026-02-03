@@ -19,9 +19,19 @@ function JournalPage() {
 
   const handleEntryClick = (entry: TimelineItem) => {
     if (entry.type === "note") {
-      navigate({ to: "/note/$id", params: { id: entry.id }, search: { from: "index" } });
+      navigate({
+        to: "/note/$id",
+        params: { id: entry.id },
+        search: { from: "index" },
+        viewTransition: { types: ["slide-left"] },
+      });
     } else if (entry.type === "task") {
-      navigate({ to: "/task/$id", params: { id: entry.id }, search: { from: "index" } });
+      navigate({
+        to: "/task/$id",
+        params: { id: entry.id },
+        search: { from: "index" },
+        viewTransition: { types: ["slide-left"] },
+      });
     }
   };
 

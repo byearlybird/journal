@@ -29,11 +29,11 @@ function RouteComponent() {
 
   const handleBack = () => {
     if (from === "index") {
-      navigate({ to: "/app" });
+      navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     } else if (from === "entries") {
-      navigate({ to: "/app/entries" });
+      navigate({ to: "/app/entries", viewTransition: { types: ["slide-right"] } });
     } else {
-      navigate({ to: "/app" });
+      navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     }
   };
 
@@ -57,9 +57,9 @@ function RouteComponent() {
         <div className="size-10 shrink-0" aria-hidden />
       </header>
       {/* Content area */}
-      <main className="flex-1 px-4 pb-4">
-        <div className="rounded-md border border-slate-light bg-slate-light p-4">{note.content}</div>
-      </main>
+      <section className="flex-1 px-4 pb-4">
+        <div className="rounded-md p-4 items-center flex">{note.content}</div>
+      </section>
     </div>
   );
 }

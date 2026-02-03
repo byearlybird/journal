@@ -17,7 +17,9 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <ClerkProvider publishableKey={ENV.VITE_CLERK_PUBLISHABLE_KEY} standardBrowser={false}>
-      <Outlet />
+      <main className="[view-transition-name:main-content]">
+        <Outlet />
+      </main>
     </ClerkProvider>
   );
 }

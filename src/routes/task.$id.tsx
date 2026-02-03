@@ -1,6 +1,12 @@
+import { Button } from "@app/components/button";
 import { tasksRepo } from "@app/db";
 import { useUpdateTaskStatus } from "@app/features/tasks";
-import { CaretLeftIcon } from "@phosphor-icons/react";
+import {
+  ArrowCounterClockwiseIcon,
+  CaretLeftIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import z from "zod";
@@ -43,11 +49,11 @@ function RouteComponent() {
 
   const handleBack = () => {
     if (from === "index") {
-      navigate({ to: "/app" });
+      navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     } else if (from === "entries") {
-      navigate({ to: "/app/entries" });
+      navigate({ to: "/app/entries", viewTransition: { types: ["slide-right"] } });
     } else {
-      navigate({ to: "/app" });
+      navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     }
   };
 
@@ -71,36 +77,27 @@ function RouteComponent() {
         <div className="size-10 shrink-0" aria-hidden />
       </header>
       {/* Content area */}
-      <main className="flex-1 px-4 pb-4">
-        <div className="rounded-md border border-slate-light bg-slate-light p-4">{task.content}</div>
-      </main>
+      <section className="flex-1 p-4">
+        <div className="rounded-md p-4 items-center flex">{task.content}</div>
+      </section>
       {/* Controls section */}
       <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
         {task.status === "incomplete" ? (
           <>
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="flex-1 rounded-md border border-slate-light bg-slate-light py-3 font-medium transition-transform active:scale-95 disabled:opacity-50"
-            >
+            <Button onClick={handleCancel} variant="slate">
+              <XCircleIcon />
               Cancel task
-            </button>
-            <button
-              type="button"
-              onClick={handleComplete}
-              className="flex-1 rounded-md bg-gold-dark py-3 font-medium text-black transition-transform active:scale-95 disabled:opacity-50"
-            >
+            </Button>
+            <Button onClick={handleComplete}>
+              <CheckCircleIcon />
               Complete
-            </button>
+            </Button>
           </>
         ) : (
-          <button
-            type="button"
-            onClick={handleReset}
-            className="w-full rounded-md border border-slate-light bg-slate-light py-3 font-medium transition-transform active:scale-95 disabled:opacity-50"
-          >
+          <Button variant="slate" onClick={handleReset}>
+            <ArrowCounterClockwiseIcon />
             {task.status === "complete" ? "Complete" : "Canceled"}
-          </button>
+          </Button>
         )}
       </section>
     </div>

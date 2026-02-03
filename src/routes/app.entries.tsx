@@ -17,9 +17,19 @@ function RouteComponent() {
 
   const handleEntryClick = (entry: TimelineItem) => {
     if (entry.type === "note") {
-      navigate({ to: "/note/$id", params: { id: entry.id }, search: { from: "entries" } });
+      navigate({
+        to: "/note/$id",
+        params: { id: entry.id },
+        search: { from: "entries" },
+        viewTransition: { types: ["slide-left"] },
+      });
     } else if (entry.type === "task") {
-      navigate({ to: "/task/$id", params: { id: entry.id }, search: { from: "entries" } });
+      navigate({
+        to: "/task/$id",
+        params: { id: entry.id },
+        search: { from: "entries" },
+        viewTransition: { types: ["slide-left"] },
+      });
     }
   };
 

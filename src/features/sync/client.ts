@@ -1,4 +1,3 @@
-import { fetch } from "@tauri-apps/plugin-http";
 import { ENV } from "@app/env";
 import { dumpDatabase, mergeIntoDatabase } from "@app/db";
 import { type Result, err, ok } from "@app/utils/result";

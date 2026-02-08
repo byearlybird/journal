@@ -8,8 +8,8 @@ export const Route = createRootRoute({
   notFoundComponent: NotFoundComponent,
   errorComponent: AppError,
   pendingComponent: AppLoading,
-  beforeLoad: () => {
-    dbService.init(migrations);
+  beforeLoad: async () => {
+    await dbService.init(migrations);
   },
 });
 

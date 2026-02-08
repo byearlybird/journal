@@ -20,30 +20,30 @@
   /* Slate */
   --color-slate-dark: #191919;
   --color-slate-medium: #262625;
-  --color-slate-light: #40403E;
+  --color-slate-light: #40403e;
 
   /* Cloud */
   --color-cloud-dark: #666663;
-  --color-cloud-medium: #91918D;
-  --color-cloud-light: #BFBFBA;
+  --color-cloud-medium: #91918d;
+  --color-cloud-light: #bfbfba;
 
   /* Ivory */
-  --color-ivory-dark: #E5E4DF;
-  --color-ivory-medium: #F0F0EB;
-  --color-ivory-light: #FAFAF7;
+  --color-ivory-dark: #e5e4df;
+  --color-ivory-medium: #f0f0eb;
+  --color-ivory-light: #fafaf7;
 
   /* Warm tones */
-  --color-gold-dark: #FADA5E;
-  --color-gold-medium: #FBE488;
-  --color-gold-light: #FCECB0;
+  --color-gold-dark: #fada5e;
+  --color-gold-medium: #fbe488;
+  --color-gold-light: #fcecb0;
 
   /* Base */
   --color-black: #000000;
-  --color-white: #FFFFFF;
+  --color-white: #ffffff;
 
   /* Semantic */
-  --color-focus: #4DA4F2;
-  --color-error: #E54D43;
+  --color-focus: #4da4f2;
+  --color-error: #e54d43;
 
   /* Radii */
   --radius-*: initial;
@@ -101,14 +101,21 @@
   animation: crossfade-in 0.25s forwards;
 }
 @keyframes crossfade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes crossfade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
-
 
 html:active-view-transition-type(slide-left) {
   &::view-transition-old(main-content) {

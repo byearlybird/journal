@@ -41,12 +41,7 @@ function RouteComponent() {
         </div>
       )}
       {Object.entries(entriesByDate).map(([date, entries]) => (
-        <DayEntriesItem
-          key={date}
-          date={date}
-          entries={entries}
-          onEntryClick={handleEntryClick}
-        />
+        <DayEntriesItem key={date} date={date} entries={entries} onEntryClick={handleEntryClick} />
       ))}
     </div>
   );

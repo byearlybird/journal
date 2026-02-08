@@ -1,5 +1,13 @@
+import {
+  MenuItem,
+  MenuPopup,
+  MenuPortal,
+  MenuPositioner,
+  MenuRoot,
+  MenuTrigger,
+} from "@app/components";
 import { notesRepo } from "@app/db";
-import { CaretLeft } from "@phosphor-icons/react";
+import { CaretLeftIcon, DotsThreeIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import z from "zod";
@@ -27,14 +35,22 @@ function RouteComponent() {
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const handleBack = () => {
+  const goBack = () => {
     if (from === "index") {
       navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     } else if (from === "entries") {
-      navigate({ to: "/app/entries", viewTransition: { types: ["slide-right"] } });
+      navigate({
+        to: "/app/entries",
+        viewTransition: { types: ["slide-right"] },
+      });
     } else {
       navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     }
+  };
+
+  const handleDelete = () => {
+    notesRepo.delete(note.id);
+    goBack();
   };
 
   const formattedDate = format(parseISO(note.date), "EEE MMM d ''yy");
@@ -45,16 +61,30 @@ function RouteComponent() {
       <header className="flex items-center gap-2 px-4 py-2">
         <button
           type="button"
-          onClick={handleBack}
+          onClick={goBack}
           className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-105"
           aria-label="Go back"
         >
-          <CaretLeft className="size-6" />
+          <CaretLeftIcon className="size-6" />
         </button>
         <time className="flex-1 text-center font-medium" dateTime={note.date}>
           {formattedDate}
         </time>
-        <div className="size-10 shrink-0" aria-hidden />
+        <MenuRoot>
+          <MenuTrigger className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-105">
+            <DotsThreeIcon className="size-6" />
+          </MenuTrigger>
+          <MenuPortal>
+            <MenuPositioner align="end">
+              <MenuPopup>
+                <MenuItem onClick={handleDelete} className="text-error flex gap-2">
+                  <TrashIcon className="size-4" />
+                  Delete
+                </MenuItem>
+              </MenuPopup>
+            </MenuPositioner>
+          </MenuPortal>
+        </MenuRoot>
       </header>
       {/* Content area */}
       <section className="flex-1 px-4 pb-4">

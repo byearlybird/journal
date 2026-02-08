@@ -4,8 +4,8 @@
 - [x] full screen task detail view
 - [ ] edit note content
 - [ ] edit task content
-- [ ] delete a note *
-- [ ] delete a task
+- [x] delete a note
+- [x] delete a task
 - [ ] thread notes together
 - [ ] pin notes
 - [ ] enhanced task rollover

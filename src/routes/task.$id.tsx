@@ -1,10 +1,20 @@
 import { Button } from "@app/components/button";
+import {
+  MenuItem,
+  MenuPopup,
+  MenuPortal,
+  MenuPositioner,
+  MenuRoot,
+  MenuTrigger,
+} from "@app/components";
 import { tasksRepo } from "@app/db";
 import { useUpdateTaskStatus } from "@app/features/tasks";
 import {
   ArrowCounterClockwiseIcon,
   CaretLeftIcon,
   CheckCircleIcon,
+  DotsThreeIcon,
+  TrashIcon,
   XCircleIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
@@ -47,6 +57,11 @@ function RouteComponent() {
     updateTaskStatus({ id: task.id, status: "incomplete" });
   };
 
+  const handleDelete = () => {
+    tasksRepo.delete(task.id);
+    handleBack();
+  };
+
   const handleBack = () => {
     if (from === "index") {
       navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
@@ -74,7 +89,21 @@ function RouteComponent() {
         <time className="flex-1 text-center font-medium" dateTime={task.date}>
           {formattedDate}
         </time>
-        <div className="size-10 shrink-0" aria-hidden />
+        <MenuRoot>
+          <MenuTrigger className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-105">
+            <DotsThreeIcon className="size-6" />
+          </MenuTrigger>
+          <MenuPortal>
+            <MenuPositioner align="end">
+              <MenuPopup>
+                <MenuItem onClick={handleDelete} className="text-error flex gap-2">
+                  <TrashIcon className="size-4" />
+                  Delete
+                </MenuItem>
+              </MenuPopup>
+            </MenuPositioner>
+          </MenuPortal>
+        </MenuRoot>
       </header>
       {/* Content area */}
       <section className="flex-1 p-4">

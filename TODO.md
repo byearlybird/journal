@@ -4,5 +4,11 @@
 - [x] full screen task detail view
 - [ ] edit note content
 - [ ] edit task content
+- [ ] delete a note *
+- [ ] delete a task
+- [ ] thread notes together
+- [ ] pin notes
+- [ ] enhanced task rollover
 - [ ] review app for touch-friendliness (touch target sizes, keyboard shifting viewport, etc)
 - [ ] delay task disappearance from quick drawer
+- [ ] E2EE sync

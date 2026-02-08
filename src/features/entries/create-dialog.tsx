@@ -1,18 +1,25 @@
 import { cx } from "cva";
 import { Button as BaseButton } from "@base-ui/react";
 import { Button } from "@app/components/button";
-import { Dialog, DialogPanel, DialogTitle, Textarea } from "@headlessui/react";
+import {
+  DialogBackdrop,
+  DialogRoot,
+  DialogPortal,
+  DialogPopup,
+  DialogTitle,
+} from "@app/components/dialog";
 import { CircleIcon, SquareIcon } from "@phosphor-icons/react";
-import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useCreateNote } from "@app/features/notes";
 import { useCreateTask } from "@app/features/tasks";
+import { AnimatePresence, motion } from "motion/react";
 
 export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const createNote = useCreateNote();
   const createTask = useCreateTask();
   const [content, setContent] = useState<string>("");
   const [entryType, setEntryType] = useState<"note" | "task">("note");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClose = () => {
     setContent("");
@@ -34,44 +41,62 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
   };
 
   return (
-    <AnimatePresence>
-      {open && (
-        <Dialog static open={open} onClose={handleClose} className="relative z-50">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-dark/80"
-          />
-          <div className="fixed inset-x-0 top-0 flex h-svh w-screen justify-center p-2 pt-safe-top">
-            <DialogPanel
-              as={motion.div}
-              initial={{ opacity: 0, y: -100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -100 }}
-              className="flex h-1/2 w-full max-w-2xl flex-col overflow-y-auto rounded-lg border bg-slate-medium"
-            >
-              <DialogTitle className="sr-only">Create a new entry</DialogTitle>
-              <Toolbar entryType={entryType} onEntryTypeChange={setEntryType} />
-              <textarea
-                placeholder="What's on your mind?"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-4 placeholder:text-cloud-medium focus:outline-none focus-visible:outline-none focus-visible:shadow-none focus:border-none focus:border-0"
-              />
-              <div className="flex justify-between gap-4 p-2">
-                <Button onClick={onClose} variant="slate">
-                  Cancel
-                </Button>
-                <Button disabled={content.trim() === ""} onClick={handleSave} variant="gold">
-                  Save
-                </Button>
-              </div>
-            </DialogPanel>
-          </div>
-        </Dialog>
-      )}
-    </AnimatePresence>
+    <DialogRoot
+      open={open}
+      onOpenChange={handleClose}
+      onOpenChangeComplete={(open) => {
+        if (open) {
+          textareaRef.current?.focus();
+        }
+      }}
+    >
+      <AnimatePresence>
+        {open && (
+          <DialogPortal keepMounted>
+            <DialogBackdrop
+              render={
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                />
+              }
+            />
+            <div className="fixed inset-x-0 -top-10 flex h-1/2 w-full max-w-2xl mx-auto">
+              <DialogPopup
+                className="flex h-full w-full flex-col overflow-y-auto p-2 pt-[calc(var(--safe-top)+var(--spacing)*10)]"
+                render={
+                  <motion.div
+                    initial={{ y: "-100%", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: "-100%", opacity: 0 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  />
+                }
+              >
+                <DialogTitle>Create a new entry</DialogTitle>
+                <Toolbar entryType={entryType} onEntryTypeChange={setEntryType} />
+                <textarea
+                  ref={textareaRef}
+                  placeholder="What's on your mind?"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-4 placeholder:text-cloud-medium focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
+                />
+                <div className="flex justify-between gap-4 p-2">
+                  <Button onClick={handleClose} variant="slate">
+                    Cancel
+                  </Button>
+                  <Button disabled={content.trim() === ""} onClick={handleSave} variant="gold">
+                    Save
+                  </Button>
+                </div>
+              </DialogPopup>
+            </div>
+          </DialogPortal>
+        )}
+      </AnimatePresence>
+    </DialogRoot>
   );
 }
 

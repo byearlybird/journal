@@ -35,8 +35,18 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col px-4 pt-2 divide-y divide-dashed *:not-first:pt-8">
+      {Object.entries(entriesByDate).length === 0 && (
+        <div className="flex flex-col items-center justify-center h-full pt-24">
+          <p className="text-sm text-cloud-light">No entries yet</p>
+        </div>
+      )}
       {Object.entries(entriesByDate).map(([date, entries]) => (
-        <DayEntriesItem key={date} date={date} entries={entries} onEntryClick={handleEntryClick} />
+        <DayEntriesItem
+          key={date}
+          date={date}
+          entries={entries}
+          onEntryClick={handleEntryClick}
+        />
       ))}
     </div>
   );

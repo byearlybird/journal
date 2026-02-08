@@ -1,5 +1,5 @@
 import { formatTime } from "@app/utils/date-utils";
-import { CheckCircleIcon, CircleIcon, SquareIcon } from "@phosphor-icons/react";
+import { CheckCircleIcon, CircleIcon, SquareIcon, XCircleIcon } from "@phosphor-icons/react";
 import type { TimelineItem } from "./types";
 import { Button as BaseButton } from "@base-ui/react";
 
@@ -24,10 +24,8 @@ export function Timeline({
           <div className="flex flex-col items-center">
             {entry.type === "note" ? (
               <SquareIcon className="size-4 text-cloud-medium" />
-            ) : entry.status === "complete" ? (
-              <CheckCircleIcon className="size-4 text-cloud-medium" />
             ) : (
-              <CircleIcon className="size-4 text-cloud-medium" />
+              <TaskIcon status={entry.status} />
             )}
             {index < entries.length - 1 && (
               <div className="w-px flex-1 border-r border-slate-light border-dotted my-1" />
@@ -56,4 +54,15 @@ export function Timeline({
       ))}
     </div>
   );
+}
+
+function TaskIcon(props: { status: "complete" | "incomplete" | "canceled" }) {
+  switch (props.status) {
+    case "complete":
+      return <CheckCircleIcon className="" />;
+    case "canceled":
+      return <XCircleIcon />;
+    default:
+      return <CircleIcon />;
+  }
 }

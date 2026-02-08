@@ -25,4 +25,3 @@ export type Note = z.infer<typeof noteSchema>;
 export type Task = z.infer<typeof taskSchema>;
 export type NewNote = z.input<typeof noteSchema>;
 export type NewTask = z.input<typeof taskSchema>;
-

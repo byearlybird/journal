@@ -54,7 +54,9 @@ class DbService {
       )
     `);
 
-    const applied = await this.select<{ version: number }>("SELECT version FROM _migrations ORDER BY version");
+    const applied = await this.select<{ version: number }>(
+      "SELECT version FROM _migrations ORDER BY version",
+    );
     const appliedSet = new Set(applied.map((r) => r.version));
 
     for (const migration of migrationList) {
@@ -62,11 +64,10 @@ class DbService {
 
       await this.transaction(async () => {
         await migration.up(this);
-        await this.execute("INSERT INTO _migrations (version, name, applied_at) VALUES ($1, $2, $3)", [
-          migration.version,
-          migration.name,
-          new Date().toISOString(),
-        ]);
+        await this.execute(
+          "INSERT INTO _migrations (version, name, applied_at) VALUES ($1, $2, $3)",
+          [migration.version, migration.name, new Date().toISOString()],
+        );
       });
     }
   }

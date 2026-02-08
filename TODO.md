@@ -17,7 +17,6 @@
 - [x] delete a note
 - [x] delete a task
 
-
 ## Guiding Priorities
 
 - Minimum useful functionality

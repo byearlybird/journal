@@ -1,6 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "journal",
+  "productName": "Journal",
+  "mainBinaryName": "journal",
   "version": "0.1.0",
   "identifier": "com.byearlybird.journal",
   "build": {
@@ -10,6 +11,7 @@
     "beforeBuildCommand": "pnpm build"
   },
   "app": {
+    
     "windows": [
       {
         "title": "Journal",

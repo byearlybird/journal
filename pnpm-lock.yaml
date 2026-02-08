@@ -23,9 +23,6 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.1.18(rolldown-vite@7.2.5(@types/node@24.10.6)(esbuild@0.25.12)(jiti@2.6.1)(tsx@4.21.0))
-      '@tanstack/react-query':
-        specifier: ^5.90.20
-        version: 5.90.20(react@19.2.3)
       '@tanstack/react-router':
         specifier: ^1.96.2
         version: 1.151.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -1229,14 +1226,6 @@ packages:
   '@tanstack/history@1.151.1':
     resolution: {integrity: sha512-Z/eymNBuUGHYIea7nNX3xR5feqx418ChlwWOKklVpCVzEQ5Q3kNTUw+WK4HYUKxF+1uXFN01Dbuhhl7SmW1LJA==}
     engines: {node: '>=12'}
-
-  '@tanstack/query-core@5.90.20':
-    resolution: {integrity: sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==}
-
-  '@tanstack/react-query@5.90.20':
-    resolution: {integrity: sha512-vXBxa+qeyveVO7OA0jX1z+DeyCA4JKnThKv411jd5SORpBKgkcVnYKCiBgECvADvniBX7tobwBmg01qq9JmMJw==}
-    peerDependencies:
-      react: ^18 || ^19
 
   '@tanstack/react-router@1.151.2':
     resolution: {integrity: sha512-hRwv3eo2gacYiU0mNXFIOoC9PW0gM4z4poo2V+khLaDI++Qj476WzfVCVPd0bEAT6JN5Li48oqBnz560gLIP2g==}
@@ -3479,13 +3468,6 @@ snapshots:
       vite: rolldown-vite@7.2.5(@types/node@24.10.6)(esbuild@0.25.12)(jiti@2.6.1)(tsx@4.21.0)
 
   '@tanstack/history@1.151.1': {}
-
-  '@tanstack/query-core@5.90.20': {}
-
-  '@tanstack/react-query@5.90.20(react@19.2.3)':
-    dependencies:
-      '@tanstack/query-core': 5.90.20
-      react: 19.2.3
 
   '@tanstack/react-router@1.151.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:

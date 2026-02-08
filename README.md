@@ -1,6 +1,6 @@
-# Journal
+# Notebook
 
-A journaling app.
+A low friction journaling app.
 
 ## Project Structure
 

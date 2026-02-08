@@ -41,12 +41,6 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
-      kysely:
-        specifier: ^0.28.11
-        version: 0.28.11
-      kysely-dialect-tauri:
-        specifier: ^1.2.1
-        version: 1.2.1(@tauri-apps/plugin-sql@2.3.1)(kysely@0.28.11)
       motion:
         specifier: ^12.23.26
         version: 12.26.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -1942,21 +1936,6 @@ packages:
 
   jsonfile@6.2.0:
     resolution: {integrity: sha512-FGuPw30AdOIUTRMC2OMRtQV+jkVj2cfPqSeWXv1NEAJ1qZ5zb1X6z1mFhbfOB/iy3ssJCD+3KuZ8r8C3uVFlAg==}
-
-  kysely-dialect-tauri@1.2.1:
-    resolution: {integrity: sha512-7kuhq1UJM7iAinAPpXMVYRThzb1sqCmpxhITfHD0CtMPBr8CWCsJ0W0xr0tk4NBGNb2f/lF59Ti8jTiqA4JgXg==}
-    peerDependencies:
-      '@tauri-apps/plugin-sql': ^2.0.0
-      kysely: '>=0.26'
-
-  kysely-generic-sqlite@1.2.1:
-    resolution: {integrity: sha512-/Bs3/Uktn04nQ9g/4oSphLMEtSHkS5+j5hbKjK5gMqXQfqr/v3V3FKtoN4pLTmo2W35hNdrIpQnBukGL1zZc6g==}
-    peerDependencies:
-      kysely: '>=0.26'
-
-  kysely@0.28.11:
-    resolution: {integrity: sha512-zpGIFg0HuoC893rIjYX1BETkVWdDnzTzF5e0kWXJFg5lE0k1/LfNWBejrcnOFu8Q2Rfq/hTDTU7XLUM8QOrpzg==}
-    engines: {node: '>=20.0.0'}
 
   lightningcss-android-arm64@1.30.2:
     resolution: {integrity: sha512-BH9sEdOCahSgmkVhBLeU7Hc9DWeZ1Eb6wNS6Da8igvUwAe0sqROHddIlvU06q3WyXVEOYDZ6ykBZQnjTbmo4+A==}
@@ -4233,18 +4212,6 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
-
-  kysely-dialect-tauri@1.2.1(@tauri-apps/plugin-sql@2.3.1)(kysely@0.28.11):
-    dependencies:
-      '@tauri-apps/plugin-sql': 2.3.1
-      kysely: 0.28.11
-      kysely-generic-sqlite: 1.2.1(kysely@0.28.11)
-
-  kysely-generic-sqlite@1.2.1(kysely@0.28.11):
-    dependencies:
-      kysely: 0.28.11
-
-  kysely@0.28.11: {}
 
   lightningcss-android-arm64@1.30.2:
     optional: true

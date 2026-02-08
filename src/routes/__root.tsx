@@ -2,15 +2,16 @@ import { ENV } from "@app/env";
 import { ErrorComponent, Loading } from "@app/components";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { migrator } from "@app/db";
+import { dbService } from "@app/db";
+import { migrations } from "@app/db/migrations";
 
 export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: AppError,
   pendingComponent: AppLoading,
-  loader: () => {
-    return migrator.migrateToLatest();
+  beforeLoad: () => {
+    dbService.init(migrations);
   },
 });
 

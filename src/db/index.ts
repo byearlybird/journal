@@ -1,5 +1,4 @@
-export * from "./client";
-export * from "./migrator";
+export * from "./service";
 export * from "./repos";
 export * from "./sync-utils";
 export * from "./schema";

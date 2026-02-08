@@ -1,33 +1,33 @@
-import { type Kysely, type Migration } from "kysely";
+import type { Migration } from "../service";
 
 export const Migration20260201Init: Migration = {
-  async up(db: Kysely<any>) {
-    await db.schema
-      .createTable("notes")
-      .addColumn("id", "text", (cb) => cb.primaryKey())
-      .addColumn("content", "text", (cb) => cb.notNull())
-      .addColumn("created_at", "text", (cb) => cb.notNull())
-      .addColumn("updated_at", "text", (cb) => cb.notNull())
-      .addColumn("date", "text", (cb) => cb.notNull())
-      .addColumn("scope", "text", (cb) => cb.notNull())
-      .addColumn("category", "text", (cb) => cb.notNull())
-      .addColumn("is_deleted", "integer", (cb) => cb.notNull().defaultTo(0))
-      .execute();
+  version: 1,
+  name: "2026-02-01-init",
+  async up(db) {
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS notes (
+        id TEXT PRIMARY KEY,
+        content TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        date TEXT NOT NULL,
+        scope TEXT NOT NULL,
+        category TEXT NOT NULL,
+        is_deleted INTEGER NOT NULL DEFAULT 0
+      )
+    `);
 
-    await db.schema
-      .createTable("tasks")
-      .addColumn("id", "text", (cb) => cb.primaryKey())
-      .addColumn("content", "text", (cb) => cb.notNull())
-      .addColumn("created_at", "text", (cb) => cb.notNull())
-      .addColumn("updated_at", "text", (cb) => cb.notNull())
-      .addColumn("date", "text", (cb) => cb.notNull())
-      .addColumn("scope", "text", (cb) => cb.notNull())
-      .addColumn("status", "text", (cb) => cb.notNull())
-      .addColumn("is_deleted", "integer", (cb) => cb.notNull().defaultTo(0))
-      .execute();
-  },
-  async down(db: Kysely<any>) {
-    await db.schema.dropTable("notes").execute();
-    await db.schema.dropTable("tasks").execute();
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS tasks (
+        id TEXT PRIMARY KEY,
+        content TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        date TEXT NOT NULL,
+        scope TEXT NOT NULL,
+        status TEXT NOT NULL,
+        is_deleted INTEGER NOT NULL DEFAULT 0
+      )
+    `);
   },
 };

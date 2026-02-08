@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A journaling application with end-to-end encryption, client-side SQLite storage, and sync via a separate API server. Users authenticate via Clerk and derive encryption keys from a passphrase (never sent to server).
+A journaling application with end-to-end encryption, client-side SQLite storage, and sync via a separate API server. Users derive encryption keys from a passphrase (never sent to server).
+
+**TODO**: Authentication system needs to be implemented.
 
 This repository contains only the client-side SPA. The API server is in a separate repository.
 
@@ -107,11 +109,12 @@ Project uses composite TypeScript setup:
 
 ### Authentication
 
-**Clerk integration**:
+**TODO**: Authentication needs to be implemented.
 
-- Client uses `@clerk/clerk-react` with `ClerkProvider` in `src/main.tsx`
-- Session tokens are sent with API requests to the separate API server
-- API server validates session tokens and protects `/api/*` routes
+- Currently, auth is stubbed with no-ops (users always considered signed in)
+- See `src/features/sync/use-sync-on-signin.tsx` and `src/features/sync/use-sync-on-interval.tsx`
+- Session tokens should be sent with API requests to the separate API server
+- API server should validate session tokens and protect `/api/*` routes
 
 ### API Endpoints
 
@@ -135,7 +138,7 @@ These endpoints are implemented in a separate API server repository.
 
 **Environment variables** (`.env`):
 
-- `VITE_CLERK_PUBLISHABLE_KEY` - Clerk public key (client)
+- `VITE_API_BASE_URL` - API server base URL (defaults to `http://localhost:3000`)
 
 ### Code Style
 

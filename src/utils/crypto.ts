@@ -3,6 +3,8 @@ const PBKDF2_ITERATIONS = 100_000;
 /**
  * Derives a non-extractable AES-GCM key from a passphrase using PBKDF2.
  * Uses the userId as salt to ensure different users get different keys.
+ *
+ * TODO: userId should come from the auth system once implemented.
  */
 export async function deriveKey(passphrase: string, userId: string): Promise<CryptoKey> {
   const encoder = new TextEncoder();

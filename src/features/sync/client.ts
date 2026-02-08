@@ -21,6 +21,8 @@ export function getIsSyncing(): boolean {
  * Fetches encrypted data from remote server.
  * Returns Ok with data (null means 404/no remote data yet).
  * Returns Err on failure.
+ *
+ * TODO: Add authentication headers once auth system is implemented.
  */
 async function fetchFromRemote(): Promise<Result<string | null, string>> {
   try {
@@ -28,6 +30,7 @@ async function fetchFromRemote(): Promise<Result<string | null, string>> {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        // TODO: Add auth token header here
       },
     });
 
@@ -52,6 +55,8 @@ async function fetchFromRemote(): Promise<Result<string | null, string>> {
 
 /**
  * Uploads encrypted data to remote server.
+ *
+ * TODO: Add authentication headers once auth system is implemented.
  */
 async function uploadToRemote(data: string): Promise<Result<void, string>> {
   try {
@@ -60,6 +65,7 @@ async function uploadToRemote(data: string): Promise<Result<void, string>> {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        // TODO: Add auth token header here
       },
       body: JSON.stringify(body),
     });

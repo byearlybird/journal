@@ -1,15 +1,14 @@
 import { ErrorComponent, Loading } from "@app/components";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { dbService } from "@app/db";
-import { migrations } from "@app/db/migrations";
+import { migrator } from "@app/db";
 
 export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: AppError,
   pendingComponent: AppLoading,
-  beforeLoad: async () => {
-    await dbService.init(migrations);
+  loader: () => {
+    return migrator.migrateToLatest();
   },
 });
 

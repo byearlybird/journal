@@ -12,10 +12,10 @@ import { useUpdateTaskStatus } from "@app/features/tasks";
 import {
   ArrowCounterClockwiseIcon,
   CaretLeftIcon,
-  CheckCircleIcon,
+  CheckSquareIcon,
   DotsThreeIcon,
   TrashIcon,
-  XCircleIcon,
+  XSquareIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
@@ -114,11 +114,11 @@ function RouteComponent() {
         {task.status === "incomplete" ? (
           <>
             <Button onClick={handleCancel} variant="slate">
-              <XCircleIcon />
+              <XSquareIcon />
               Cancel task
             </Button>
             <Button onClick={handleComplete}>
-              <CheckCircleIcon />
+              <CheckSquareIcon />
               Complete
             </Button>
           </>

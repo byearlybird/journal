@@ -81,7 +81,7 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
                   placeholder="What's on your mind?"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-4 placeholder:text-cloud-medium focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
+                  className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-2 placeholder:text-cloud-medium focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
                 />
                 <div className="flex justify-between gap-4 p-2">
                   <Button onClick={handleClose} variant="slate">
@@ -111,11 +111,11 @@ function Toolbar({
     <div className="flex items-center justify-between p-2">
       <div className="flex w-fit rounded-full shrink-0 gap-2">
         <ToolbarButton selected={entryType === "note"} onClick={() => onEntryTypeChange("note")}>
-          <SquareIcon className="size-4" />
+          <CircleIcon className="size-4" />
           Note
         </ToolbarButton>
         <ToolbarButton selected={entryType === "task"} onClick={() => onEntryTypeChange("task")}>
-          <CircleIcon className="size-4" />
+          <SquareIcon className="size-4" />
           Task
         </ToolbarButton>
       </div>

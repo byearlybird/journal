@@ -2,6 +2,7 @@ import { formatTime } from "@app/utils/date-utils";
 import { CheckSquareIcon, CircleIcon, SquareIcon, XSquareIcon } from "@phosphor-icons/react";
 import type { TimelineItem } from "./types";
 import { Button as BaseButton } from "@base-ui/react";
+import { cx } from "cva";
 
 export function Timeline({
   entries,
@@ -46,7 +47,7 @@ export function Timeline({
             >
               {formatTime(entry.created_at)}
             </div>
-            <div className={size === "compact" ? "mt-2 text-sm line-clamp-2" : "mt-2"}>
+            <div className={cx("mt-2 whitespace-pre-line", size === "compact" && "text-sm line-clamp-2")}>
               {entry.content}
             </div>
           </BaseButton>

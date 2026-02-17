@@ -5,11 +5,14 @@ import {
   MenuPositioner,
   MenuRoot,
   MenuTrigger,
+  TextContent,
 } from "@app/components";
 import { notesRepo } from "@app/db";
-import { CaretLeftIcon, DotsThreeIcon, TrashIcon } from "@phosphor-icons/react";
+import { EditNoteDialog } from "@app/features/notes";
+import { CaretLeftIcon, DotsThreeIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
+import { useState } from "react";
 import z from "zod";
 
 const noteSearchSchema = z.object({
@@ -34,6 +37,7 @@ function RouteComponent() {
   const { note } = Route.useLoaderData();
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
+  const [editOpen, setEditOpen] = useState(false);
 
   const goBack = () => {
     if (from === "index") {
@@ -53,7 +57,8 @@ function RouteComponent() {
     goBack();
   };
 
-  const formattedDate = format(parseISO(note.date), "EEE MMM d ''yy");
+  const formattedDate = format(parseISO(note.date), "MMMM d");
+  const createdTime = format(parseISO(note.created_at), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
@@ -67,9 +72,14 @@ function RouteComponent() {
         >
           <CaretLeftIcon className="size-6" />
         </button>
-        <time className="flex-1 text-center font-medium" dateTime={note.date}>
-          {formattedDate}
-        </time>
+        <div className="flex-1 text-center flex flex-col justify-between gap-2">
+          <time className="font-medium" dateTime={note.date}>
+            {formattedDate}
+          </time>
+          <time className="block text-xs text-cloud-medium" dateTime={note.created_at}>
+            {createdTime}
+          </time>
+        </div>
         <MenuRoot>
           <MenuTrigger className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-105">
             <DotsThreeIcon className="size-6" />
@@ -77,6 +87,10 @@ function RouteComponent() {
           <MenuPortal>
             <MenuPositioner align="end">
               <MenuPopup>
+                <MenuItem onClick={() => setEditOpen(true)} className="flex gap-2">
+                  <PencilSimpleIcon className="size-4" />
+                  Edit
+                </MenuItem>
                 <MenuItem onClick={handleDelete} className="text-error flex gap-2">
                   <TrashIcon className="size-4" />
                   Delete
@@ -87,9 +101,8 @@ function RouteComponent() {
         </MenuRoot>
       </header>
       {/* Content area */}
-      <section className="flex-1 px-4 pb-4">
-        <div className="rounded-md p-4 items-center flex">{note.content}</div>
-      </section>
+      <TextContent content={note.content} updatedAt={note.updated_at} createdAt={note.created_at} />
+      <EditNoteDialog open={editOpen} onClose={() => setEditOpen(false)} note={note} />
     </div>
   );
 }

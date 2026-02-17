@@ -6,19 +6,22 @@ import {
   MenuPositioner,
   MenuRoot,
   MenuTrigger,
+  TextContent,
 } from "@app/components";
 import { tasksRepo } from "@app/db";
-import { useUpdateTaskStatus } from "@app/features/tasks";
+import { EditTaskDialog, useUpdateTaskStatus } from "@app/features/tasks";
 import {
   ArrowCounterClockwiseIcon,
   CaretLeftIcon,
   CheckSquareIcon,
   DotsThreeIcon,
+  PencilSimpleIcon,
   TrashIcon,
   XSquareIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
+import { useState } from "react";
 import z from "zod";
 
 const taskSearchSchema = z.object({
@@ -44,6 +47,7 @@ function RouteComponent() {
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
   const updateTaskStatus = useUpdateTaskStatus();
+  const [editOpen, setEditOpen] = useState(false);
 
   const handleComplete = () => {
     updateTaskStatus({ id: task.id, status: "complete" });
@@ -72,7 +76,8 @@ function RouteComponent() {
     }
   };
 
-  const formattedDate = format(parseISO(task.date), "EEE MMM d ''yy");
+  const formattedDate = format(parseISO(task.date), "MMMM d");
+  const createdTime = format(parseISO(task.created_at), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
@@ -86,9 +91,14 @@ function RouteComponent() {
         >
           <CaretLeftIcon className="size-6" />
         </button>
-        <time className="flex-1 text-center font-medium" dateTime={task.date}>
-          {formattedDate}
-        </time>
+        <div className="flex-1 text-center flex flex-col justify-between gap-2">
+          <time className="font-medium" dateTime={task.date}>
+            {formattedDate}
+          </time>
+          <time className="block text-xs text-cloud-medium" dateTime={task.created_at}>
+            {createdTime}
+          </time>
+        </div>
         <MenuRoot>
           <MenuTrigger className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-105">
             <DotsThreeIcon className="size-6" />
@@ -96,6 +106,10 @@ function RouteComponent() {
           <MenuPortal>
             <MenuPositioner align="end">
               <MenuPopup>
+                <MenuItem onClick={() => setEditOpen(true)} className="flex gap-2">
+                  <PencilSimpleIcon className="size-4" />
+                  Edit
+                </MenuItem>
                 <MenuItem onClick={handleDelete} className="text-error flex gap-2">
                   <TrashIcon className="size-4" />
                   Delete
@@ -106,9 +120,7 @@ function RouteComponent() {
         </MenuRoot>
       </header>
       {/* Content area */}
-      <section className="flex-1 p-4">
-        <div className="rounded-md p-4 items-center flex">{task.content}</div>
-      </section>
+      <TextContent content={task.content} updatedAt={task.updated_at} createdAt={task.created_at} />
       {/* Controls section */}
       <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
         {task.status === "incomplete" ? (
@@ -129,6 +141,7 @@ function RouteComponent() {
           </Button>
         )}
       </section>
+      <EditTaskDialog open={editOpen} onClose={() => setEditOpen(false)} task={task} />
     </div>
   );
 }

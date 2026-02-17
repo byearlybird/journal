@@ -1,5 +1,5 @@
-- [ ] edit note content
-- [ ] edit task content
+- [x] edit note content
+- [x] edit task content
 - [ ] E2EE sync
 - [ ] macOS version support
 - [ ] data export (JSON/markdown)

@@ -3,3 +3,5 @@ export * from "./error";
 export * from "./loading";
 export * from "./menu";
 export * from "./navbar";
+export * from "./text-content";
+export * from "./textarea-dialog";

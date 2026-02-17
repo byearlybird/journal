@@ -13,3 +13,12 @@ export function useCreateNote() {
     await router.invalidate();
   };
 }
+
+export function useUpdateNote() {
+  const router = useRouter();
+
+  return async (id: string, { content }: { content: string }) => {
+    await notesRepo.update(id, { content });
+    await router.invalidate();
+  };
+}

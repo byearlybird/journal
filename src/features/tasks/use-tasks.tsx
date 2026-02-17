@@ -21,3 +21,12 @@ export function useUpdateTaskStatus() {
     await router.invalidate();
   };
 }
+
+export function useUpdateTask() {
+  const router = useRouter();
+
+  return async (id: string, { content }: { content: string }) => {
+    await tasksRepo.update(id, { content });
+    await router.invalidate();
+  };
+}

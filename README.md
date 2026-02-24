@@ -8,12 +8,12 @@ A low friction journaling app.
 
 ## Development
 
-- Install deps: `pnpm install`
-- Run locally: `pnpm dev`
-- Lint: `pnpm lint`
-- Format: `pnpm fmt`
+- Install deps: `bun install`
+- Run locally: `bun dev`
+- Lint: `bun lint`
+- Format: `bun fmt`
 
 ## Build
 
-- Production build: `pnpm build`
-- Preview build: `pnpm preview`
+- Production build: `bun build`
+- Preview build: `bun preview`

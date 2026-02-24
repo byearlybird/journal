@@ -62,5 +62,5 @@
   "overrides": {
     "vite": "npm:rolldown-vite@7.2.5"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "bun"
 }

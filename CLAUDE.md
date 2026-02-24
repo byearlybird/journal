@@ -14,17 +14,17 @@ This repository contains only the client-side SPA. The API server is in a separa
 
 ### Development
 
-- Install dependencies: `pnpm install`
-- Start dev server: `pnpm dev` - Runs Vite dev server on localhost
-- Lint: `pnpm lint` - Runs oxlint
-- Lint with fixes: `pnpm lint:fix`
-- Format: `pnpm fmt` - Runs oxfmt formatter
-- Format check: `pnpm fmt:check`
+- Install dependencies: `bun install`
+- Start dev server: `bun dev` - Runs Vite dev server on localhost
+- Lint: `bun lint` - Runs oxlint
+- Lint with fixes: `bun lint:fix`
+- Format: `bun fmt` - Runs oxfmt formatter
+- Format check: `bun fmt:check`
 
 ### Build & Deploy
 
-- Production build: `pnpm build` - Builds the client SPA with Vite
-- Preview build: `pnpm preview` - Preview production build locally
+- Production build: `bun build` - Builds the client SPA with Vite
+- Preview build: `bun preview` - Preview production build locally
 - Deploy: Deploy the built SPA to your hosting provider
 
 ### Testing

@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 import { SplashScreen } from '@capacitor/splash-screen';
+import { Keyboard } from '@capacitor/keyboard';
 import "./main.css";
 
 // Create router instance
@@ -14,6 +15,7 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
+
 // Hide the splash (per Capacitor docs, you should do this on app launch)
 await SplashScreen.hide();
 
@@ -21,6 +23,10 @@ await SplashScreen.hide();
 await SplashScreen.show({
   autoHide: false,
 });
+
+await Keyboard.setAccessoryBarVisible({
+  isVisible: false
+})
 
 // biome-ignore lint/style/noNonNullAssertion: we know the element is always present
 createRoot(document.getElementById("root")!).render(

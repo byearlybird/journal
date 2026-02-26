@@ -1,4 +1,5 @@
 import type { CapacitorConfig } from "@capacitor/cli";
+import { KeyboardResize, KeyboardStyle } from "@capacitor/keyboard";
 
 const config: CapacitorConfig = {
   appId: "com.byearlybird.journal",
@@ -8,6 +9,10 @@ const config: CapacitorConfig = {
     CapacitorSQLite: {
       iosDatabaseLocation: "Library/CapacitorDatabase",
       iosIsEncryption: false,
+    },
+    Keyboard: {
+      resize: KeyboardResize.None,
+      style: KeyboardStyle.Dark,
     },
   },
   backgroundColor: "#262625",

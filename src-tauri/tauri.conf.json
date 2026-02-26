@@ -2,13 +2,13 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Notebook",
   "mainBinaryName": "Notebook by Early Bird",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "identifier": "com.byearlybird.journal",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "bun dev",
-    "beforeBuildCommand": "bun build"
+    "beforeDevCommand": "bun run dev",
+    "beforeBuildCommand": "bun run build"
   },
   "app": {
     "windows": [

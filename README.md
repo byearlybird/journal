@@ -15,5 +15,5 @@ A low friction journaling app.
 
 ## Build
 
-- Production build: `bun build`
+- Production build: `bun run build`
 - Preview build: `bun preview`

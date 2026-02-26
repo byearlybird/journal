@@ -23,7 +23,7 @@ This repository contains only the client-side SPA. The API server is in a separa
 
 ### Build & Deploy
 
-- Production build: `bun build` - Builds the client SPA with Vite
+- Production build: `bun run build` - Builds the client SPA with Vite
 - Preview build: `bun preview` - Preview production build locally
 - Deploy: Deploy the built SPA to your hosting provider
 

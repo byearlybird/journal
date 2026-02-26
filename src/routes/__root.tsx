@@ -1,14 +1,20 @@
 import { ErrorComponent, Loading } from "@app/components";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { migrator } from "@app/db";
+import { Dialog } from "@capacitor/dialog";
+
+let migrated = false;
 
 export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: AppError,
   pendingComponent: AppLoading,
-  loader: () => {
-    return migrator.migrateToLatest();
+  beforeLoad: async () => {
+    if (!migrated) {
+      await migrator.migrateToLatest();
+      migrated = true;
+    }
   },
 });
 
@@ -32,7 +38,11 @@ function AppLoading() {
   );
 }
 
-function AppError() {
+function AppError(props: { error: Error }) {
+  Dialog.alert({
+    title: "Error",
+    message: props.error.message,
+  });
   return (
     <main className="flex size-full h-screen items-center justify-center">
       <ErrorComponent />

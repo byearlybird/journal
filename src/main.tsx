@@ -2,6 +2,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
+import { SplashScreen } from '@capacitor/splash-screen';
 import "./main.css";
 
 // Create router instance
@@ -13,6 +14,13 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
+// Hide the splash (per Capacitor docs, you should do this on app launch)
+await SplashScreen.hide();
+
+// Show the splash for an indefinite amount of time:
+await SplashScreen.show({
+  autoHide: false,
+});
 
 // biome-ignore lint/style/noNonNullAssertion: we know the element is always present
 createRoot(document.getElementById("root")!).render(

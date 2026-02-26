@@ -8,6 +8,8 @@ PODS:
   - CapacitorCordova (8.1.0)
   - CapacitorDialog (8.0.1):
     - Capacitor
+  - CapacitorSplashScreen (8.0.1):
+    - Capacitor
   - SQLCipher (4.10.0):
     - SQLCipher/standard (= 4.10.0)
   - SQLCipher/common (4.10.0)
@@ -20,6 +22,7 @@ DEPENDENCIES:
   - "CapacitorCommunitySqlite (from `../../node_modules/@capacitor-community/sqlite`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDialog (from `../../node_modules/@capacitor/dialog`)"
+  - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
 
 SPEC REPOS:
   trunk:
@@ -35,15 +38,18 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorDialog:
     :path: "../../node_modules/@capacitor/dialog"
+  CapacitorSplashScreen:
+    :path: "../../node_modules/@capacitor/splash-screen"
 
 SPEC CHECKSUMS:
   Capacitor: 47b825120c6b8b6d6f9f053e9350a8960d436710
   CapacitorCommunitySqlite: 8a61c1d599927d4321c13b28f132de8ca94b6d95
   CapacitorCordova: e8b76fd95fc1e157775abc484c59cc0de464095d
   CapacitorDialog: 854c5dac405081cae697c177ca43bcaa95ae67bf
+  CapacitorSplashScreen: 4b46c72298db552b3c57ce021ef028b6dc7f1fa7
   SQLCipher: eb79c64049cb002b4e9fcb30edb7979bf4706dfc
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: b6470d964580bb2c47c561198dd12c01d51e10e2
+PODFILE CHECKSUM: bd5080778ec18d740807721ee24d5f79a93eb0d8
 
 COCOAPODS: 1.16.2

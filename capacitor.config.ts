@@ -10,6 +10,7 @@ const config: CapacitorConfig = {
       iosIsEncryption: false,
     },
   },
+  backgroundColor: "#262625",
 };
 
 export default config;

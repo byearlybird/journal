@@ -49,4 +49,7 @@ export default defineConfig({
       },
     ],
   },
+  server: {
+    port: Number(process.env.LOCAL_PORT) || 5173,
+  },
 });

@@ -14,6 +14,12 @@ const config: CapacitorConfig = {
       resize: KeyboardResize.None,
       style: KeyboardStyle.Dark,
     },
+    CapacitorCookies: {
+      enabled: true,
+    },
+    CapacitorHttp: {
+      enabled: true,
+    },
   },
   backgroundColor: "#262625",
 };

@@ -24,7 +24,8 @@ dist-ssr
 *.sw?
 
 *.module.css.d.ts
-.env
+.env*
+!.env.example
 src/routeTree.gen.ts
 
 *storybook.log

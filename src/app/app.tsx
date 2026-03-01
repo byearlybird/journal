@@ -1,7 +1,7 @@
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
 import { ErrorComponent, Loading } from "@/app/components";
-import { getDb } from "@/app/db";
+import { getDb } from "@/app/idb";
 import { SyncProvider } from "@/app/features/sync";
 import { $router } from "@/app/stores/router";
 import { AppLayout } from "@/app/pages/app-layout";

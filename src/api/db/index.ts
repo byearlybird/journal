@@ -1,2 +1,2 @@
-export * from "./client";
-export * from "./migrations";
+export { db } from "./client";
+export { backups, type Backup } from "./schema";

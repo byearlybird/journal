@@ -47,7 +47,12 @@ export function Timeline({
             >
               {formatTime(entry.createdAt)}
             </div>
-            <div className={cx("mt-2 whitespace-pre-line", size === "compact" && "text-sm line-clamp-2")}>
+            <div
+              className={cx(
+                "mt-2 whitespace-pre-line",
+                size === "compact" && "text-sm line-clamp-2",
+              )}
+            >
               {entry.content}
             </div>
           </BaseButton>

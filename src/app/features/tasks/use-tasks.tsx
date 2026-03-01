@@ -1,4 +1,4 @@
-import { tasksRepo, type Task, type NewTask } from "@/app/db";
+import { tasksRepo, type Task, type NewTask } from "@/app/idb";
 import { useSyncContext } from "@/app/features/sync";
 import { invalidateData } from "@/app/stores/data-version";
 

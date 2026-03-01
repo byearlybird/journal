@@ -1,4 +1,4 @@
-import { dumpDatabase, mergeIntoDatabase } from "@/app/db/sync-utils";
+import { dumpDatabase, mergeIntoDatabase } from "@/app/idb/sync-utils";
 
 export async function exportBackup() {
   const dump = await dumpDatabase();

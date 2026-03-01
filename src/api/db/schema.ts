@@ -1,16 +1,11 @@
-import { z } from "zod";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const backupSchema = z.object({
-  id: z.string(),
-  user_id: z.string(),
-  data: z.string(),
-  created_at: z.string(),
-  updated_at: z.string(),
+export const backups = sqliteTable("backups", {
+  id: text().primaryKey(),
+  userId: text().notNull().unique(),
+  data: text().notNull(),
+  createdAt: text().notNull(),
+  updatedAt: text().notNull(),
 });
 
-export type Backup = z.output<typeof backupSchema>;
-export type NewBackup = z.input<typeof backupSchema>;
-
-export type Database = {
-  backups: Backup;
-};
+export type Backup = typeof backups.$inferSelect;

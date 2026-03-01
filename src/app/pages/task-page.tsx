@@ -8,7 +8,7 @@ import {
   MenuTrigger,
   TextContent,
 } from "@/app/components";
-import { tasksRepo } from "@/app/db";
+import { tasksRepo } from "@/app/idb";
 import { EditTaskDialog, useUpdateTaskStatus } from "@/app/features/tasks";
 import { useLocalData } from "@/app/hooks/use-local-data";
 import { navigate } from "@/app/utils/navigate";
@@ -28,7 +28,10 @@ export function TaskPage({ id }: { id: string }) {
   const task = useLocalData(() => tasksRepo.findById(id), [id]);
   const updateTaskStatus = useUpdateTaskStatus();
   const [editOpen, setEditOpen] = useState(false);
-  const from = new URLSearchParams(window.location.search).get("from") as "index" | "entries" | null;
+  const from = new URLSearchParams(window.location.search).get("from") as
+    | "index"
+    | "entries"
+    | null;
 
   const handleComplete = () => {
     if (!task) return;

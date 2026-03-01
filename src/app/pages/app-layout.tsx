@@ -1,5 +1,5 @@
 import { ActionNavbar, Navbar, type NavItemData } from "@/app/components";
-import { tasksRepo, type Task } from "@/app/db";
+import { tasksRepo, type Task } from "@/app/idb";
 import { CreateDialog } from "@/app/features/entries";
 import { TasksDialog } from "@/app/features/tasks";
 import { useLocalData } from "@/app/hooks/use-local-data";

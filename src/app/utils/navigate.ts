@@ -14,8 +14,14 @@ type RouteParams = {
 export function navigate<R extends keyof RouteParams>(
   route: R,
   ...[params, options]: RouteParams[R] extends Record<string, never>
-    ? [params?: undefined, options?: { search?: Record<string, string>; transition?: TransitionType }]
-    : [params: RouteParams[R], options?: { search?: Record<string, string>; transition?: TransitionType }]
+    ? [
+        params?: undefined,
+        options?: { search?: Record<string, string>; transition?: TransitionType },
+      ]
+    : [
+        params: RouteParams[R],
+        options?: { search?: Record<string, string>; transition?: TransitionType },
+      ]
 ) {
   const transition = options?.transition;
   const search = options?.search;

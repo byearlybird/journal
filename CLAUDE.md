@@ -19,6 +19,11 @@ A journaling application with end-to-end encryption, client-side SQLite storage,
 - Format: `bun fmt` - Runs oxfmt formatter
 - Format check: `bun fmt:check`
 
+### Database
+
+- Run migrations: `bun run db:migrate`
+- Generate migration after schema change: `bun run db:generate`
+
 ### Build & Deploy
 
 - Production build: `bun run build` - Builds the client SPA with Bun bundler
@@ -56,8 +61,8 @@ No automated test setup is currently configured. If adding tests, prefer vitest 
 
 - Hono framework with Zod validation
 - Clerk authentication middleware (`src/api/clerk-middleware.ts`)
-- LibSQL/Turso database via Kysely (`src/api/db/`)
-- Database migrations run on startup via top-level await
+- Bun SQLite (`bun:sqlite`) via Drizzle ORM (`src/api/db/`)
+- Database migrations run via `bun run db:migrate` (not on server startup)
 - Routes: `GET /api/status`, `GET /api/v0/backup`, `PUT /api/v0/backup`
 
 ### Path Aliases
@@ -96,9 +101,11 @@ Single flat `tsconfig.json` for the entire project.
 
 **Server-side database** (`src/api/db/`):
 
-- LibSQL/Turso via Kysely
+- Bun SQLite (`bun:sqlite`) via Drizzle ORM
 - Schema: `backups` table (id, user_id, data, created_at, updated_at)
-- Migrations run automatically on server startup
+- Migrations managed by drizzle-kit, run via `bun run db:migrate`
+- Generate new migrations: `bun run db:generate`
+- On Railway, migrations run before server start via `railway.toml`
 
 **Sync mechanism** (`src/app/features/sync/`):
 
@@ -153,8 +160,7 @@ Single flat `tsconfig.json` for the entire project.
 **Server variables** (server-side only, not bundled into client):
 
 - `CLERK_SECRET_KEY` - Clerk secret key
-- `DATABASE_URL` - LibSQL/Turso database URL (e.g. `file:./database.db` for local dev)
-- `DATABASE_AUTH_TOKEN` - Turso auth token (optional for local dev)
+- `DATABASE_URL` - SQLite database file path (e.g. `./database.db` for local dev)
 
 Note: The API server reuses `PUBLIC_CLERK_PUBLISHABLE_KEY` for its Clerk client — no separate `CLERK_PUBLISHABLE_KEY` needed.
 
@@ -172,12 +178,15 @@ Commit messages follow lightweight Conventional Commits: `feat:`, `fix:`, `chore
 ## Key Files
 
 - `src/server.ts` - Unified Bun server entry point (SPA + API)
-- `src/api/index.ts` - Hono API app setup, migration runner
+- `src/api/index.ts` - Hono API app setup
 - `src/api/clerk-middleware.ts` - Clerk authentication middleware
 - `src/api/backup-routes.ts` - Backup API route handlers
 - `src/api/backup-service.ts` - Backup business logic
 - `src/api/backup-repo.ts` - Backup data access layer
-- `src/api/db/` - Server database client, schema, migrations
+- `src/api/db/` - Server database client (Drizzle + bun:sqlite), schema
+- `src/api/db/migrate.ts` - Standalone migration runner
+- `drizzle.config.ts` - Drizzle-kit configuration
+- `drizzle/` - Generated SQL migration files
 - `src/app/utils/crypto.ts` - Encryption/decryption utilities
 - `src/app/db/db.ts` - Client database schema and setup
 - `src/app/db/merger.ts` - Conflict-free merge logic (dump/merge functions)

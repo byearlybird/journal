@@ -7,10 +7,12 @@
     "dev": "bun --hot src/server.ts",
     "start": "NODE_ENV=production bun src/server.ts",
     "build": "bun run build.ts",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
+    "lint": "oxlint  --fix",
+    "lint:check": "oxlint",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "db:migrate": "bun src/api/db/migrate.ts",
+    "db:generate": "bunx drizzle-kit generate"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
@@ -18,7 +20,6 @@
     "@clerk/clerk-react": "^5.61.2",
     "@headlessui/react": "^2.2.9",
     "@hono/zod-validator": "^0.7.6",
-    "@libsql/kysely-libsql": "^0.4.1",
     "@nanostores/react": "^1.0.0",
     "@nanostores/router": "^1.0.0",
     "@phosphor-icons/react": "^2.1.10",
@@ -26,9 +27,9 @@
     "bun-plugin-tailwind": "^0.1.0",
     "cva": "1.0.0-beta.4",
     "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.1",
     "hono": "^4.12.3",
     "idb": "^8.0.3",
-    "kysely": "^0.28.11",
     "motion": "^12.23.26",
     "nanostores": "^1.1.1",
     "react": "^19.2.0",
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "drizzle-kit": "^0.31.9",
     "oxfmt": "^0.24.0",
     "oxlint": "^1.39.0",
     "typescript": "~5.9.3"

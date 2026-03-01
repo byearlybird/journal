@@ -1,4 +1,4 @@
-import { notesRepo, tasksRepo } from "@/app/db";
+import { notesRepo, tasksRepo } from "@/app/idb";
 import { compareDesc, isToday, parseISO } from "date-fns";
 import { formatISODate } from "@/app/utils/date-utils";
 import type { TimelineItem } from "./types";

@@ -1,4 +1,4 @@
-import { type DatabaseDump, dumpDatabase, mergeIntoDatabase } from "@/app/db";
+import { type DatabaseDump, dumpDatabase, mergeIntoDatabase } from "@/app/idb";
 
 // Flag to prevent infinite loop when syncing triggers store changes
 let isSyncing = false;

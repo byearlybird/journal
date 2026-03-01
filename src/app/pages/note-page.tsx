@@ -7,7 +7,7 @@ import {
   MenuTrigger,
   TextContent,
 } from "@/app/components";
-import { notesRepo } from "@/app/db";
+import { notesRepo } from "@/app/idb";
 import { EditNoteDialog } from "@/app/features/notes";
 import { useLocalData } from "@/app/hooks/use-local-data";
 import { navigate } from "@/app/utils/navigate";
@@ -18,7 +18,10 @@ import { useState } from "react";
 export function NotePage({ id }: { id: string }) {
   const note = useLocalData(() => notesRepo.findById(id), [id]);
   const [editOpen, setEditOpen] = useState(false);
-  const from = new URLSearchParams(window.location.search).get("from") as "index" | "entries" | null;
+  const from = new URLSearchParams(window.location.search).get("from") as
+    | "index"
+    | "entries"
+    | null;
 
   const goBack = () => {
     if (from === "entries") {

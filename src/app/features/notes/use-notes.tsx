@@ -1,4 +1,4 @@
-import { notesRepo, type NewNote } from "@/app/db";
+import { notesRepo, type NewNote } from "@/app/idb";
 import { useSyncContext } from "@/app/features/sync";
 import { invalidateData } from "@/app/stores/data-version";
 

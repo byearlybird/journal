@@ -1,18 +1,26 @@
-import { db } from "./db/index";
-import { Backup } from "./db/schema";
+import { eq } from "drizzle-orm";
+import { db, backups, type Backup } from "./db/index";
 
 export const backupRepo = {
   getByUserId: async (userId: string): Promise<Backup | undefined> => {
-    return db.selectFrom("backups").where("user_id", "=", userId).selectAll().executeTakeFirst();
+    return db.select().from(backups).where(eq(backups.userId, userId)).get();
   },
+
   upsert: async (userId: string, data: string): Promise<void> => {
-    const id = crypto.randomUUID();
     const now = new Date().toISOString();
-    await db
-      .insertInto("backups")
-      .values({ id, user_id: userId, data, created_at: now, updated_at: now })
-      .onConflict((oc) => oc.column("user_id").doUpdateSet({ data, updated_at: now }))
-      .execute();
+    db.insert(backups)
+      .values({
+        id: crypto.randomUUID(),
+        userId,
+        data,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: backups.userId,
+        set: { data, updatedAt: now },
+      })
+      .run();
   },
 };
 

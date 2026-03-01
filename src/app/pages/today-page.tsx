@@ -25,7 +25,10 @@ export function TodayPage() {
           <span className="text-2xl font-extrabold">{formatMonthDate(new Date())}</span>
           <span className="font-bold text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
         </div>
-        <button type="button" onClick={() => navigate("settings", undefined, { transition: "slide-left" })}>
+        <button
+          type="button"
+          onClick={() => navigate("settings", undefined, { transition: "slide-left" })}
+        >
           <SlidersHorizontalIcon className="size-6 text-cloud-light" />
         </button>
       </header>

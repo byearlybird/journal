@@ -10,7 +10,7 @@ const baseSchema = z.object({
 
 const baseEntrySchema = baseSchema.extend({
   content: z.string().min(1),
-  date: z.iso.date().default(() => new Date().toISOString().split("T")[0]),
+  date: z.iso.date().default(() => new Date().toISOString().split("T")[0]!),
   scope: z.enum(["daily", "weekly", "monthly"]),
 });
 
@@ -23,27 +23,33 @@ export const taskSchema = baseEntrySchema.extend({
 });
 
 export type Note = z.infer<typeof noteSchema>;
+export type NoteIndex = z.infer<typeof noteIndexSchema>;
 export type Task = z.infer<typeof taskSchema>;
+export type TaskIndex = z.infer<typeof taskIndexSchema>;
 export type NewNote = z.input<typeof noteSchema>;
 export type NewTask = z.input<typeof taskSchema>;
+
+const noteIndexSchema = noteSchema.pick({
+  createdAt: true,
+  date: true,
+  isDeleted: true,
+});
+
+const taskIndexSchema = taskSchema.pick({
+  createdAt: true,
+  date: true,
+  isDeleted: true,
+});
 
 export interface Database extends DBSchema {
   notes: {
     key: string;
     value: Note;
-    indexes: {
-      createdAt: string;
-      date: string;
-      isDeleted: number;
-    };
+    indexes: NoteIndex;
   };
   tasks: {
     key: string;
     value: Task;
-    indexes: {
-      createdAt: string;
-      date: string;
-      isDeleted: number;
-    };
+    indexes: TaskIndex;
   };
 }

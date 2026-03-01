@@ -2,7 +2,8 @@ import { getEntriesToday } from "@app/features/entries/entries-loader";
 import { Timeline } from "@app/features/entries/timeline";
 import type { TimelineItem } from "@app/features/entries/types";
 import { formatDayOfWeek, formatMonthDate } from "@app/utils/date-utils";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { SlidersHorizontalIcon } from "@phosphor-icons/react";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/")({
   component: JournalPage,
@@ -37,10 +38,15 @@ function JournalPage() {
 
   return (
     <div className="px-4 py-2 space-y-4">
-      <h1 className="text-2xl font-bold sticky flex items-baseline top-0 backdrop-blur-md bg-slate-medium py-1 gap-2">
-        <span className="font-extrabold">{formatMonthDate(new Date())}</span>
-        <span className="text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
-      </h1>
+      <header className="sticky top-0 backdrop-blur-md bg-slate-medium py-1 flex justify-between items-center">
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-extrabold">{formatMonthDate(new Date())}</span>
+          <span className="font-bold text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
+        </div>
+        <Link to="/settings" viewTransition={{ types: ["slide-left"] }}>
+          <SlidersHorizontalIcon className="size-6 text-cloud-light" />
+        </Link>
+      </header>
       {empty ? (
         <div className="flex flex-col gap-2">
           <p className="text-sm text-cloud-light text-center pt-10">No entries yet today</p>

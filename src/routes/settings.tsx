@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SignedIn, SignedOut, SignInButton, SignOutButton, useUser } from "@clerk/clerk-react";
 import {
   CaretLeftIcon,
@@ -8,10 +7,9 @@ import {
   SignOutIcon,
 } from "@phosphor-icons/react";
 import { formatDistanceToNow } from "date-fns";
-import { ExportDialog } from "@app/features/entries/export-dialog";
-import { ImportDialog } from "@app/features/entries/import-dialog";
+import { exportBackup, importBackup } from "@app/features/entries/backup";
 import { useSyncContext } from "@app/features/sync";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/settings")({
   component: RouteComponent,
@@ -47,8 +45,7 @@ function RouteComponent() {
 }
 
 function BackupSection() {
-  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
-  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+  const router = useRouter();
   const { lastSyncedAt } = useSyncContext();
 
   return (
@@ -68,7 +65,7 @@ function BackupSection() {
         </div>
         <button
           type="button"
-          onClick={() => setIsExportDialogOpen(true)}
+          onClick={() => exportBackup()}
           className="flex items-center justify-between w-full p-4 transition-transform active:scale-[0.99]"
         >
           <span>Export data</span>
@@ -76,15 +73,13 @@ function BackupSection() {
         </button>
         <button
           type="button"
-          onClick={() => setIsImportDialogOpen(true)}
+          onClick={() => importBackup().then(() => router.invalidate())}
           className="flex items-center justify-between w-full p-4 transition-transform active:scale-[0.99]"
         >
           <span>Import data</span>
           <DownloadSimpleIcon className="size-5 text-cloud-medium" />
         </button>
       </div>
-      <ExportDialog open={isExportDialogOpen} onClose={() => setIsExportDialogOpen(false)} />
-      <ImportDialog open={isImportDialogOpen} onClose={() => setIsImportDialogOpen(false)} />
     </section>
   );
 }

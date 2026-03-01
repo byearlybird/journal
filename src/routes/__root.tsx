@@ -1,8 +1,7 @@
 import { ErrorComponent, Loading } from "@app/components";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { migrator } from "@app/db";
-import { Dialog } from "@capacitor/dialog";
-import { SplashScreen } from '@capacitor/splash-screen';
+import { SyncProvider } from "@app/features/sync";
 
 let migrated = false;
 
@@ -15,16 +14,17 @@ export const Route = createRootRoute({
     if (!migrated) {
       await migrator.migrateToLatest();
       migrated = true;
-      await SplashScreen.hide()
     }
   },
 });
 
 function RootComponent() {
   return (
-    <main className="[view-transition-name:main-content]">
-      <Outlet />
-    </main>
+    <SyncProvider>
+      <main className="[view-transition-name:main-content]">
+        <Outlet />
+      </main>
+    </SyncProvider>
   );
 }
 
@@ -41,10 +41,7 @@ function AppLoading() {
 }
 
 function AppError(props: { error: Error }) {
-  Dialog.alert({
-    title: "Error",
-    message: props.error.message,
-  });
+  console.error(props.error.message);
   return (
     <main className="flex size-full h-screen items-center justify-center">
       <ErrorComponent />

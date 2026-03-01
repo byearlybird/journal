@@ -2,11 +2,8 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
-import { SplashScreen } from "@capacitor/splash-screen";
-import { Keyboard } from "@capacitor/keyboard";
 import { ClerkProvider } from "@clerk/clerk-react";
 import "./main.css";
-import { SyncProvider } from "./features/sync";
 
 // Create router instance
 const router = createRouter({ routeTree, defaultViewTransition: true });
@@ -24,20 +21,6 @@ const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
   throw new Error("Add your Clerk Publishable Key to the .env file");
 }
-
-// Hide the splash (per Capacitor docs, you should do this on app launch)
-await SplashScreen.hide();
-
-// Show the splash for an indefinite amount of time:
-await SplashScreen.show({
-  autoHide: false,
-});
-
-await Keyboard.setAccessoryBarVisible({
-  isVisible: false,
-});
-
-console.log(PUBLISHABLE_KEY);
 
 // biome-ignore lint/style/noNonNullAssertion: we know the element is always present
 createRoot(document.getElementById("root")!).render(
@@ -66,9 +49,7 @@ createRoot(document.getElementById("root")!).render(
         },
       }}
     >
-      <SyncProvider>
-        <RouterProvider router={router} />
-      </SyncProvider>
+      <RouterProvider router={router} />
     </ClerkProvider>
   </StrictMode>,
 );

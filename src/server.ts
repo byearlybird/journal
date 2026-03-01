@@ -1,12 +1,9 @@
 import index from "./index.html";
+import { api } from "./api/index.ts";
 
 const server = Bun.serve({
   routes: {
-    "/api/status": {
-      GET() {
-        return Response.json({ status: "ok" });
-      },
-    },
+    "/api/*": (req) => api.fetch(req),
     "/*": index,
   },
   development: process.env.NODE_ENV !== "production" && {

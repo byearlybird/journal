@@ -1,4 +1,3 @@
-import { ENV } from "@/env";
 import { type DatabaseDump, dumpDatabase, mergeIntoDatabase } from "@/db";
 
 // Flag to prevent infinite loop when syncing triggers store changes
@@ -16,7 +15,7 @@ export function getIsSyncing(): boolean {
  * Returns null if no remote data exists yet (404).
  */
 export async function syncPull(token: string): Promise<DatabaseDump | null> {
-  const response = await fetch(`${ENV.VITE_API_BASE_URL}/v0/backup`, {
+  const response = await fetch("/api/v0/backup", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -39,7 +38,7 @@ export async function syncPull(token: string): Promise<DatabaseDump | null> {
  * Pushes pre-serialized data to remote server.
  */
 export async function syncPush(token: string, data: string): Promise<void> {
-  const response = await fetch(`${ENV.VITE_API_BASE_URL}/v0/backup`, {
+  const response = await fetch("/api/v0/backup", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

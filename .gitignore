@@ -30,3 +30,5 @@ src/routeTree.gen.ts
 
 *storybook.log
 storybook-static
+
+*.db

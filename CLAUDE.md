@@ -4,11 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A journaling application with end-to-end encryption, client-side SQLite storage, and sync via a separate API server. Users derive encryption keys from a passphrase (never sent to server).
+A journaling application with end-to-end encryption, client-side SQLite storage, and sync. Users derive encryption keys from a passphrase (never sent to server). The API server runs in the same Bun process as the SPA, mounted at `/api/*` via Hono.
 
 **TODO**: Authentication system needs to be implemented.
-
-This repository contains only the client-side SPA. The API server is in a separate repository.
 
 ## Commands
 
@@ -33,16 +31,34 @@ No automated test setup is currently configured. If adding tests, prefer vitest 
 
 ## Architecture
 
+### Unified Server
+
+**`src/server.ts`** — Single Bun.serve() entry point serving both the SPA and API:
+
+- `/api/*` routes delegate to the Hono app (`src/api/index.ts`)
+- `/*` serves the SPA (`src/index.html`)
+- No CORS needed — everything is same-origin
+
 ### Client SPA
 
 **`src/`** - Client web application (React + Bun)
 
 - Runs in the browser
-- Uses SQLite via `sqlocal` (WASM-based client-side database)
-- React 19, TanStack Query for data management
+- Uses IndexedDB via `idb` for client-side storage
+- React 19, nanostores for state management
 - Tailwind CSS v4 for styling
 - Entry point: `src/main.tsx`
-- Communicates with a separate API server at `/api/*` endpoints
+- API calls use relative URLs (`/api/v0/backup`)
+
+### API Server
+
+**`src/api/`** - Hono API server (runs server-side in the same Bun process)
+
+- Hono framework with Zod validation
+- Clerk authentication middleware (`src/api/clerk-middleware.ts`)
+- LibSQL/Turso database via Kysely (`src/api/db/`)
+- Database migrations run on startup via top-level await
+- Routes: `GET /api/status`, `GET /api/v0/backup`, `PUT /api/v0/backup`
 
 ### Path Aliases
 
@@ -75,10 +91,14 @@ Single flat `tsconfig.json` for the entire project.
 
 **Client-side database** (`src/db/`):
 
-- SQLite via `sqlocal` (WASM-based, runs in browser)
-- Kysely for type-safe query building
-- Database file: `journal-local-9192390.db`
+- IndexedDB via `idb` (runs in browser)
 - Schema: `note` table (id, content, created_at, updated_at, deleted_at)
+
+**Server-side database** (`src/api/db/`):
+
+- LibSQL/Turso via Kysely
+- Schema: `backups` table (id, user_id, data, created_at, updated_at)
+- Migrations run automatically on server startup
 
 **Sync mechanism** (`src/features/sync/`):
 
@@ -87,21 +107,19 @@ Single flat `tsconfig.json` for the entire project.
   - On mutation (immediate sync after data changes)
   - On sign-in (initial sync when user authenticates)
 - Pull-merge-push strategy (`src/features/sync/client.ts`):
-  1. Fetch encrypted database blob from API server (`GET /v0/backup`)
+  1. Fetch encrypted database blob from API (`GET /api/v0/backup`)
   2. Decrypt and merge into local database
-  3. Encrypt local database and upload to API server (`PUT /v0/backup`)
+  3. Encrypt local database and upload to API (`PUT /api/v0/backup`)
 - Uses `updated_at` timestamps for last-write-wins conflict resolution
 - Merge logic in `src/db/merger.ts` handles combining remote and local state
 - Data format: JSON with `notes` array and `schema_version` field
 - Skips push if pull fails to avoid out-of-date overwrites
-- Uses standard fetch API for server communication
 
 **Migrations** (`src/db/migrations/`):
 
-- Kysely migrations manage schema evolution
+- Kysely migrations manage client-side schema evolution
 - Run automatically on app load via `AppProvider`
 - Add new migrations as `YYYY-MM-DD-description.ts` in `src/db/migrations/`
-- Migrations run in `AppProvider` before rendering children
 
 ### Authentication
 
@@ -109,33 +127,36 @@ Single flat `tsconfig.json` for the entire project.
 
 - Currently, auth is stubbed with no-ops (users always considered signed in)
 - See `src/features/sync/use-sync-on-signin.tsx` and `src/features/sync/use-sync-on-interval.tsx`
-- Session tokens should be sent with API requests to the separate API server
-- API server should validate session tokens and protect `/v0/*` routes
+- Clerk middleware on the API validates session tokens for `/v0/*` routes
+- Session tokens should be sent with API requests
 
 ### API Endpoints
 
-The client expects the following API endpoints from the separate API server:
-
-- `GET /v0/backup` - Download encrypted database for current user
-- `PUT /v0/backup` - Upload encrypted database for current user
-
-These endpoints are implemented in a separate API server repository.
+- `GET /api/status` - Health check (no auth required)
+- `GET /api/v0/backup` - Download encrypted database for current user
+- `PUT /api/v0/backup` - Upload encrypted database for current user
 
 ### State Management
 
 **Client state** (`src/features/` and `src/providers/`):
 
-- TanStack Query manages all data fetching and mutations
-- `AppProvider` wraps app with `QueryClientProvider`
-- All queries auto-invalidate on any mutation (acceptable for local-first data)
+- Nanostores for state management
+- `AppProvider` wraps app initialization
 - `SyncProvider` orchestrates background sync via custom hooks
 
 ### Environment Variables
 
-**Environment variables** (`.env`):
+**Client variables** (exposed to browser via `PUBLIC_` prefix):
 
-- `PUBLIC_API_BASE_URL` - API server base URL (defaults to `http://localhost:3000`)
 - `PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
+
+**Server variables** (server-side only, not bundled into client):
+
+- `CLERK_SECRET_KEY` - Clerk secret key
+- `DATABASE_URL` - LibSQL/Turso database URL (e.g. `file:./database.db` for local dev)
+- `DATABASE_AUTH_TOKEN` - Turso auth token (optional for local dev)
+
+Note: The API server reuses `PUBLIC_CLERK_PUBLISHABLE_KEY` for its Clerk client — no separate `CLERK_PUBLISHABLE_KEY` needed.
 
 ### Code Style
 
@@ -150,12 +171,18 @@ Commit messages follow lightweight Conventional Commits: `feat:`, `fix:`, `chore
 
 ## Key Files
 
+- `src/server.ts` - Unified Bun server entry point (SPA + API)
+- `src/api/index.ts` - Hono API app setup, migration runner
+- `src/api/clerk-middleware.ts` - Clerk authentication middleware
+- `src/api/backup-routes.ts` - Backup API route handlers
+- `src/api/backup-service.ts` - Backup business logic
+- `src/api/backup-repo.ts` - Backup data access layer
+- `src/api/db/` - Server database client, schema, migrations
 - `src/utils/crypto.ts` - Encryption/decryption utilities
-- `src/db/db.ts` - Database schema and client setup
+- `src/db/db.ts` - Client database schema and setup
 - `src/db/merger.ts` - Conflict-free merge logic (dump/merge functions)
 - `src/features/sync/client.ts` - Sync orchestration (syncPull/syncPush/sync functions)
 - `src/features/sync/sync-provider.tsx` - Sync hooks coordination
 - `src/providers/app-provider.tsx` - App initialization and migration runner
 - `src/main.tsx` - App entry point with providers
-- `src/server.ts` - Bun.serve() entry point for dev and production
 - `build.ts` - Production build script using Bun.build()

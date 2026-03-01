@@ -1,0 +1,9 @@
+:{$PORT} {
+	root * dist
+	file_server
+	header {
+		Cross-Origin-Embedder-Policy "require-corp"
+		Cross-Origin-Opener-Policy "same-origin"
+	}
+	try_files {path} /index.html
+}

@@ -1,38 +1,20 @@
 import { getEntriesToday } from "@app/features/entries/entries-loader";
 import { Timeline } from "@app/features/entries/timeline";
 import type { TimelineItem } from "@app/features/entries/types";
+import { useLocalData } from "@app/hooks/use-local-data";
 import { formatDayOfWeek, formatMonthDate } from "@app/utils/date-utils";
+import { navigate } from "@app/utils/navigate";
 import { SlidersHorizontalIcon } from "@phosphor-icons/react";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/app/")({
-  component: JournalPage,
-  loader: async () => {
-    const entries = await getEntriesToday();
-    return { entries };
-  },
-});
-
-function JournalPage() {
-  const navigate = useNavigate();
-  const { entries } = Route.useLoaderData();
-  const empty = entries.length === 0;
+export function TodayPage() {
+  const entries = useLocalData(() => getEntriesToday());
+  const empty = !entries || entries.length === 0;
 
   const handleEntryClick = (entry: TimelineItem) => {
     if (entry.type === "note") {
-      navigate({
-        to: "/note/$id",
-        params: { id: entry.id },
-        search: { from: "index" },
-        viewTransition: { types: ["slide-left"] },
-      });
+      navigate("note", { id: entry.id }, { search: { from: "index" }, transition: "slide-left" });
     } else if (entry.type === "task") {
-      navigate({
-        to: "/task/$id",
-        params: { id: entry.id },
-        search: { from: "index" },
-        viewTransition: { types: ["slide-left"] },
-      });
+      navigate("task", { id: entry.id }, { search: { from: "index" }, transition: "slide-left" });
     }
   };
 
@@ -43,9 +25,9 @@ function JournalPage() {
           <span className="text-2xl font-extrabold">{formatMonthDate(new Date())}</span>
           <span className="font-bold text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
         </div>
-        <Link to="/settings" viewTransition={{ types: ["slide-left"] }}>
+        <button type="button" onClick={() => navigate("settings", undefined, { transition: "slide-left" })}>
           <SlidersHorizontalIcon className="size-6 text-cloud-light" />
-        </Link>
+        </button>
       </header>
       {empty ? (
         <div className="flex flex-col gap-2">

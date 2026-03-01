@@ -1,37 +1,21 @@
 import { getEntriesGroupedByDate } from "@app/features/entries/entries-loader";
 import { DayEntriesItem } from "@app/features/entries";
 import type { TimelineItem } from "@app/features/entries/types";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useLocalData } from "@app/hooks/use-local-data";
+import { navigate } from "@app/utils/navigate";
 
-export const Route = createFileRoute("/app/entries")({
-  component: RouteComponent,
-  loader: async () => {
-    const entriesByDate = await getEntriesGroupedByDate();
-    return { entriesByDate };
-  },
-});
-
-function RouteComponent() {
-  const navigate = useNavigate();
-  const { entriesByDate } = Route.useLoaderData();
+export function EntriesPage() {
+  const entriesByDate = useLocalData(() => getEntriesGroupedByDate());
 
   const handleEntryClick = (entry: TimelineItem) => {
     if (entry.type === "note") {
-      navigate({
-        to: "/note/$id",
-        params: { id: entry.id },
-        search: { from: "entries" },
-        viewTransition: { types: ["slide-left"] },
-      });
+      navigate("note", { id: entry.id }, { search: { from: "entries" }, transition: "slide-left" });
     } else if (entry.type === "task") {
-      navigate({
-        to: "/task/$id",
-        params: { id: entry.id },
-        search: { from: "entries" },
-        viewTransition: { types: ["slide-left"] },
-      });
+      navigate("task", { id: entry.id }, { search: { from: "entries" }, transition: "slide-left" });
     }
   };
+
+  if (!entriesByDate) return null;
 
   return (
     <div className="flex flex-col px-4 pt-2 divide-y divide-dashed *:not-first:pt-8">

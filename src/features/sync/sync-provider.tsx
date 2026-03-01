@@ -1,8 +1,8 @@
 import { type ReactNode, createContext, useCallback, useContext, useEffect } from "react";
 import { useSession } from "@clerk/clerk-react";
 import { useLocalStorage } from "@app/hooks/use-local-storage";
+import { invalidateData } from "@app/stores/data-version";
 import { syncDatabase } from "./client";
-import { useRouter } from "@tanstack/react-router";
 
 interface SyncContextValue {
   lastSyncedAt: number | null;
@@ -23,7 +23,6 @@ const SYNC_INTERVAL = 60000 * 5; // 5 minutes
 
 export function SyncProvider({ children }: SyncProviderProps) {
   const { isSignedIn, session } = useSession();
-  const router = useRouter();
   const [lastSyncedAt, setLastSyncedAt] = useLocalStorage<number | null>("lastSyncedAt", null);
 
   const sync = useCallback(async () => {
@@ -38,17 +37,17 @@ export function SyncProvider({ children }: SyncProviderProps) {
     if (!isSignedIn) return;
 
     sync().then(() => {
-      router.invalidate();
+      invalidateData();
     });
 
     const interval = setInterval(() => {
       sync().then(() => {
-        router.invalidate();
+        invalidateData();
       });
     }, SYNC_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [isSignedIn, sync, router]);
+  }, [isSignedIn, sync]);
 
   return <SyncContext value={{ lastSyncedAt, sync }}>{children}</SyncContext>;
 }

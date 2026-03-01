@@ -1,9 +1,8 @@
 import { notesRepo, type NewNote } from "@app/db";
 import { useSyncContext } from "@app/features/sync";
-import { useRouter } from "@tanstack/react-router";
+import { invalidateData } from "@app/stores/data-version";
 
 export function useCreateNote() {
-  const router = useRouter();
   const { sync } = useSyncContext();
 
   return async (note: Pick<NewNote, "content">) => {
@@ -12,18 +11,17 @@ export function useCreateNote() {
       scope: "daily",
       category: "log",
     });
-    await router.invalidate();
+    invalidateData();
     sync();
   };
 }
 
 export function useUpdateNote() {
-  const router = useRouter();
   const { sync } = useSyncContext();
 
   return async (id: string, { content }: { content: string }) => {
     await notesRepo.update(id, { content });
-    await router.invalidate();
+    invalidateData();
     sync();
   };
 }

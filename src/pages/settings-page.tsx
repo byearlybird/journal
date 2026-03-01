@@ -9,17 +9,12 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { exportBackup, importBackup } from "@app/features/entries/backup";
 import { useSyncContext } from "@app/features/sync";
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { invalidateData } from "@app/stores/data-version";
+import { navigate } from "@app/utils/navigate";
 
-export const Route = createFileRoute("/settings")({
-  component: RouteComponent,
-});
-
-function RouteComponent() {
-  const navigate = useNavigate();
-
+export function SettingsPage() {
   const goBack = () => {
-    navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
+    navigate("app", undefined, { transition: "slide-right" });
   };
 
   return (
@@ -45,7 +40,6 @@ function RouteComponent() {
 }
 
 function BackupSection() {
-  const router = useRouter();
   const { lastSyncedAt } = useSyncContext();
 
   return (
@@ -73,7 +67,7 @@ function BackupSection() {
         </button>
         <button
           type="button"
-          onClick={() => importBackup().then(() => router.invalidate())}
+          onClick={() => importBackup().then(() => invalidateData())}
           className="flex items-center justify-between w-full p-4 transition-transform active:scale-[0.99]"
         >
           <span>Import data</span>

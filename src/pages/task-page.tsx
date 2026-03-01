@@ -10,6 +10,8 @@ import {
 } from "@app/components";
 import { tasksRepo } from "@app/db";
 import { EditTaskDialog, useUpdateTaskStatus } from "@app/features/tasks";
+import { useLocalData } from "@app/hooks/use-local-data";
+import { navigate } from "@app/utils/navigate";
 import {
   ArrowCounterClockwiseIcon,
   CaretLeftIcon,
@@ -19,69 +21,51 @@ import {
   TrashIcon,
   XSquareIcon,
 } from "@phosphor-icons/react";
-import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
-import z from "zod";
 
-const taskSearchSchema = z.object({
-  from: z.enum(["index", "entries"]).optional().catch(undefined),
-});
-
-export const Route = createFileRoute("/task/$id")({
-  component: RouteComponent,
-  validateSearch: (search: Record<string, unknown>) => taskSearchSchema.parse(search),
-  loader: async ({ params }) => {
-    const task = await tasksRepo.findById(params.id);
-    if (!task) {
-      throw notFound();
-    }
-    return {
-      task,
-    };
-  },
-});
-
-function RouteComponent() {
-  const { task } = Route.useLoaderData();
-  const { from } = Route.useSearch();
-  const navigate = Route.useNavigate();
+export function TaskPage({ id }: { id: string }) {
+  const task = useLocalData(() => tasksRepo.findById(id), [id]);
   const updateTaskStatus = useUpdateTaskStatus();
   const [editOpen, setEditOpen] = useState(false);
+  const from = new URLSearchParams(window.location.search).get("from") as "index" | "entries" | null;
 
   const handleComplete = () => {
+    if (!task) return;
     updateTaskStatus({ id: task.id, status: "complete" });
   };
 
   const handleCancel = () => {
+    if (!task) return;
     updateTaskStatus({ id: task.id, status: "canceled" });
   };
 
   const handleReset = () => {
+    if (!task) return;
     updateTaskStatus({ id: task.id, status: "incomplete" });
   };
 
+  const handleBack = () => {
+    if (from === "entries") {
+      navigate("entries", undefined, { transition: "slide-right" });
+    } else {
+      navigate("app", undefined, { transition: "slide-right" });
+    }
+  };
+
   const handleDelete = () => {
+    if (!task) return;
     tasksRepo.delete(task.id);
     handleBack();
   };
 
-  const handleBack = () => {
-    if (from === "index") {
-      navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
-    } else if (from === "entries") {
-      navigate({ to: "/app/entries", viewTransition: { types: ["slide-right"] } });
-    } else {
-      navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
-    }
-  };
+  if (!task) return null;
 
   const formattedDate = format(parseISO(task.date), "MMMM d");
   const createdTime = format(parseISO(task.created_at), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
-      {/* Header row */}
       <header className="flex items-center gap-2 px-4 py-2">
         <button
           type="button"
@@ -119,9 +103,7 @@ function RouteComponent() {
           </MenuPortal>
         </MenuRoot>
       </header>
-      {/* Content area */}
       <TextContent content={task.content} updatedAt={task.updated_at} createdAt={task.created_at} />
-      {/* Controls section */}
       <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
         {task.status === "incomplete" ? (
           <>

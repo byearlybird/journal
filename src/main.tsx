@@ -1,19 +1,8 @@
-import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { routeTree } from "./routeTree.gen";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { App } from "./app";
 import "./main.css";
-
-// Create router instance
-const router = createRouter({ routeTree, defaultViewTransition: true });
-
-// TypeScript: Register router type
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -49,7 +38,7 @@ createRoot(document.getElementById("root")!).render(
         },
       }}
     >
-      <RouterProvider router={router} />
+      <App />
     </ClerkProvider>
   </StrictMode>,
 );

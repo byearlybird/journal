@@ -2,53 +2,32 @@ import { ActionNavbar, Navbar, type NavItemData } from "@app/components";
 import { tasksRepo, type Task } from "@app/db";
 import { CreateDialog } from "@app/features/entries";
 import { TasksDialog } from "@app/features/tasks";
+import { useLocalData } from "@app/hooks/use-local-data";
 import { compareDesc, parseISO } from "date-fns";
 import { ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/app")({
-  component: RouteComponent,
-  loader: async () => {
-    const tasks = await tasksRepo.findAll();
-    const incompleteTasks = tasks
-      .filter((task) => task.status === "incomplete")
-      .sort((a, b) => compareDesc(parseISO(a.created_at), parseISO(b.created_at)));
-    return { incompleteTasks };
+const navItems: NavItemData[] = [
+  {
+    route: "app",
+    label: "Today",
+    icon: SunHorizonIcon,
   },
-});
+  {
+    route: "entries",
+    label: "All Entries",
+    icon: ListBulletsIcon,
+  },
+];
 
-function RouteComponent() {
-  const { incompleteTasks } = Route.useLoaderData();
-  return (
-    <AppLayout incompleteTasks={incompleteTasks}>
-      <Outlet />
-    </AppLayout>
-  );
-}
+export function AppLayout({ children }: { children: React.ReactNode }) {
+  const tasks = useLocalData(() => tasksRepo.findAll());
+  const incompleteTasks = (tasks ?? [])
+    .filter((task: Task) => task.status === "incomplete")
+    .sort((a: Task, b: Task) => compareDesc(parseISO(a.created_at), parseISO(b.created_at)));
 
-function AppLayout({
-  children,
-  incompleteTasks,
-}: {
-  children: React.ReactNode;
-  incompleteTasks: Task[];
-}) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isPushpinDialogOpen, setIsPushpinDialogOpen] = useState(false);
-
-  const navItems: NavItemData[] = [
-    {
-      href: "/app",
-      label: "Today",
-      icon: SunHorizonIcon,
-    },
-    {
-      href: "/app/entries",
-      label: "All Entries",
-      icon: ListBulletsIcon,
-    },
-  ];
 
   return (
     <>

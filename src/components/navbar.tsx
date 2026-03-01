@@ -1,9 +1,11 @@
 import { type Icon } from "@phosphor-icons/react";
-import { useMatchRoute, useRouter, type LinkProps } from "@tanstack/react-router";
+import { useStore } from "@nanostores/react";
 import { cx } from "cva";
+import { $router } from "@app/stores/router";
+import { navigate } from "@app/utils/navigate";
 
 export type NavItemData = {
-  href: LinkProps["to"];
+  route: string;
   label: string;
   icon: Icon;
 };
@@ -16,19 +18,18 @@ export function Navbar({ navItems }: NavbarProps) {
   return (
     <nav className="flex gap-1 rounded-lg border bg-slate-dark p-0.5 backdrop-blur">
       {navItems.map((item) => (
-        <NavItem key={item.href} {...item} />
+        <NavItem key={item.route} {...item} />
       ))}
     </nav>
   );
 }
 
-function NavItem({ href, label, icon: Icon }: NavItemData) {
-  const match = useMatchRoute();
-  const router = useRouter();
-  const isActive = match({ to: href });
+function NavItem({ route, label, icon: Icon }: NavItemData) {
+  const page = useStore($router);
+  const isActive = page?.route === route;
 
   const handleClick = () => {
-    router.navigate({ to: href });
+    navigate(route as any);
   };
 
   return (

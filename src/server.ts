@@ -1,4 +1,4 @@
-import index from "./index.html";
+import index from "./app/index.html";
 import { api } from "./api/index.ts";
 
 const server = Bun.serve({

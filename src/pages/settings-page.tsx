@@ -7,10 +7,10 @@ import {
   SignOutIcon,
 } from "@phosphor-icons/react";
 import { formatDistanceToNow } from "date-fns";
-import { exportBackup, importBackup } from "@app/features/entries/backup";
-import { useSyncContext } from "@app/features/sync";
-import { invalidateData } from "@app/stores/data-version";
-import { navigate } from "@app/utils/navigate";
+import { exportBackup, importBackup } from "@/features/entries/backup";
+import { useSyncContext } from "@/features/sync";
+import { invalidateData } from "@/stores/data-version";
+import { navigate } from "@/utils/navigate";
 
 export function SettingsPage() {
   const goBack = () => {

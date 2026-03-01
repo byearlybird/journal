@@ -1,4 +1,4 @@
-import { Button } from "@app/components/button";
+import { Button } from "@/components/button";
 import {
   MenuItem,
   MenuPopup,
@@ -7,11 +7,11 @@ import {
   MenuRoot,
   MenuTrigger,
   TextContent,
-} from "@app/components";
-import { tasksRepo } from "@app/db";
-import { EditTaskDialog, useUpdateTaskStatus } from "@app/features/tasks";
-import { useLocalData } from "@app/hooks/use-local-data";
-import { navigate } from "@app/utils/navigate";
+} from "@/components";
+import { tasksRepo } from "@/db";
+import { EditTaskDialog, useUpdateTaskStatus } from "@/features/tasks";
+import { useLocalData } from "@/hooks/use-local-data";
+import { navigate } from "@/utils/navigate";
 import {
   ArrowCounterClockwiseIcon,
   CaretLeftIcon,
@@ -62,7 +62,7 @@ export function TaskPage({ id }: { id: string }) {
   if (!task) return null;
 
   const formattedDate = format(parseISO(task.date), "MMMM d");
-  const createdTime = format(parseISO(task.created_at), "h:mm a");
+  const createdTime = format(parseISO(task.createdAt), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
@@ -79,7 +79,7 @@ export function TaskPage({ id }: { id: string }) {
           <time className="font-medium" dateTime={task.date}>
             {formattedDate}
           </time>
-          <time className="block text-xs text-cloud-medium" dateTime={task.created_at}>
+          <time className="block text-xs text-cloud-medium" dateTime={task.createdAt}>
             {createdTime}
           </time>
         </div>
@@ -103,7 +103,7 @@ export function TaskPage({ id }: { id: string }) {
           </MenuPortal>
         </MenuRoot>
       </header>
-      <TextContent content={task.content} updatedAt={task.updated_at} createdAt={task.created_at} />
+      <TextContent content={task.content} updatedAt={task.updatedAt} createdAt={task.createdAt} />
       <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
         {task.status === "incomplete" ? (
           <>

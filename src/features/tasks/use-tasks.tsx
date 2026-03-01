@@ -1,6 +1,6 @@
-import { tasksRepo, type Task, type NewTask } from "@app/db";
-import { useSyncContext } from "@app/features/sync";
-import { invalidateData } from "@app/stores/data-version";
+import { tasksRepo, type Task, type NewTask } from "@/db";
+import { useSyncContext } from "@/features/sync";
+import { invalidateData } from "@/stores/data-version";
 
 export function useCreateTask() {
   const { sync } = useSyncContext();

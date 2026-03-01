@@ -1,5 +1,5 @@
 import { openPage } from "@nanostores/router";
-import { $router } from "@app/stores/router";
+import { $router } from "@/stores/router";
 
 type TransitionType = "slide-left" | "slide-right";
 

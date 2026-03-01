@@ -1,4 +1,4 @@
-import type { Task } from "@app/db";
+import type { Task } from "@/db";
 import {
   DialogBackdrop,
   DialogClose,
@@ -6,10 +6,10 @@ import {
   DialogPortal,
   DialogRoot,
   DialogTitle,
-} from "@app/components/dialog";
+} from "@/components/dialog";
 import { XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
-import { TaskItem, useUpdateTaskStatus } from "@app/features/tasks";
+import { TaskItem, useUpdateTaskStatus } from "@/features/tasks";
 
 export function TasksDialog({
   incompleteTasks,

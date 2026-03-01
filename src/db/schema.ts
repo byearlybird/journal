@@ -1,10 +1,11 @@
 import z from "zod";
+import type { DBSchema } from "idb";
 
 const baseSchema = z.object({
   id: z.uuid().default(() => crypto.randomUUID()),
-  created_at: z.iso.datetime().default(() => new Date().toISOString()),
-  updated_at: z.iso.datetime().default(() => new Date().toISOString()),
-  is_deleted: z.number().int().min(0).max(1).default(0),
+  createdAt: z.iso.datetime().default(() => new Date().toISOString()),
+  updatedAt: z.iso.datetime().default(() => new Date().toISOString()),
+  isDeleted: z.number().int().min(0).max(1).default(0),
 });
 
 const baseEntrySchema = baseSchema.extend({
@@ -26,7 +27,23 @@ export type Task = z.infer<typeof taskSchema>;
 export type NewNote = z.input<typeof noteSchema>;
 export type NewTask = z.input<typeof taskSchema>;
 
-export type Database = {
-  notes: Note;
-  tasks: Task;
-};
+export interface Database extends DBSchema {
+  notes: {
+    key: string;
+    value: Note;
+    indexes: {
+      createdAt: string;
+      date: string;
+      isDeleted: number;
+    };
+  };
+  tasks: {
+    key: string;
+    value: Task;
+    indexes: {
+      createdAt: string;
+      date: string;
+      isDeleted: number;
+    };
+  };
+}

@@ -1,8 +1,8 @@
 import { type Icon } from "@phosphor-icons/react";
 import { useStore } from "@nanostores/react";
 import { cx } from "cva";
-import { $router } from "@app/stores/router";
-import { navigate } from "@app/utils/navigate";
+import { $router } from "@/stores/router";
+import { navigate } from "@/utils/navigate";
 
 export type NavItemData = {
   route: string;

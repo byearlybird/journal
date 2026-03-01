@@ -1,23 +1,22 @@
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
-import { ErrorComponent, Loading } from "@app/components";
-import { migrator } from "@app/db";
-import { SyncProvider } from "@app/features/sync";
-import { $router } from "@app/stores/router";
-import { AppLayout } from "@app/pages/app-layout";
-import { TodayPage } from "@app/pages/today-page";
-import { EntriesPage } from "@app/pages/entries-page";
-import { NotePage } from "@app/pages/note-page";
-import { TaskPage } from "@app/pages/task-page";
-import { SettingsPage } from "@app/pages/settings-page";
-import { NotFoundPage } from "@app/pages/not-found-page";
+import { ErrorComponent, Loading } from "@/components";
+import { getDb } from "@/db";
+import { SyncProvider } from "@/features/sync";
+import { $router } from "@/stores/router";
+import { AppLayout } from "@/pages/app-layout";
+import { TodayPage } from "@/pages/today-page";
+import { EntriesPage } from "@/pages/entries-page";
+import { NotePage } from "@/pages/note-page";
+import { TaskPage } from "@/pages/task-page";
+import { SettingsPage } from "@/pages/settings-page";
+import { NotFoundPage } from "@/pages/not-found-page";
 
 export function App() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
-    migrator
-      .migrateToLatest()
+    getDb()
       .then(() => setStatus("ready"))
       .catch((err) => {
         console.error(err);

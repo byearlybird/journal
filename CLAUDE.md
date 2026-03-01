@@ -15,7 +15,7 @@ This repository contains only the client-side SPA. The API server is in a separa
 ### Development
 
 - Install dependencies: `bun install`
-- Start dev server: `bun dev` - Runs Vite dev server on localhost
+- Start dev server: `bun dev` - Runs Bun dev server with HMR on localhost
 - Lint: `bun lint` - Runs oxlint
 - Lint with fixes: `bun lint:fix`
 - Format: `bun fmt` - Runs oxfmt formatter
@@ -23,8 +23,8 @@ This repository contains only the client-side SPA. The API server is in a separa
 
 ### Build & Deploy
 
-- Production build: `bun run build` - Builds the client SPA with Vite
-- Preview build: `bun preview` - Preview production build locally
+- Production build: `bun run build` - Builds the client SPA with Bun bundler
+- Start production: `bun start` - Runs production server
 - Deploy: Deploy the built SPA to your hosting provider
 
 ### Testing
@@ -35,7 +35,7 @@ No automated test setup is currently configured. If adding tests, prefer vitest 
 
 ### Client SPA
 
-**`src/`** - Client web application (React + Vite)
+**`src/`** - Client web application (React + Bun)
 
 - Runs in the browser
 - Uses SQLite via `sqlocal` (WASM-based client-side database)
@@ -46,17 +46,13 @@ No automated test setup is currently configured. If adding tests, prefer vitest 
 
 ### Path Aliases
 
-TypeScript path aliases configured in `vite.config.ts`:
+TypeScript path aliases configured in `tsconfig.json`:
 
-- `@app/*` → `./src/*`
+- `@/*` → `./src/*`
 
 ### TypeScript Configuration
 
-Project uses composite TypeScript setup:
-
-- `tsconfig.json` - Root references file
-- `tsconfig.app.json` - Client app config
-- `tsconfig.node.json` - Node build scripts config
+Single flat `tsconfig.json` for the entire project.
 
 ### End-to-End Encryption
 
@@ -138,7 +134,8 @@ These endpoints are implemented in a separate API server repository.
 
 **Environment variables** (`.env`):
 
-- `VITE_API_BASE_URL` - API server base URL (defaults to `http://localhost:3000`)
+- `PUBLIC_API_BASE_URL` - API server base URL (defaults to `http://localhost:3000`)
+- `PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
 
 ### Code Style
 
@@ -160,3 +157,5 @@ Commit messages follow lightweight Conventional Commits: `feat:`, `fix:`, `chore
 - `src/features/sync/sync-provider.tsx` - Sync hooks coordination
 - `src/providers/app-provider.tsx` - App initialization and migration runner
 - `src/main.tsx` - App entry point with providers
+- `src/server.ts` - Bun.serve() entry point for dev and production
+- `build.ts` - Production build script using Bun.build()

@@ -1,5 +1,5 @@
-import { ENV } from "@app/env";
-import { type DatabaseDump, dumpDatabase, mergeIntoDatabase } from "@app/db";
+import { ENV } from "@/env";
+import { type DatabaseDump, dumpDatabase, mergeIntoDatabase } from "@/db";
 
 // Flag to prevent infinite loop when syncing triggers store changes
 let isSyncing = false;

@@ -1,27 +1,27 @@
-import { notesRepo, tasksRepo } from "@app/db";
+import { notesRepo, tasksRepo } from "@/db";
 import { compareDesc, isToday, parseISO } from "date-fns";
-import { formatISODate } from "@app/utils/date-utils";
+import { formatISODate } from "@/utils/date-utils";
 import type { TimelineItem } from "./types";
 
 export async function getEntriesToday(): Promise<TimelineItem[]> {
   const [notes, tasks] = await Promise.all([notesRepo.findAll(), tasksRepo.findAll()]);
 
   const noteEntries: TimelineItem[] = notes
-    .filter((note) => isToday(parseISO(note.created_at)))
+    .filter((note) => isToday(parseISO(note.createdAt)))
     .map((note) => ({
       ...note,
       type: "note" as const,
     }));
 
   const taskEntries: TimelineItem[] = tasks
-    .filter((task) => isToday(parseISO(task.created_at)))
+    .filter((task) => isToday(parseISO(task.createdAt)))
     .map((task) => ({
       ...task,
       type: "task" as const,
     }));
 
   return [...noteEntries, ...taskEntries].sort((a, b) =>
-    compareDesc(parseISO(a.created_at), parseISO(b.created_at)),
+    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
   );
 }
 
@@ -39,12 +39,12 @@ export async function getEntriesGroupedByDate(): Promise<Record<string, Timeline
   }));
 
   const allEntries = [...noteEntries, ...taskEntries].sort((a, b) =>
-    compareDesc(parseISO(a.created_at), parseISO(b.created_at)),
+    compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)),
   );
 
   const grouped: Record<string, TimelineItem[]> = {};
   for (const entry of allEntries) {
-    const date = formatISODate(parseISO(entry.created_at));
+    const date = formatISODate(parseISO(entry.createdAt));
     grouped[date] ??= [];
     grouped[date].push(entry);
   }

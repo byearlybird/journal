@@ -1,8 +1,8 @@
-import { ActionNavbar, Navbar, type NavItemData } from "@app/components";
-import { tasksRepo, type Task } from "@app/db";
-import { CreateDialog } from "@app/features/entries";
-import { TasksDialog } from "@app/features/tasks";
-import { useLocalData } from "@app/hooks/use-local-data";
+import { ActionNavbar, Navbar, type NavItemData } from "@/components";
+import { tasksRepo, type Task } from "@/db";
+import { CreateDialog } from "@/features/entries";
+import { TasksDialog } from "@/features/tasks";
+import { useLocalData } from "@/hooks/use-local-data";
 import { compareDesc, parseISO } from "date-fns";
 import { ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
 import { useState } from "react";
@@ -24,7 +24,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const tasks = useLocalData(() => tasksRepo.findAll());
   const incompleteTasks = (tasks ?? [])
     .filter((task: Task) => task.status === "incomplete")
-    .sort((a: Task, b: Task) => compareDesc(parseISO(a.created_at), parseISO(b.created_at)));
+    .sort((a: Task, b: Task) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isPushpinDialogOpen, setIsPushpinDialogOpen] = useState(false);

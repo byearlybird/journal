@@ -1,7 +1,7 @@
 import { type ReactNode, createContext, useCallback, useContext, useEffect } from "react";
 import { useSession } from "@clerk/clerk-react";
-import { useLocalStorage } from "@app/hooks/use-local-storage";
-import { invalidateData } from "@app/stores/data-version";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { invalidateData } from "@/stores/data-version";
 import { syncDatabase } from "./client";
 
 interface SyncContextValue {

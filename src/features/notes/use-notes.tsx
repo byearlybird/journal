@@ -1,6 +1,6 @@
-import { notesRepo, type NewNote } from "@app/db";
-import { useSyncContext } from "@app/features/sync";
-import { invalidateData } from "@app/stores/data-version";
+import { notesRepo, type NewNote } from "@/db";
+import { useSyncContext } from "@/features/sync";
+import { invalidateData } from "@/stores/data-version";
 
 export function useCreateNote() {
   const { sync } = useSyncContext();

@@ -1,92 +1,78 @@
-import { db } from "./client";
+import { getDb } from "./client";
 import { type Note, type Task, type NewNote, type NewTask, noteSchema, taskSchema } from "./schema";
 
-// Notes repository
 export const notesRepo = {
   async findAll(): Promise<Note[]> {
-    return await db
-      .selectFrom("notes")
-      .selectAll()
-      .where("is_deleted", "=", 0)
-      .orderBy("created_at", "desc")
-      .execute();
+    const db = await getDb();
+    const all = await db.getAllFromIndex("notes", "isDeleted", 0);
+    return all.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
   },
 
   async findById(id: string): Promise<Note | undefined> {
-    return await db
-      .selectFrom("notes")
-      .selectAll()
-      .where("id", "=", id)
-      .where("is_deleted", "=", 0)
-      .executeTakeFirst();
+    const db = await getDb();
+    const note = await db.get("notes", id);
+    if (!note || note.isDeleted === 1) return undefined;
+    return note;
   },
 
   async create(note: NewNote): Promise<Note> {
-    const insert: Note = noteSchema.parse(note);
-    await db.insertInto("notes").values(insert).execute();
-    return insert;
+    const db = await getDb();
+    const parsed: Note = noteSchema.parse(note);
+    await db.put("notes", parsed);
+    return parsed;
   },
 
   async update(id: string, updates: Partial<Note>): Promise<Note | undefined> {
-    await db
-      .updateTable("notes")
-      .set({ ...updates, updated_at: new Date().toISOString() })
-      .where("id", "=", id)
-      .execute();
-
-    return this.findById(id);
+    const db = await getDb();
+    const existing = await db.get("notes", id);
+    if (!existing || existing.isDeleted === 1) return undefined;
+    const updated = { ...existing, ...updates, updatedAt: new Date().toISOString() };
+    await db.put("notes", updated);
+    return updated;
   },
 
   async delete(id: string): Promise<void> {
-    await db
-      .updateTable("notes")
-      .set({ is_deleted: 1, updated_at: new Date().toISOString() })
-      .where("id", "=", id)
-      .execute();
+    const db = await getDb();
+    const existing = await db.get("notes", id);
+    if (!existing) return;
+    await db.put("notes", { ...existing, isDeleted: 1, updatedAt: new Date().toISOString() });
   },
 };
 
-// Tasks repository
 export const tasksRepo = {
   async findAll(): Promise<Task[]> {
-    return await db
-      .selectFrom("tasks")
-      .selectAll()
-      .where("is_deleted", "=", 0)
-      .orderBy("created_at", "desc")
-      .execute();
+    const db = await getDb();
+    const all = await db.getAllFromIndex("tasks", "isDeleted", 0);
+    return all.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
   },
 
   async findById(id: string): Promise<Task | undefined> {
-    return await db
-      .selectFrom("tasks")
-      .selectAll()
-      .where("id", "=", id)
-      .where("is_deleted", "=", 0)
-      .executeTakeFirst();
+    const db = await getDb();
+    const task = await db.get("tasks", id);
+    if (!task || task.isDeleted === 1) return undefined;
+    return task;
   },
 
   async create(task: NewTask): Promise<Task> {
-    const insert: Task = taskSchema.parse(task);
-    await db.insertInto("tasks").values(insert).execute();
-    return insert;
+    const db = await getDb();
+    const parsed: Task = taskSchema.parse(task);
+    await db.put("tasks", parsed);
+    return parsed;
   },
 
   async update(id: string, updates: Partial<Task>): Promise<Task | undefined> {
-    await db
-      .updateTable("tasks")
-      .set({ ...updates, updated_at: new Date().toISOString() })
-      .where("id", "=", id)
-      .execute();
-
-    return this.findById(id);
+    const db = await getDb();
+    const existing = await db.get("tasks", id);
+    if (!existing || existing.isDeleted === 1) return undefined;
+    const updated = { ...existing, ...updates, updatedAt: new Date().toISOString() };
+    await db.put("tasks", updated);
+    return updated;
   },
 
   async delete(id: string): Promise<void> {
-    await db
-      .updateTable("tasks")
-      .set({ is_deleted: 1, updated_at: new Date().toISOString() })
-      .where("id", "=", id)
-      .execute();
+    const db = await getDb();
+    const existing = await db.get("tasks", id);
+    if (!existing) return;
+    await db.put("tasks", { ...existing, isDeleted: 1, updatedAt: new Date().toISOString() });
   },
 };

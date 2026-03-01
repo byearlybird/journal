@@ -1,6 +1,6 @@
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
-import { $dataVersion } from "@app/stores/data-version";
+import { $dataVersion } from "@/stores/data-version";
 
 export function useLocalData<T>(fetcher: () => Promise<T>, deps: unknown[] = []): T | undefined {
   const dataVersion = useStore($dataVersion);

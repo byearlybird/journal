@@ -1,8 +1,8 @@
-import { getEntriesGroupedByDate } from "@app/features/entries/entries-loader";
-import { DayEntriesItem } from "@app/features/entries";
-import type { TimelineItem } from "@app/features/entries/types";
-import { useLocalData } from "@app/hooks/use-local-data";
-import { navigate } from "@app/utils/navigate";
+import { getEntriesGroupedByDate } from "@/features/entries/entries-loader";
+import { DayEntriesItem } from "@/features/entries";
+import type { TimelineItem } from "@/features/entries/types";
+import { useLocalData } from "@/hooks/use-local-data";
+import { navigate } from "@/utils/navigate";
 
 export function EntriesPage() {
   const entriesByDate = useLocalData(() => getEntriesGroupedByDate());

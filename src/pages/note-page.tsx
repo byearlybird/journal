@@ -6,11 +6,11 @@ import {
   MenuRoot,
   MenuTrigger,
   TextContent,
-} from "@app/components";
-import { notesRepo } from "@app/db";
-import { EditNoteDialog } from "@app/features/notes";
-import { useLocalData } from "@app/hooks/use-local-data";
-import { navigate } from "@app/utils/navigate";
+} from "@/components";
+import { notesRepo } from "@/db";
+import { EditNoteDialog } from "@/features/notes";
+import { useLocalData } from "@/hooks/use-local-data";
+import { navigate } from "@/utils/navigate";
 import { CaretLeftIcon, DotsThreeIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react";
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
@@ -37,7 +37,7 @@ export function NotePage({ id }: { id: string }) {
   if (!note) return null;
 
   const formattedDate = format(parseISO(note.date), "MMMM d");
-  const createdTime = format(parseISO(note.created_at), "h:mm a");
+  const createdTime = format(parseISO(note.createdAt), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
@@ -54,7 +54,7 @@ export function NotePage({ id }: { id: string }) {
           <time className="font-medium" dateTime={note.date}>
             {formattedDate}
           </time>
-          <time className="block text-xs text-cloud-medium" dateTime={note.created_at}>
+          <time className="block text-xs text-cloud-medium" dateTime={note.createdAt}>
             {createdTime}
           </time>
         </div>
@@ -78,7 +78,7 @@ export function NotePage({ id }: { id: string }) {
           </MenuPortal>
         </MenuRoot>
       </header>
-      <TextContent content={note.content} updatedAt={note.updated_at} createdAt={note.created_at} />
+      <TextContent content={note.content} updatedAt={note.updatedAt} createdAt={note.createdAt} />
       <EditNoteDialog open={editOpen} onClose={() => setEditOpen(false)} note={note} />
     </div>
   );

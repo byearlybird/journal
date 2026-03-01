@@ -1,9 +1,9 @@
-import { getEntriesToday } from "@app/features/entries/entries-loader";
-import { Timeline } from "@app/features/entries/timeline";
-import type { TimelineItem } from "@app/features/entries/types";
-import { useLocalData } from "@app/hooks/use-local-data";
-import { formatDayOfWeek, formatMonthDate } from "@app/utils/date-utils";
-import { navigate } from "@app/utils/navigate";
+import { getEntriesToday } from "@/features/entries/entries-loader";
+import { Timeline } from "@/features/entries/timeline";
+import type { TimelineItem } from "@/features/entries/types";
+import { useLocalData } from "@/hooks/use-local-data";
+import { formatDayOfWeek, formatMonthDate } from "@/utils/date-utils";
+import { navigate } from "@/utils/navigate";
 import { SlidersHorizontalIcon } from "@phosphor-icons/react";
 
 export function TodayPage() {

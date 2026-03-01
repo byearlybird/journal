@@ -91,9 +91,9 @@ Project uses composite TypeScript setup:
   - On mutation (immediate sync after data changes)
   - On sign-in (initial sync when user authenticates)
 - Pull-merge-push strategy (`src/features/sync/client.ts`):
-  1. Fetch encrypted database blob from API server (`GET /api/journal`)
+  1. Fetch encrypted database blob from API server (`GET /v0/backup`)
   2. Decrypt and merge into local database
-  3. Encrypt local database and upload to API server (`PUT /api/journal`)
+  3. Encrypt local database and upload to API server (`PUT /v0/backup`)
 - Uses `updated_at` timestamps for last-write-wins conflict resolution
 - Merge logic in `src/db/merger.ts` handles combining remote and local state
 - Data format: JSON with `notes` array and `schema_version` field
@@ -114,14 +114,14 @@ Project uses composite TypeScript setup:
 - Currently, auth is stubbed with no-ops (users always considered signed in)
 - See `src/features/sync/use-sync-on-signin.tsx` and `src/features/sync/use-sync-on-interval.tsx`
 - Session tokens should be sent with API requests to the separate API server
-- API server should validate session tokens and protect `/api/*` routes
+- API server should validate session tokens and protect `/v0/*` routes
 
 ### API Endpoints
 
 The client expects the following API endpoints from the separate API server:
 
-- `GET /api/journal` - Download encrypted database for current user
-- `PUT /api/journal` - Upload encrypted database for current user
+- `GET /v0/backup` - Download encrypted database for current user
+- `PUT /v0/backup` - Upload encrypted database for current user
 
 These endpoints are implemented in a separate API server repository.
 

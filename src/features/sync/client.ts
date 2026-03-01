@@ -1,10 +1,5 @@
 import { ENV } from "@app/env";
-import { dumpDatabase, mergeIntoDatabase } from "@app/db";
-import { type Result, err, ok } from "@app/utils/result";
-
-// API response types
-type JournalGetResponse = { data: string };
-type JournalPutRequest = { data: string };
+import { type DatabaseDump, dumpDatabase, mergeIntoDatabase } from "@app/db";
 
 // Flag to prevent infinite loop when syncing triggers store changes
 let isSyncing = false;
@@ -17,129 +12,64 @@ export function getIsSyncing(): boolean {
 }
 
 /**
- * Fetches encrypted data from remote server.
- * Returns Ok with data (null means 404/no remote data yet).
- * Returns Err on failure.
- *
- * TODO: Add authentication headers once auth system is implemented.
+ * Fetches remote data and returns it as a parsed DatabaseDump.
+ * Returns null if no remote data exists yet (404).
  */
-async function fetchFromRemote(): Promise<Result<string | null, string>> {
-  try {
-    const response = await fetch(`${ENV.VITE_API_BASE_URL}/api/journal`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        // TODO: Add auth token header here
-      },
-    });
+export async function syncPull(token: string): Promise<DatabaseDump | null> {
+  const response = await fetch(`${ENV.VITE_API_BASE_URL}/v0/backup`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-    if (!response.ok) {
-      // 404 means no remote data yet - this is valid for new users
-      if (response.status === 404) {
-        return ok(null);
-      }
-
-      // Other errors are real failures
-      console.error("Failed to fetch from remote:", response.status);
-      return err(`HTTP ${response.status}`);
+  if (!response.ok) {
+    if (response.status === 404) {
+      return null;
     }
-
-    const json = (await response.json()) as JournalGetResponse;
-    return ok(json.data);
-  } catch (error) {
-    console.error("Failed to fetch from remote:", error);
-    return err(error instanceof Error ? error.message : "Unknown error");
+    throw new Error(`Failed to fetch from remote: HTTP ${response.status}`);
   }
+
+  const json = (await response.json()) as { data: string };
+  return JSON.parse(json.data) as DatabaseDump;
 }
 
 /**
- * Uploads encrypted data to remote server.
- *
- * TODO: Add authentication headers once auth system is implemented.
+ * Pushes pre-serialized data to remote server.
  */
-async function uploadToRemote(data: string): Promise<Result<void, string>> {
-  try {
-    const body: JournalPutRequest = { data };
-    const response = await fetch(`${ENV.VITE_API_BASE_URL}/api/journal`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        // TODO: Add auth token header here
-      },
-      body: JSON.stringify(body),
-    });
+export async function syncPush(token: string, data: string): Promise<void> {
+  const response = await fetch(`${ENV.VITE_API_BASE_URL}/v0/backup`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ data }),
+  });
 
-    if (!response.ok) {
-      console.error("Failed to upload to remote:", response.status);
-      return err(`HTTP ${response.status}`);
-    }
-
-    return ok(undefined);
-  } catch (error) {
-    console.error("Failed to upload to remote:", error);
-    return err(error instanceof Error ? error.message : "Unknown error");
+  if (!response.ok) {
+    throw new Error(`Failed to upload to remote: HTTP ${response.status}`);
   }
 }
 
 /**
- * Pulls remote data and merges it into local database.
- * Succeeds even when no remote data exists yet (404).
- */
-export async function syncPull(): Promise<Result<void, string>> {
-  const result = await fetchFromRemote();
-
-  if (!result.ok) {
-    return err(result.error);
-  }
-
-  // No remote data yet (404) - nothing to merge, but not an error
-  if (!result.data) {
-    return ok(undefined);
-  }
-
-  try {
-    await mergeIntoDatabase(JSON.parse(result.data));
-    return ok(undefined);
-  } catch (error) {
-    console.error("Failed to merge remote data:", error);
-    return err(error instanceof Error ? error.message : "Failed to merge");
-  }
-}
-
-/**
- * Dumps local database and pushes it to remote server.
- */
-export async function syncPush(): Promise<Result<void, string>> {
-  try {
-    const dump = await dumpDatabase();
-    const localData = JSON.stringify(dump);
-    return await uploadToRemote(localData);
-  } catch (error) {
-    console.error("Failed to dump database:", error);
-    return err(error instanceof Error ? error.message : "Failed to dump");
-  }
-}
-
-/**
- * Performs a full sync: pull remote changes, then push local changes.
+ * Performs a full sync: pull remote changes, merge, then dump and push.
  * Skips pushing if pull fails to avoid out-of-date overwrites.
  */
-export async function sync(): Promise<Result<void, string>> {
+export async function syncDatabase(token: string): Promise<void> {
   if (!navigator.onLine) {
-    return err("Offline");
+    throw new Error("Offline");
   }
 
-  // Set flag to prevent sync-on-mutate from triggering during this operation
   isSyncing = true;
   try {
-    const pullResult = await syncPull();
-
-    // Only push if pull succeeded to avoid conflicts
-    if (pullResult.ok) {
-      await syncPush();
+    const remote = await syncPull(token);
+    if (remote) {
+      await mergeIntoDatabase(remote);
     }
-
-    return pullResult;
+    const dump = await dumpDatabase();
+    await syncPush(token, JSON.stringify(dump));
   } finally {
     isSyncing = false;
   }

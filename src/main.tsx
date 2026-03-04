@@ -6,7 +6,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import "./main.css";
 
 // Create router instance
-const router = createRouter({ routeTree, defaultViewTransition: true });
+const router = createRouter({ routeTree });
 
 // TypeScript: Register router type
 declare module "@tanstack/react-router" {

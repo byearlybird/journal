@@ -28,7 +28,7 @@ function NavItem({ href, label, icon: Icon }: NavItemData) {
   const isActive = match({ to: href });
 
   const handleClick = () => {
-    router.navigate({ to: href });
+    router.navigate({ to: href, viewTransition: true });
   };
 
   return (

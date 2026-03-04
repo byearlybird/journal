@@ -1,6 +1,6 @@
 import { ErrorComponent, Loading } from "@app/components";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { migrator } from "@app/db";
+import { runMigrations } from "@app/db";
 import { SyncProvider } from "@app/features/sync";
 
 let migrated = false;
@@ -12,7 +12,7 @@ export const Route = createRootRoute({
   pendingComponent: AppLoading,
   beforeLoad: async () => {
     if (!migrated) {
-      await migrator.migrateToLatest();
+      await runMigrations();
       migrated = true;
     }
   },

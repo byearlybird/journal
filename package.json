@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "vite build && bun scripts/generate-sw-manifest.ts",
     "preview": "vite preview",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",

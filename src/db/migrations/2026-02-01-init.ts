@@ -1,7 +1,7 @@
 export const Migration20260201Init = {
   async up(sql) {
     await sql`
-      CREATE TABLE notes (
+      CREATE TABLE IF NOT EXISTS notes (
         id TEXT PRIMARY KEY,
         content TEXT NOT NULL,
         created_at TEXT NOT NULL,
@@ -13,7 +13,7 @@ export const Migration20260201Init = {
       )
     `;
     await sql`
-      CREATE TABLE tasks (
+      CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
         content TEXT NOT NULL,
         created_at TEXT NOT NULL,

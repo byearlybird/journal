@@ -4,13 +4,12 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import sqlocal from "sqlocal/vite";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [tanstackRouter(), react(), tailwindcss(), sqlocal()],
+  plugins: [tanstackRouter(), react(), tailwindcss()],
   resolve: {
     alias: {
       "@app": path.resolve(dirname, "./src"),
@@ -21,5 +20,9 @@ export default defineConfig({
   },
   server: {
     port: Number(process.env.LOCAL_PORT) || 5173,
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
+    },
   },
 });

@@ -8,7 +8,6 @@ import {
   DialogTitle,
 } from "@app/components/dialog";
 import { XIcon } from "@phosphor-icons/react";
-import { AnimatePresence, motion } from "motion/react";
 import { TaskItem, useUpdateTaskStatus } from "@app/features/tasks";
 
 export function TasksDialog({
@@ -28,30 +27,9 @@ export function TasksDialog({
 
   return (
     <DialogRoot open={open} onOpenChange={onClose}>
-      <AnimatePresence>
-        {open && (
-          <DialogPortal keepMounted>
-            <DialogBackdrop
-              render={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-              }
-            />
-            <div className="fixed inset-x-0 bottom-0 flex h-3/4 w-full max-w-2xl mx-auto">
-              <DialogPopup
-                className="flex h-full w-full flex-col overflow-y-auto p-2 pb-[calc(var(--safe-bottom)+var(--spacing)*2)]"
-                render={
-                  <motion.div
-                    initial={{ y: "100%", opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: "100%", opacity: 0 }}
-                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                  />
-                }
-              >
+      <DialogPortal keepMounted>
+        <DialogBackdrop />
+        <DialogPopup className="bottom-2 h-3/4 pb-[calc(var(--safe-bottom)+var(--spacing)*2)] data-starting-style:translate-y-full data-ending-style:translate-y-full">
                 <DialogTitle>Tasks</DialogTitle>
                 <div className="sticky top-0 z-10 flex items-center justify-between bg-slate-medium p-2">
                   <DialogClose className="flex size-8 ms-auto items-center justify-center rounded-full border bg-slate-medium text-ivory-light transition-transform duration-100 ease-in-out active:scale-105">
@@ -73,11 +51,8 @@ export function TasksDialog({
                     </div>
                   )}
                 </div>
-              </DialogPopup>
-            </div>
-          </DialogPortal>
-        )}
-      </AnimatePresence>
+        </DialogPopup>
+      </DialogPortal>
     </DialogRoot>
   );
 }

@@ -12,7 +12,6 @@ import { CircleIcon, SquareIcon } from "@phosphor-icons/react";
 import { useRef, useState } from "react";
 import { useCreateNote } from "@app/features/notes";
 import { useCreateTask } from "@app/features/tasks";
-import { AnimatePresence, motion } from "motion/react";
 
 export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const createNote = useCreateNote();
@@ -50,52 +49,28 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
         }
       }}
     >
-      <AnimatePresence>
-        {open && (
-          <DialogPortal keepMounted>
-            <DialogBackdrop
-              render={
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-              }
-            />
-            <div className="fixed inset-x-0 -top-10 flex h-1/2 w-full max-w-2xl mx-auto">
-              <DialogPopup
-                className="flex h-full w-full flex-col overflow-y-auto p-2 pt-[calc(var(--safe-top)+var(--spacing)*10)]"
-                render={
-                  <motion.div
-                    initial={{ y: "-100%", opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: "-100%", opacity: 0 }}
-                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                  />
-                }
-              >
-                <DialogTitle>Create a new entry</DialogTitle>
-                <Toolbar entryType={entryType} onEntryTypeChange={setEntryType} />
-                <textarea
-                  ref={textareaRef}
-                  placeholder="What's on your mind?"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-2 placeholder:text-cloud-medium focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
-                />
-                <div className="flex justify-between gap-4 p-2">
-                  <Button onClick={handleClose} variant="slate">
-                    Cancel
-                  </Button>
-                  <Button disabled={content.trim() === ""} onClick={handleSave} variant="gold">
-                    Save
-                  </Button>
-                </div>
-              </DialogPopup>
-            </div>
-          </DialogPortal>
-        )}
-      </AnimatePresence>
+      <DialogPortal keepMounted>
+        <DialogBackdrop />
+        <DialogPopup className="top-[calc(var(--safe-top,0px)+0.5rem)] h-1/2 data-starting-style:-translate-y-full data-ending-style:-translate-y-full">
+          <DialogTitle>Create a new entry</DialogTitle>
+          <Toolbar entryType={entryType} onEntryTypeChange={setEntryType} />
+          <textarea
+            ref={textareaRef}
+            placeholder="What's on your mind?"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-2 placeholder:text-cloud-medium outline-none"
+          />
+          <div className="flex justify-between gap-4 p-2">
+            <Button onClick={handleClose} variant="slate">
+              Cancel
+            </Button>
+            <Button disabled={content.trim() === ""} onClick={handleSave} variant="gold">
+              Save
+            </Button>
+          </div>
+        </DialogPopup>
+      </DialogPortal>
     </DialogRoot>
   );
 }

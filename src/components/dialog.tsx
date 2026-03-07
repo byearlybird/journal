@@ -11,11 +11,11 @@ export function DialogTrigger({ className, ...props }: ComponentProps<typeof Dia
 export const DialogPortal = Dialog.Portal;
 
 export function DialogBackdrop({ className, ...props }: ComponentProps<typeof Dialog.Backdrop>) {
-  return <Dialog.Backdrop className={cx("fixed inset-0 bg-slate-dark/80", className)} {...props} />;
+  return <Dialog.Backdrop className={cx("fixed inset-0 bg-slate-dark/80 transition-opacity duration-200 data-starting-style:opacity-0 data-ending-style:opacity-0", className)} {...props} />;
 }
 
 export function DialogPopup({ className, ...props }: ComponentProps<typeof Dialog.Popup>) {
-  return <Dialog.Popup className={cx("rounded-lg border bg-slate-medium", className)} {...props} />;
+  return <Dialog.Popup className={cx("fixed inset-x-2 flex max-w-2xl mx-auto flex-col overflow-y-auto rounded-lg border bg-slate-medium p-2 transition-[translate,opacity] duration-200 ease-in-out data-starting-style:opacity-0 data-ending-style:opacity-0", className)} {...props} />;
 }
 
 export function DialogTitle({ className, ...props }: ComponentProps<typeof Dialog.Title>) {

@@ -1,0 +1,33 @@
+{
+  "originHash" : "b111d95cc90feaf38af55c281593da90f437f0fdc870e81d2400ccde297946c1",
+  "pins" : [
+    {
+      "identity" : "capacitor-swift-pm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ionic-team/capacitor-swift-pm.git",
+      "state" : {
+        "revision" : "1f324fe7bdbdc8c5cc28bea48a231545a8c2e823",
+        "version" : "8.1.0"
+      }
+    },
+    {
+      "identity" : "libsql-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tursodatabase/libsql-swift",
+      "state" : {
+        "revision" : "f2944a4ea93a20f7d9afcf2913cd4e391e57cd79",
+        "version" : "0.3.2"
+      }
+    },
+    {
+      "identity" : "sqlitecipher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/zhuorantan/SQLiteCipher.git",
+      "state" : {
+        "revision" : "70589046bd800e3db5c0155a558a9bc7a9f260ef",
+        "version" : "0.16.0"
+      }
+    }
+  ],
+  "version" : 3
+}

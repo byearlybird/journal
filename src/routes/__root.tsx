@@ -1,9 +1,11 @@
 import { ErrorComponent, Loading } from "@app/components";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { Dialog } from "@capacitor/dialog";
-import { SplashScreen } from '@capacitor/splash-screen';
+import { SplashScreen } from "@capacitor/splash-screen";
+import { storage } from "@app/db";
 
 let initialized = false;
+await storage.init();
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -12,8 +14,10 @@ export const Route = createRootRoute({
   pendingComponent: AppLoading,
   beforeLoad: async () => {
     if (!initialized) {
+      await storage.init();
+      console.log("Storage initialized");
       initialized = true;
-      await SplashScreen.hide()
+      await SplashScreen.hide();
     }
   },
 });

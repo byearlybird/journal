@@ -84,7 +84,11 @@ export function ImportDialog({ open, onClose }: { open: boolean; onClose: () => 
                   <Button onClick={handleClose} variant="slate">
                     Cancel
                   </Button>
-                  <Button onClick={handleImport} variant="gold" disabled={importing || !json.trim()}>
+                  <Button
+                    onClick={handleImport}
+                    variant="gold"
+                    disabled={importing || !json.trim()}
+                  >
                     {importing ? "Importing…" : "Import"}
                   </Button>
                 </div>

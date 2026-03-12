@@ -1,81 +1,56 @@
+import { storage } from ".";
 import { type Note, type Task, type NewNote, type NewTask, noteSchema, taskSchema } from "./schema";
 
-const today = new Date().toISOString().split("T")[0];
-const now = new Date().toISOString();
+const NOTE_PREFIX = "note:";
+const TASK_PREFIX = "task:";
 
-const demoNotes: Note[] = [
-  {
-    id: "demo-note-1",
-    content: "Started the morning with a long walk. Clear skies, cool air.",
-    date: today,
-    scope: "daily",
-    category: "log",
-    created_at: now,
-    updated_at: now,
-    is_deleted: 0,
-  },
-  {
-    id: "demo-note-2",
-    content: "Feeling grateful for the small wins this week.",
-    date: today,
-    scope: "daily",
-    category: "reflection",
-    created_at: now,
-    updated_at: now,
-    is_deleted: 0,
-  },
-];
-
-const demoTasks: Task[] = [
-  {
-    id: "demo-task-1",
-    content: "Review weekly goals and plan next steps",
-    date: today,
-    scope: "daily",
-    status: "incomplete",
-    created_at: now,
-    updated_at: now,
-    is_deleted: 0,
-  },
-];
-
-// Notes repository
 export const notesRepo = {
   async findAll(): Promise<Note[]> {
-    return demoNotes;
+    return storage.valuesWithKeyPrefix<Note>(NOTE_PREFIX);
   },
 
   async findById(id: string): Promise<Note | undefined> {
-    return demoNotes.find((n) => n.id === id);
+    return storage.get<Note>(`${NOTE_PREFIX}${id}`);
   },
 
   async create(note: NewNote): Promise<Note> {
-    return noteSchema.parse(note);
+    const newNote = noteSchema.parse(note);
+    await storage.set(`${NOTE_PREFIX}${newNote.id}`, newNote);
+    return newNote;
   },
 
-  async update(id: string, _updates: Partial<Note>): Promise<Note | undefined> {
-    return this.findById(id);
+  async update(id: string, updates: Partial<Note>): Promise<Note | undefined> {
+    const note = await storage.get<Note>(`${NOTE_PREFIX}${id}`);
+    if (!note) return undefined;
+    const updatedNote = noteSchema.parse({ ...note, ...updates });
+    await storage.set(`${NOTE_PREFIX}${id}`, updatedNote);
+    return updatedNote;
   },
 
   async delete(_id: string): Promise<void> {},
 };
 
-// Tasks repository
 export const tasksRepo = {
   async findAll(): Promise<Task[]> {
-    return demoTasks;
+    return storage.valuesWithKeyPrefix<Task>(TASK_PREFIX);
   },
 
   async findById(id: string): Promise<Task | undefined> {
-    return demoTasks.find((t) => t.id === id);
+    return storage.get<Task>(`${TASK_PREFIX}${id}`);
   },
 
   async create(task: NewTask): Promise<Task> {
-    return taskSchema.parse(task);
+    const newTask = taskSchema.parse(task);
+    await storage.set(`${TASK_PREFIX}${newTask.id}`, newTask);
+    return newTask;
   },
 
-  async update(id: string, _updates: Partial<Task>): Promise<Task | undefined> {
-    return this.findById(id);
+  async update(id: string, updates: Partial<Task>): Promise<Task | undefined> {
+    const task = await storage.get<Task>(`${TASK_PREFIX}${id}`);
+    if (!task) return undefined;
+    const updatedTask = taskSchema.parse({ ...task, ...updates });
+    await storage.set(`${TASK_PREFIX}${id}`, updatedTask);
+    return updatedTask;
   },
 
   async delete(_id: string): Promise<void> {},

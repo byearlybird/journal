@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  CaretLeftIcon,
-  DownloadSimpleIcon,
-  ExportIcon,
-} from "@phosphor-icons/react";
+import { CaretLeftIcon, DownloadSimpleIcon, ExportIcon } from "@phosphor-icons/react";
 import { ExportDialog } from "@app/features/entries/export-dialog";
 import { ImportDialog } from "@app/features/entries/import-dialog";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";

@@ -3,7 +3,8 @@ import type { Task } from "@app/db";
 type BaseTimelineItem = {
   id: string;
   content: string;
-  created_at: string;
+  createdAt: string;
+  date: string;
 };
 
 type NoteTimelineItem = BaseTimelineItem & {

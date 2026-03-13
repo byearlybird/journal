@@ -34,13 +34,14 @@ export function createRepo<T extends Record<string, unknown>>(
   return {
     async findAll(): Promise<T[]> {
       const docs = await storage.values<crdt.Doc>(keys.all);
+      const activeDocs = docs.filter((docs) => docs["~x"] === null);
 
-      return docs.map((item) => crdt.makePOJO(item) as T);
+      return activeDocs.map((item) => crdt.makePOJO(item) as T);
     },
 
     async findById(id: string): Promise<T | undefined> {
       const doc = await storage.get<crdt.Doc>(keys.id(id));
-      if (!doc) return undefined;
+      if (!doc || doc["~x"] !== null) return undefined;
 
       return crdt.makePOJO(doc) as T;
     },
@@ -62,7 +63,7 @@ export function createRepo<T extends Record<string, unknown>>(
       return mutate(async (timestamp) => {
         const doc = await storage.get<crdt.Doc>(keys.id(id));
 
-        if (!doc) return undefined;
+        if (!doc || doc["~x"] !== null) return undefined;
 
         const currentItem = crdt.makePOJO(doc);
         const updatedItem = schema.parse({ ...currentItem, ...updates }); // validate updates
@@ -75,8 +76,14 @@ export function createRepo<T extends Record<string, unknown>>(
       });
     },
 
-    async delete(_id: string): Promise<void> {
-      throw new Error("Not implemented");
+    async remove(id: string): Promise<void> {
+      return mutate(async (timestamp) => {
+        const doc = await storage.get<crdt.Doc>(keys.id(id));
+        if (!doc || doc["~x"] !== null) return;
+
+        crdt.tombstoneDoc(doc, timestamp);
+        await storage.set(keys.id(id), doc);
+      });
     },
   };
 }

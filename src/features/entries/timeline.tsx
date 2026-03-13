@@ -45,7 +45,7 @@ export function Timeline({
                 size === "compact" ? "text-xs text-cloud-medium" : "text-sm text-cloud-medium"
               }
             >
-              {formatTime(entry.created_at)}
+              {formatTime(entry.createdAt)}
             </div>
             <div
               className={cx(

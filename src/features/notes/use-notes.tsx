@@ -7,8 +7,6 @@ export function useCreateNote() {
   return async (note: Pick<NewNote, "content">) => {
     await notesRepo.create({
       content: note.content,
-      scope: "daily",
-      category: "log",
     });
     await router.invalidate();
   };
@@ -19,6 +17,15 @@ export function useUpdateNote() {
 
   return async (id: string, { content }: { content: string }) => {
     await notesRepo.update(id, { content });
+    await router.invalidate();
+  };
+}
+
+export function useRemoveNote() {
+  const router = useRouter();
+
+  return async (id: string) => {
+    await notesRepo.remove(id);
     await router.invalidate();
   };
 }

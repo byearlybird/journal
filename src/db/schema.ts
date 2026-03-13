@@ -1,24 +1,20 @@
 import z from "zod";
 
-const baseSchema = z.object({
+export const noteSchema = z.object({
   id: z.uuid().default(() => crypto.randomUUID()),
-  created_at: z.iso.datetime().default(() => new Date().toISOString()),
-  updated_at: z.iso.datetime().default(() => new Date().toISOString()),
-  is_deleted: z.number().int().min(0).max(1).default(0),
-});
-
-const baseEntrySchema = baseSchema.extend({
   content: z.string().min(1),
   date: z.iso.date().default(() => new Date().toISOString().split("T")[0]),
-  scope: z.enum(["daily", "weekly", "monthly"]),
+  createdAt: z.iso.datetime().default(() => new Date().toISOString()),
+  editedAt: z.iso.datetime().nullable().default(null),
 });
 
-export const noteSchema = baseEntrySchema.extend({
-  category: z.enum(["log", "intention", "reflection"]),
-});
-
-export const taskSchema = baseEntrySchema.extend({
+export const taskSchema = z.object({
+  id: z.uuid().default(() => crypto.randomUUID()),
+  content: z.string().min(1),
+  date: z.iso.date().default(() => new Date().toISOString().split("T")[0]),
   status: z.enum(["incomplete", "complete", "canceled"]).default("incomplete"),
+  createdAt: z.iso.datetime().default(() => new Date().toISOString()),
+  editedAt: z.iso.datetime().nullable().default(null),
 });
 
 export type Note = z.infer<typeof noteSchema>;

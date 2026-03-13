@@ -30,3 +30,12 @@ export function useUpdateTask() {
     await router.invalidate();
   };
 }
+
+export function useRemoveTask() {
+  const router = useRouter();
+
+  return async (id: string) => {
+    await tasksRepo.remove(id);
+    await router.invalidate();
+  };
+}

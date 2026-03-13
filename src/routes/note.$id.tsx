@@ -8,7 +8,7 @@ import {
   TextContent,
 } from "@app/components";
 import { notesRepo } from "@app/db";
-import { EditNoteDialog } from "@app/features/notes";
+import { EditNoteDialog, useRemoveNote } from "@app/features/notes";
 import { CaretLeftIcon, DotsThreeIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
@@ -37,6 +37,7 @@ function RouteComponent() {
   const { note } = Route.useLoaderData();
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
+  const removeNote = useRemoveNote();
   const [editOpen, setEditOpen] = useState(false);
 
   const goBack = () => {
@@ -52,13 +53,13 @@ function RouteComponent() {
     }
   };
 
-  const handleDelete = () => {
-    notesRepo.delete(note.id);
+  const handleDelete = async () => {
+    await removeNote(note.id);
     goBack();
   };
 
   const formattedDate = format(parseISO(note.date), "MMMM d");
-  const createdTime = format(parseISO(note.created_at), "h:mm a");
+  const createdTime = format(parseISO(note.createdAt), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
@@ -76,7 +77,7 @@ function RouteComponent() {
           <time className="font-medium" dateTime={note.date}>
             {formattedDate}
           </time>
-          <time className="block text-xs text-cloud-medium" dateTime={note.created_at}>
+          <time className="block text-xs text-cloud-medium" dateTime={note.createdAt}>
             {createdTime}
           </time>
         </div>
@@ -101,7 +102,7 @@ function RouteComponent() {
         </MenuRoot>
       </header>
       {/* Content area */}
-      <TextContent content={note.content} updatedAt={note.updated_at} createdAt={note.created_at} />
+      <TextContent content={note.content} editedAt={note.editedAt} />
       <EditNoteDialog open={editOpen} onClose={() => setEditOpen(false)} note={note} />
     </div>
   );

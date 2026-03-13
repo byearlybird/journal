@@ -13,7 +13,7 @@ export const Route = createFileRoute("/app")({
     const tasks = await tasksRepo.findAll();
     const incompleteTasks = tasks
       .filter((task) => task.status === "incomplete")
-      .sort((a, b) => compareDesc(parseISO(a.created_at), parseISO(b.created_at)));
+      .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
     return { incompleteTasks };
   },
 });

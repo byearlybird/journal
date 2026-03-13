@@ -11,7 +11,7 @@ import { notesRepo } from "@app/db";
 import { EditNoteDialog, useRemoveNote } from "@app/features/notes";
 import { CaretLeftIcon, DotsThreeIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { format, parseISO } from "date-fns";
+import { formatDateLong, formatTime } from "@app/utils/date-utils";
 import { useState } from "react";
 import z from "zod";
 
@@ -58,8 +58,8 @@ function RouteComponent() {
     goBack();
   };
 
-  const formattedDate = format(parseISO(note.date), "MMMM d");
-  const createdTime = format(parseISO(note.createdAt), "h:mm a");
+  const formattedDate = formatDateLong(note.date);
+  const createdTime = formatTime(note.createdAt);
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">

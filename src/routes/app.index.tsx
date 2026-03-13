@@ -1,7 +1,7 @@
 import { getEntriesToday } from "@app/features/entries/entries-loader";
 import { Timeline } from "@app/features/entries/timeline";
 import type { TimelineItem } from "@app/features/entries/types";
-import { formatDayOfWeek, formatMonthDate } from "@app/utils/date-utils";
+import { formatDayOfWeek, formatMonthDate, getTodayISODate } from "@app/utils/date-utils";
 import { SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 
@@ -40,8 +40,8 @@ function JournalPage() {
     <div className="px-4 py-2 space-y-4">
       <header className="sticky top-0 backdrop-blur-md bg-slate-medium py-1 flex justify-between items-center">
         <div className="flex items-baseline gap-2">
-          <span className="text-2xl font-extrabold">{formatMonthDate(new Date())}</span>
-          <span className="font-bold text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
+          <span className="text-2xl font-extrabold">{formatMonthDate(getTodayISODate())}</span>
+          <span className="font-bold text-sm text-cloud-light">{formatDayOfWeek(getTodayISODate())}</span>
         </div>
         <Link to="/settings" viewTransition={{ types: ["slide-left"] }}>
           <SlidersHorizontalIcon className="size-6 text-cloud-light" />

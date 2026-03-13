@@ -1,7 +1,7 @@
-import { format, parseISO } from "date-fns";
+import { formatEditedTime } from "@app/utils/date-utils";
 
 export function TextContent({ content, editedAt }: { content: string; editedAt: string | null }) {
-  const editedTime = editedAt ? format(parseISO(editedAt), "M/d/yy h:mm a") : null;
+  const editedTime = editedAt ? formatEditedTime(editedAt) : null;
 
   return (
     <section className="flex-1 px-4 py-2 pb-2">

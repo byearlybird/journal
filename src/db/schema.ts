@@ -1,9 +1,10 @@
 import z from "zod";
+import { getTodayISODate } from "@app/utils/date-utils";
 
 export const noteSchema = z.object({
   id: z.uuid().default(() => crypto.randomUUID()),
   content: z.string().min(1),
-  date: z.iso.date().default(() => new Date().toISOString().split("T")[0]),
+  date: z.iso.date().default(() => getTodayISODate()),
   createdAt: z.iso.datetime().default(() => new Date().toISOString()),
   editedAt: z.iso.datetime().nullable().default(null),
 });
@@ -11,7 +12,7 @@ export const noteSchema = z.object({
 export const taskSchema = z.object({
   id: z.uuid().default(() => crypto.randomUUID()),
   content: z.string().min(1),
-  date: z.iso.date().default(() => new Date().toISOString().split("T")[0]),
+  date: z.iso.date().default(() => getTodayISODate()),
   status: z.enum(["incomplete", "complete", "canceled"]).default("incomplete"),
   createdAt: z.iso.datetime().default(() => new Date().toISOString()),
   editedAt: z.iso.datetime().nullable().default(null),

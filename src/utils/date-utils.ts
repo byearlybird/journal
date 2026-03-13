@@ -1,36 +1,47 @@
-import { format } from "date-fns";
-
-/**
- * Format a date as "MMM d" (e.g., "Jan 15")
- */
-export function formatMonthDate(date: Date | string | number): string {
-  return format(date, "MMM d");
+function parseLocalDate(date: string): Date {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(y, m - 1, d);
 }
 
-/**
- * Format a date as day of week (e.g., "Mon")
- */
-export function formatDayOfWeek(date: Date | string | number): string {
-  return format(date, "EEE");
+const pad = (n: number) => String(n).padStart(2, "0");
+
+export function formatMonthDate(date: string): string {
+  const d = parseLocalDate(date);
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-/**
- * Format a date as time in 12-hour format (e.g., "3:45 PM")
- */
-export function formatTime(date: Date | string | number): string {
-  return format(date, "h:mm a");
+export function formatDateLong(date: string): string {
+  const d = parseLocalDate(date);
+  return d.toLocaleDateString("en-US", { month: "long", day: "numeric" });
 }
 
-/**
- * Format a date as ISO date string (e.g., "2024-01-15")
- */
-export function formatISODate(date: Date | number): string {
-  return format(date, "yyyy-MM-dd");
+export function formatDayOfWeek(date: string): string {
+  const d = parseLocalDate(date);
+  return d.toLocaleDateString("en-US", { weekday: "short" });
 }
 
-/**
- * Get today's date formatted as ISO date string
- */
+export function formatTime(datetime: string): string {
+  return new Date(datetime).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+export function formatEditedTime(datetime: string): string {
+  return new Date(datetime).toLocaleString("en-US", {
+    month: "numeric",
+    day: "numeric",
+    year: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 export function getTodayISODate(): string {
-  return formatISODate(new Date());
+  const now = new Date();
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
+export function compareByDatetimeDesc(a: string, b: string): number {
+  return new Date(b).getTime() - new Date(a).getTime();
 }

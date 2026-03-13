@@ -2,7 +2,7 @@ import { ActionNavbar, Navbar, type NavItemData } from "@app/components";
 import { tasksRepo, type Task } from "@app/db";
 import { CreateDialog } from "@app/features/entries";
 import { TasksDialog } from "@app/features/tasks";
-import { compareDesc, parseISO } from "date-fns";
+import { compareByDatetimeDesc } from "@app/utils/date-utils";
 import { ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/app")({
     const tasks = await tasksRepo.findAll();
     const incompleteTasks = tasks
       .filter((task) => task.status === "incomplete")
-      .sort((a, b) => compareDesc(parseISO(a.createdAt), parseISO(b.createdAt)));
+      .sort((a, b) => compareByDatetimeDesc(a.createdAt, b.createdAt));
     return { incompleteTasks };
   },
 });

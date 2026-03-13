@@ -20,7 +20,7 @@ import {
   XSquareIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { format, parseISO } from "date-fns";
+import { formatDateLong, formatTime } from "@app/utils/date-utils";
 import { useState } from "react";
 import z from "zod";
 
@@ -77,8 +77,8 @@ function RouteComponent() {
     }
   };
 
-  const formattedDate = format(parseISO(task.date), "MMMM d");
-  const createdTime = format(parseISO(task.createdAt), "h:mm a");
+  const formattedDate = formatDateLong(task.date);
+  const createdTime = formatTime(task.createdAt);
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">

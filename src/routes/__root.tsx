@@ -14,7 +14,10 @@ export const Route = createRootRoute({
   pendingComponent: AppLoading,
   beforeLoad: async () => {
     if (!migrated) {
-      await migrator.migrateToLatest();
+      await Promise.all([
+        migrator.migrateToLatest(),
+        new Promise((resolve) => setTimeout(resolve, 500)),
+      ]);
       migrated = true;
       if (import.meta.env.DEV) await seed();
       await SplashScreen.hide();

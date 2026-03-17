@@ -11,7 +11,7 @@ import { ArrowSquareRightIcon, CheckSquareIcon, XIcon, XSquareIcon } from "@phos
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRolloverTask, useUpdateTaskStatus } from "@app/features/tasks";
-import { format, formatDistanceToNowStrict, parseISO } from "date-fns";
+import { formatDistanceToNowStrict, parseISO } from "date-fns";
 
 const UNDO_DELAY_MS = 3000;
 
@@ -95,16 +95,15 @@ export function TasksDialog({
                 />
               }
             />
-            <div className="fixed inset-x-0 bottom-0 flex h-3/4 w-full max-w-2xl mx-auto">
+            <div className="fixed inset-x-0 -bottom-10 flex h-3/4 w-full max-w-2xl mx-auto">
               <DialogPopup
-                className="flex h-full w-full flex-col overflow-y-auto p-2 pb-[calc(var(--safe-bottom)+var(--spacing)*2)]"
+                className="flex h-full w-full flex-col overflow-y-auto p-2 pb-[calc(var(--safe-bottom)+var(--spacing)*12)] border-x-0 border-b-0"
                 render={
                   <motion.div
                     initial={{ y: "100%", opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
-                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                  />
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }} />
                 }
               >
                 <DialogTitle>Tasks</DialogTitle>
@@ -125,14 +124,14 @@ export function TasksDialog({
                           <h3 className="text-xs font-semibold uppercase tracking-wider text-cloud-medium pb-2">
                             Today
                           </h3>
-                          <div className="flex flex-col divide-y divide-dashed divide-slate-light">
+                          <div className="flex flex-col">
                             <AnimatePresence initial={false}>
                               {todayTasks.map((task) => (
                                 <motion.div
                                   key={task.id}
                                   exit={{ opacity: 0, height: 0 }}
                                   transition={{ duration: 0.25, ease: "easeInOut" }}
-                                  className="overflow-hidden py-2"
+                                  className="overflow-hidden py-2 pb-2.5"
                                 >
                                   <TodayTaskItem
                                     task={task}
@@ -152,7 +151,7 @@ export function TasksDialog({
                           <h3 className="text-xs font-semibold uppercase tracking-wider text-gold-dark pb-2">
                             Prior
                           </h3>
-                          <div className="flex flex-col divide-y divide-dashed divide-slate-light">
+                          <div className="flex flex-col">
                             <AnimatePresence initial={false}>
                               {priorTasks.map((task) => (
                                 <motion.div

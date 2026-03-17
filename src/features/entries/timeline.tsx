@@ -56,7 +56,7 @@ export function Timeline({
             <div
               className={cx(
                 "mt-2 whitespace-pre-line",
-                size === "compact" && "text-sm line-clamp-2",
+                size === "compact" && "text-sm line-clamp-3",
               )}
             >
               {entry.content}

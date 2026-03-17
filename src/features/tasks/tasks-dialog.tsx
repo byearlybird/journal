@@ -103,7 +103,8 @@ export function TasksDialog({
                     initial={{ y: "100%", opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
-                    transition={{ type: "spring", damping: 30, stiffness: 400 }} />
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                  />
                 }
               >
                 <DialogTitle>Tasks</DialogTitle>
@@ -136,7 +137,9 @@ export function TasksDialog({
                                   <TodayTaskItem
                                     task={task}
                                     isPending={pendingUpdates.get(task.id) !== undefined}
-                                    onComplete={() => handlePendingStatusChange(task.id, "complete")}
+                                    onComplete={() =>
+                                      handlePendingStatusChange(task.id, "complete")
+                                    }
                                     onCancel={() => handlePendingStatusChange(task.id, "canceled")}
                                     onUndo={() => handleUndo(task.id)}
                                   />
@@ -164,7 +167,9 @@ export function TasksDialog({
                                     task={task}
                                     isPending={pendingUpdates.get(task.id) !== undefined}
                                     onRollover={() => handlePendingRollover(task.id)}
-                                    onComplete={() => handlePendingStatusChange(task.id, "complete")}
+                                    onComplete={() =>
+                                      handlePendingStatusChange(task.id, "complete")
+                                    }
                                     onCancel={() => handlePendingStatusChange(task.id, "canceled")}
                                     onUndo={() => handleUndo(task.id)}
                                   />
@@ -199,7 +204,6 @@ function TodayTaskItem({
   onCancel: () => void;
   onUndo: () => void;
 }) {
-
   return (
     <div className="flex flex-col gap-2">
       <span className={`text-sm text-ivory-light${isPending ? " line-through opacity-40" : ""}`}>

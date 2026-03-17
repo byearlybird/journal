@@ -8,7 +8,12 @@ type ActionNavbarProps = {
   onPushpinClick: () => void;
 };
 
-export function ActionNavbar({ hasIncompleteTasks, hasPriorTasks, onCreateClick, onPushpinClick }: ActionNavbarProps) {
+export function ActionNavbar({
+  hasIncompleteTasks,
+  hasPriorTasks,
+  onCreateClick,
+  onPushpinClick,
+}: ActionNavbarProps) {
   return (
     <div className="fixed right-[max(var(--safe-right),1rem)] bottom-[max(var(--safe-bottom),1rem)]">
       <div className="flex gap-1 rounded-lg border bg-slate-dark p-0.5 backdrop-blur">

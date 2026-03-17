@@ -36,7 +36,9 @@ export const Route = createFileRoute("/task/$id")({
     const task = await tasksRepo.findById(params.id);
     if (!task) throw notFound();
     const rolledTask =
-      task.status === "deferred" ? await tasksRepo.findByOriginalId(task.original_id ?? task.id) : null;
+      task.status === "deferred"
+        ? await tasksRepo.findByOriginalId(task.original_id ?? task.id)
+        : null;
     return { task, rolledTask };
   },
 });

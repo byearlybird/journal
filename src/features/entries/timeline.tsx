@@ -1,5 +1,11 @@
 import { formatTime } from "@app/utils/date-utils";
-import { CheckSquareIcon, CircleIcon, SquareIcon, XSquareIcon } from "@phosphor-icons/react";
+import {
+  CheckSquareIcon,
+  CircleIcon,
+  SquareIcon,
+  XSquareIcon,
+  ArrowSquareRightIcon,
+} from "@phosphor-icons/react";
 import type { TimelineItem } from "./types";
 import { Button as BaseButton } from "@base-ui/react";
 import { cx } from "cva";
@@ -47,7 +53,12 @@ export function Timeline({
             >
               {formatTime(entry.created_at)}
             </div>
-            <div className={cx("mt-2 whitespace-pre-line", size === "compact" && "text-sm line-clamp-2")}>
+            <div
+              className={cx(
+                "mt-2 whitespace-pre-line",
+                size === "compact" && "text-sm line-clamp-2",
+              )}
+            >
               {entry.content}
             </div>
           </BaseButton>
@@ -57,12 +68,14 @@ export function Timeline({
   );
 }
 
-function TaskIcon(props: { status: "complete" | "incomplete" | "canceled" }) {
+function TaskIcon(props: { status: "complete" | "incomplete" | "canceled" | "deferred" }) {
   switch (props.status) {
     case "complete":
       return <CheckSquareIcon className="text-gold-light" />;
     case "canceled":
       return <XSquareIcon className="text-cloud-dark" />;
+    case "deferred":
+      return <ArrowSquareRightIcon className="text-cloud-light" />;
     default:
       return <SquareIcon className="text-cloud-light" />;
   }

@@ -1,4 +1,5 @@
 import { tasksRepo, type Task, type NewTask } from "@app/db";
+import { rolloverTask } from "./rollover";
 import { useRouter } from "@tanstack/react-router";
 
 export function useCreateTask() {
@@ -27,6 +28,15 @@ export function useUpdateTask() {
 
   return async (id: string, { content }: { content: string }) => {
     await tasksRepo.update(id, { content });
+    await router.invalidate();
+  };
+}
+
+export function useRolloverTask() {
+  const router = useRouter();
+
+  return async (id: string, targetDate: string) => {
+    await rolloverTask(id, targetDate);
     await router.invalidate();
   };
 }

@@ -2,7 +2,8 @@ import { ErrorComponent, Loading } from "@app/components";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { migrator } from "@app/db";
 import { Dialog } from "@capacitor/dialog";
-import { SplashScreen } from '@capacitor/splash-screen';
+import { SplashScreen } from "@capacitor/splash-screen";
+import { seed } from "@app/db/seed";
 
 let migrated = false;
 
@@ -15,7 +16,8 @@ export const Route = createRootRoute({
     if (!migrated) {
       await migrator.migrateToLatest();
       migrated = true;
-      await SplashScreen.hide()
+      if (import.meta.env.DEV) await seed();
+      await SplashScreen.hide();
     }
   },
 });

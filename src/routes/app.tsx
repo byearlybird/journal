@@ -10,14 +10,17 @@ export const Route = createFileRoute("/app")({
   component: RouteComponent,
   loader: async () => {
     const incompleteTasks = await tasksRepo.findIncomplete();
-    return { incompleteTasks };
+    const today = new Date().toLocaleDateString("en-CA");
+    const todayTasks = incompleteTasks.filter((t) => t.date === today);
+    const priorTasks = incompleteTasks.filter((t) => t.date < today);
+    return { todayTasks, priorTasks };
   },
 });
 
 function RouteComponent() {
-  const { incompleteTasks } = Route.useLoaderData();
+  const { todayTasks, priorTasks } = Route.useLoaderData();
   return (
-    <AppLayout incompleteTasks={incompleteTasks}>
+    <AppLayout todayTasks={todayTasks} priorTasks={priorTasks}>
       <Outlet />
     </AppLayout>
   );
@@ -25,10 +28,12 @@ function RouteComponent() {
 
 function AppLayout({
   children,
-  incompleteTasks,
+  todayTasks,
+  priorTasks,
 }: {
   children: React.ReactNode;
-  incompleteTasks: Task[];
+  todayTasks: Task[];
+  priorTasks: Task[];
 }) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isPushpinDialogOpen, setIsPushpinDialogOpen] = useState(false);
@@ -54,14 +59,16 @@ function AppLayout({
           <Navbar navItems={navItems} />
         </div>
         <ActionNavbar
-          incompleteTasksCount={incompleteTasks.length}
+          hasIncompleteTasks={todayTasks.length > 0 || priorTasks.length > 0}
+          hasPriorTasks={priorTasks.length > 0}
           onCreateClick={() => setIsCreateDialogOpen(true)}
           onPushpinClick={() => setIsPushpinDialogOpen(true)}
         />
       </div>
       <CreateDialog open={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
       <TasksDialog
-        incompleteTasks={incompleteTasks}
+        todayTasks={todayTasks}
+        priorTasks={priorTasks}
         open={isPushpinDialogOpen}
         onClose={() => setIsPushpinDialogOpen(false)}
       />

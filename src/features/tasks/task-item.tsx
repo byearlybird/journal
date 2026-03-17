@@ -18,7 +18,9 @@ export function TaskItem({
 
   return (
     <Field.Root>
-      <Field.Label className={`flex items-center gap-3 ${isComplete ? "text-cloud-medium line-through" : "text-ivory-light"}`}>
+      <Field.Label
+        className={`flex items-center gap-3 ${isComplete ? "text-cloud-medium line-through" : "text-ivory-light"}`}
+      >
         <Checkbox.Root
           checked={isComplete}
           onCheckedChange={handleChange}

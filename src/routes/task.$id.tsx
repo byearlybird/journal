@@ -12,6 +12,7 @@ import { tasksRepo } from "@app/db";
 import { EditTaskDialog, useUpdateTaskStatus } from "@app/features/tasks";
 import {
   ArrowCounterClockwiseIcon,
+  ArrowSquareRightIcon,
   CaretLeftIcon,
   CheckSquareIcon,
   DotsThreeIcon,
@@ -33,17 +34,15 @@ export const Route = createFileRoute("/task/$id")({
   validateSearch: (search: Record<string, unknown>) => taskSearchSchema.parse(search),
   loader: async ({ params }) => {
     const task = await tasksRepo.findById(params.id);
-    if (!task) {
-      throw notFound();
-    }
-    return {
-      task,
-    };
+    if (!task) throw notFound();
+    const rolledTask =
+      task.status === "deferred" ? await tasksRepo.findByOriginalId(task.original_id ?? task.id) : null;
+    return { task, rolledTask };
   },
 });
 
 function RouteComponent() {
-  const { task } = Route.useLoaderData();
+  const { task, rolledTask } = Route.useLoaderData();
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
   const updateTaskStatus = useUpdateTaskStatus();
@@ -134,6 +133,23 @@ function RouteComponent() {
               Complete
             </Button>
           </>
+        ) : task.status === "deferred" ? (
+          <Button
+            variant="slate"
+            disabled={!rolledTask}
+            onClick={() =>
+              rolledTask &&
+              navigate({
+                to: "/task/$id",
+                params: { id: rolledTask.id },
+                search: { from },
+                viewTransition: { types: ["slide-left"] },
+              })
+            }
+          >
+            <ArrowSquareRightIcon />
+            Deferred
+          </Button>
         ) : (
           <Button variant="slate" onClick={handleReset}>
             <ArrowCounterClockwiseIcon />

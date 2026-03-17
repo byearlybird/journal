@@ -18,7 +18,8 @@ export const noteSchema = baseEntrySchema.extend({
 });
 
 export const taskSchema = baseEntrySchema.extend({
-  status: z.enum(["incomplete", "complete", "canceled"]).default("incomplete"),
+  status: z.enum(["incomplete", "complete", "canceled", "deferred"]).default("incomplete"),
+  original_id: z.string().uuid().nullable().default(null),
 });
 
 export type Note = z.infer<typeof noteSchema>;

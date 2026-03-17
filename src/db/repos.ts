@@ -96,6 +96,16 @@ export const tasksRepo = {
       .executeTakeFirst();
   },
 
+  async findByOriginalId(originalId: string): Promise<Task | undefined> {
+    return await db
+      .selectFrom("tasks")
+      .selectAll()
+      .where("is_deleted", "=", 0)
+      .where("original_id", "=", originalId)
+      .orderBy("created_at", "desc")
+      .executeTakeFirst();
+  },
+
   async create(task: NewTask): Promise<Task> {
     const insert: Task = taskSchema.parse(task);
     await db.insertInto("tasks").values(insert).execute();

@@ -1,4 +1,4 @@
-import { getEntriesToday } from "@app/features/entries/entries-loader";
+import { getEntriesToday } from "@app/services/entries-service";
 import { Timeline } from "@app/features/entries/timeline";
 import type { TimelineItem } from "@app/features/entries/types";
 import { formatDayOfWeek, formatMonthDate } from "@app/utils/date-utils";

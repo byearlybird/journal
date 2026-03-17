@@ -1,15 +1,11 @@
-import { notesRepo, type NewNote } from "@app/db";
+import * as notesService from "@app/services/notes-service";
 import { useRouter } from "@tanstack/react-router";
 
 export function useCreateNote() {
   const router = useRouter();
 
-  return async (note: Pick<NewNote, "content">) => {
-    await notesRepo.create({
-      content: note.content,
-      scope: "daily",
-      category: "log",
-    });
+  return async (note: { content: string }) => {
+    await notesService.createNote(note.content);
     await router.invalidate();
   };
 }
@@ -18,7 +14,7 @@ export function useUpdateNote() {
   const router = useRouter();
 
   return async (id: string, { content }: { content: string }) => {
-    await notesRepo.update(id, { content });
+    await notesService.updateNote(id, { content });
     await router.invalidate();
   };
 }

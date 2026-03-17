@@ -1,4 +1,4 @@
-import { getEntriesGroupedByDate } from "@app/features/entries/entries-loader";
+import { getEntriesGroupedByDate } from "@app/services/entries-service";
 import { DayEntriesItem } from "@app/features/entries";
 import type { TimelineItem } from "@app/features/entries/types";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";

@@ -1,20 +1,15 @@
 import { ActionNavbar, Navbar, type NavItemData } from "@app/components";
-import { tasksRepo, type Task } from "@app/db";
+import { type Task } from "@app/db";
 import { CreateDialog } from "@app/features/entries";
 import { TasksDialog } from "@app/features/tasks";
+import { getIncompleteTasks } from "@app/services/tasks-service";
 import { ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
-  loader: async () => {
-    const incompleteTasks = await tasksRepo.findIncomplete();
-    const today = new Date().toLocaleDateString("en-CA");
-    const todayTasks = incompleteTasks.filter((t) => t.date === today);
-    const priorTasks = incompleteTasks.filter((t) => t.date < today);
-    return { todayTasks, priorTasks };
-  },
+  loader: () => getIncompleteTasks(),
 });
 
 function RouteComponent() {

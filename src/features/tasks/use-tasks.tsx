@@ -1,15 +1,12 @@
-import { tasksRepo, type Task, type NewTask } from "@app/db";
-import { rolloverTask } from "./rollover";
+import type { Task } from "@app/db";
+import * as tasksService from "@app/services/tasks-service";
 import { useRouter } from "@tanstack/react-router";
 
 export function useCreateTask() {
   const router = useRouter();
 
-  return async (task: Pick<NewTask, "content">) => {
-    await tasksRepo.create({
-      content: task.content,
-      scope: "daily",
-    });
+  return async (task: { content: string }) => {
+    await tasksService.createTask(task.content);
     await router.invalidate();
   };
 }
@@ -18,7 +15,7 @@ export function useUpdateTaskStatus() {
   const router = useRouter();
 
   return async ({ id, status }: { id: string; status: Task["status"] }) => {
-    await tasksRepo.update(id, { status });
+    await tasksService.updateTaskStatus(id, status);
     await router.invalidate();
   };
 }
@@ -27,7 +24,7 @@ export function useUpdateTask() {
   const router = useRouter();
 
   return async (id: string, { content }: { content: string }) => {
-    await tasksRepo.update(id, { content });
+    await tasksService.updateTask(id, { content });
     await router.invalidate();
   };
 }
@@ -36,7 +33,7 @@ export function useRolloverTask() {
   const router = useRouter();
 
   return async (id: string, targetDate: string) => {
-    await rolloverTask(id, targetDate);
+    await tasksService.rolloverTask(id, targetDate);
     await router.invalidate();
   };
 }

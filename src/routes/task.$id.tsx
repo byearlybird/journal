@@ -8,8 +8,8 @@ import {
   MenuTrigger,
   TextContent,
 } from "@app/components";
-import { tasksRepo } from "@app/db";
 import { EditTaskDialog, useUpdateTaskStatus } from "@app/features/tasks";
+import * as tasksService from "@app/services/tasks-service";
 import {
   ArrowCounterClockwiseIcon,
   ArrowSquareRightIcon,
@@ -33,13 +33,11 @@ export const Route = createFileRoute("/task/$id")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => taskSearchSchema.parse(search),
   loader: async ({ params }) => {
-    const task = await tasksRepo.findById(params.id);
-    if (!task) throw notFound();
-    const rolledTask =
-      task.status === "deferred"
-        ? await tasksRepo.findByOriginalId(task.original_id ?? task.id)
-        : null;
-    return { task, rolledTask };
+    try {
+      return await tasksService.getTaskWithRolled(params.id);
+    } catch {
+      throw notFound();
+    }
   },
 });
 
@@ -63,7 +61,7 @@ function RouteComponent() {
   };
 
   const handleDelete = () => {
-    tasksRepo.delete(task.id);
+    tasksService.deleteTask(task.id);
     handleBack();
   };
 

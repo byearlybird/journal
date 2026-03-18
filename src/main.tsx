@@ -17,7 +17,7 @@ declare module "@tanstack/react-router" {
 }
 
 // Hide the splash (per Capacitor docs, you should do this on app launch)
-await SplashScreen.hide("");
+await SplashScreen.hide();
 
 // Show the splash for an indefinite amount of time:
 await SplashScreen.show({

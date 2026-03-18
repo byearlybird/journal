@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/button";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { Editor, useEditor, readEditorContent } from "@/components/lexical";
 
 export function TextareaDialog({
   open,
@@ -24,16 +25,17 @@ export function TextareaDialog({
   placeholder?: string;
   initialContent: string;
 }) {
-  const [content, setContent] = useState(initialContent);
+  const editor = useEditor();
+  const [isEmpty, setIsEmpty] = useState(!initialContent);
 
   const handleClose = () => {
-    setContent(initialContent);
     onClose();
   };
 
   const handleSave = () => {
-    if (content.trim() === "") return;
-    onSave(content.trim());
+    const content = readEditorContent(editor);
+    if (!content) return;
+    onSave(content);
     handleClose();
   };
 
@@ -64,17 +66,17 @@ export function TextareaDialog({
                 }
               >
                 <DialogTitle>{title}</DialogTitle>
-                <textarea
+                <Editor
+                  editor={editor}
+                  initialContent={initialContent}
+                  onEmptyChange={setIsEmpty}
                   placeholder={placeholder}
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="scrollbar-hide text-base h-full border-t border-dotted w-full resize-none p-2 placeholder:text-cloud-medium focus:outline-none focus-visible:outline-none focus-visible:shadow-none"
                 />
                 <div className="flex justify-between gap-4 p-2">
                   <Button onClick={handleClose} variant="slate">
                     Cancel
                   </Button>
-                  <Button disabled={content.trim() === ""} onClick={handleSave} variant="gold">
+                  <Button disabled={isEmpty} onClick={handleSave} variant="gold">
                     Save
                   </Button>
                 </div>

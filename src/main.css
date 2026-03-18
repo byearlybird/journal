@@ -7,6 +7,7 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
+  --keyboard-height: 0px;
 }
 
 @theme {
@@ -60,6 +61,19 @@
 }
 
 @layer base {
+  .lexical-content strong {
+    font-weight: bold;
+  }
+  .lexical-content em {
+    font-style: italic;
+  }
+  .lexical-content del {
+    text-decoration: line-through;
+  }
+  .lexical-content p + p {
+    margin-top: 0.5em;
+  }
+
   html {
     background-color: var(--color-slate-medium);
     font-family: var(--font-sans);

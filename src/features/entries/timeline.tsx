@@ -9,6 +9,7 @@ import {
 import type { TimelineItem } from "./types";
 import { Button as BaseButton } from "@base-ui/react";
 import { cx } from "cva";
+import { Renderer } from "@/components/lexical";
 
 export function Timeline({
   entries,
@@ -44,7 +45,9 @@ export function Timeline({
             nativeButton={false}
             render={<div />}
             onClick={() => handleClick(entry)}
-            className={size === "compact" ? "flex-1 pb-4 min-h-16" : "flex-1 pb-4 min-h-20"}
+            className={
+              size === "compact" ? "flex-1 min-w-0 pb-4 min-h-16" : "flex-1 min-w-0 pb-4 min-h-20"
+            }
           >
             <div
               className={
@@ -53,13 +56,8 @@ export function Timeline({
             >
               {formatTime(entry.created_at)}
             </div>
-            <div
-              className={cx(
-                "mt-2 whitespace-pre-line",
-                size === "compact" && "text-sm line-clamp-3",
-              )}
-            >
-              {entry.content}
+            <div className={cx("mt-2", size === "compact" && "text-sm line-clamp-3")}>
+              <Renderer content={entry.content} />
             </div>
           </BaseButton>
         </div>

@@ -1,4 +1,5 @@
 import type { Task } from "@/db";
+import { Renderer } from "@/components/lexical";
 import {
   DialogBackdrop,
   DialogClose,
@@ -206,9 +207,9 @@ function TodayTaskItem({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <span className={`text-sm text-ivory-light${isPending ? " line-through opacity-40" : ""}`}>
-        {task.content}
-      </span>
+      <div className={`text-sm text-ivory-light${isPending ? " line-through opacity-40" : ""}`}>
+        <Renderer content={task.content} />
+      </div>
       {isPending ? (
         <div className="flex gap-1">
           <button
@@ -264,9 +265,9 @@ function PriorTaskItem({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between gap-2">
-        <span className={`text-sm text-ivory-light${isPending ? " line-through opacity-40" : ""}`}>
-          {task.content}
-        </span>
+        <div className={`text-sm text-ivory-light${isPending ? " line-through opacity-40" : ""}`}>
+          <Renderer content={task.content} />
+        </div>
         <span className="shrink-0 text-xs text-cloud-dark">{dateLabel}</span>
       </div>
       {isPending ? (

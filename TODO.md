@@ -1,11 +1,19 @@
-- [ ] E2EE sync
-- [ ] Desktop optimizations support
 - [ ] search notes
-- [ ] thread notes together
+- [ ] related notes organization
+  - ideas: threading, and/or tagging/labeling
 - [ ] pin notes
-- [ ] redesign quick drawer / enhanced task rollover
-- [ ] delay task disappearance from quick drawer
-- [ ] review app for touch-friendliness (touch target sizes, keyboard shifting viewport, etc)
+- [x] rich text editor
+- [x] redesign quick drawer / enhanced task rollover
+- [x] delay task disappearance from quick drawer
+
+## Stablizing
+
+- [ ] review app for touch-friendliness (touch target sizes, etc)
+
+## Cross-platform support
+
+- [ ] E2EE sync
+- [ ] Desktop optimizations
 
 ## Guiding Priorities
 

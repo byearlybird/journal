@@ -3,7 +3,9 @@ import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { migrator } from "@/db";
 import { Dialog } from "@capacitor/dialog";
 import { SplashScreen } from "@capacitor/splash-screen";
+import { Keyboard } from "@capacitor/keyboard";
 import { seed } from "@/db/seed";
+import { useEffect } from "react";
 
 let migrated = false;
 
@@ -19,13 +21,25 @@ export const Route = createRootRoute({
         new Promise((resolve) => setTimeout(resolve, 500)),
       ]);
       migrated = true;
-      if (import.meta.env.DEV) await seed();
       await SplashScreen.hide();
     }
   },
 });
 
 function RootComponent() {
+  useEffect(() => {
+    const showListener = Keyboard.addListener("keyboardWillShow", (info) => {
+      document.documentElement.style.setProperty("--keyboard-height", `${info.keyboardHeight}px`);
+    });
+    const hideListener = Keyboard.addListener("keyboardWillHide", () => {
+      document.documentElement.style.setProperty("--keyboard-height", "0px");
+    });
+    return () => {
+      showListener.then((h) => h.remove());
+      hideListener.then((h) => h.remove());
+    };
+  }, []);
+
   return (
     <main className="[view-transition-name:main-content]">
       <Outlet />

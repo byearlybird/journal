@@ -9,16 +9,13 @@ const baseSchema = z.object({
 const baseEntrySchema = baseSchema.extend({
   content: z.string().min(1),
   date: z.iso.date().default(() => new Date().toLocaleDateString("en-CA")), // YYYY-MM-DD
-  scope: z.enum(["daily", "weekly", "monthly"]),
 });
 
-export const noteSchema = baseEntrySchema.extend({
-  category: z.enum(["log", "intention", "reflection"]),
-});
+export const noteSchema = baseEntrySchema;
 
 export const taskSchema = baseEntrySchema.extend({
   status: z.enum(["incomplete", "complete", "canceled", "deferred"]).default("incomplete"),
-  original_id: z.string().uuid().nullable().default(null),
+  original_id: z.uuid().nullable().default(null),
 });
 
 export type Note = z.infer<typeof noteSchema>;

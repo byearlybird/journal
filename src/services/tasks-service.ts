@@ -4,7 +4,6 @@ import { tasksRepo } from "@/repos/tasks-repo";
 export async function createTask(content: string): Promise<Task> {
   return tasksRepo.create({
     content,
-    scope: "daily",
   });
 }
 
@@ -76,7 +75,6 @@ export async function rolloverTask(
 
   const rolled = await tasksRepo.create({
     content: deferred.content,
-    scope: deferred.scope,
     date: targetDate,
     status: "incomplete",
     // presence of original_id indicates the original task was rolled over before, so keep it's original id

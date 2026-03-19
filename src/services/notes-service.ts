@@ -4,8 +4,6 @@ import { notesRepo } from "@/repos/notes-repo";
 export async function createNote(content: string): Promise<Note> {
   return notesRepo.create({
     content,
-    scope: "daily",
-    category: "log",
   });
 }
 

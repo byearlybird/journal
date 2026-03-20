@@ -34,3 +34,7 @@ export function formatISODate(date: Date | number): string {
 export function getTodayISODate(): string {
   return formatISODate(new Date());
 }
+
+export function getCurrentMonth(): string {
+  return format(new Date(), "yyyy-MM");
+}

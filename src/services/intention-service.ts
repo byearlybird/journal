@@ -1,15 +1,18 @@
-import type { Intention } from "@/db/schema";
-import { intentionRepo } from "@/repos/intention-repo";
+import { intentionSchema, type Database } from "@/db/schema";
+import type { Kysely } from "kysely";
 
-export async function getIntentionForMonth(month: string): Promise<Intention | undefined> {
-  return intentionRepo.findByMonth(month);
-}
-
-export async function upsertIntention(month: string, content: string): Promise<Intention> {
-  const existing = await intentionRepo.findByMonth(month);
-  if (existing) {
-    const updated = await intentionRepo.update(existing.id, { content });
-    return updated!;
-  }
-  return intentionRepo.create({ month, content });
+export function createIntentionService(db: Kysely<Database>) {
+  return {
+    getByMonth: async (month: string) => {
+      return db.selectFrom("intentions").where("month", "=", month).selectAll().executeTakeFirst();
+    },
+    upsert: async (month: string, content: string): Promise<void> => {
+      const intention = intentionSchema.parse({ month, content });
+      await db
+        .insertInto("intentions")
+        .values(intention)
+        .onConflict((oc) => oc.column("month").doUpdateSet({ content }))
+        .execute();
+    },
+  };
 }

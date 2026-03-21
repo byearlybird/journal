@@ -2,17 +2,17 @@ import { Renderer } from "@/components/lexical/renderer";
 import { getEntriesToday } from "@/services/entries-service";
 import { Timeline } from "@/features/entries/timeline";
 import type { TimelineItem } from "@/features/entries/types";
-import { intentionRepo } from "@/repos/intention-repo";
 import { formatDayOfWeek, formatMonthDate, getCurrentMonth } from "@/utils/date-utils";
 import { FlowerLotusIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { intentionService } from "@/app";
 
 export const Route = createFileRoute("/app/")({
   component: JournalPage,
   loader: async () => {
     const [entries, intention] = await Promise.all([
       getEntriesToday(),
-      intentionRepo.findByMonth(getCurrentMonth()),
+      intentionService.getByMonth(getCurrentMonth()),
     ]);
     return { entries, intention: intention?.content ?? null };
   },

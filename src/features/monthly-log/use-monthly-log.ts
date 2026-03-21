@@ -1,5 +1,5 @@
 import type { Goal } from "@/db/schema";
-import * as intentionService from "@/services/intention-service";
+import { intentionService } from "@/app";
 import * as goalService from "@/services/goal-service";
 import { useRouter } from "@tanstack/react-router";
 
@@ -7,7 +7,7 @@ export function useUpdateIntention() {
   const router = useRouter();
 
   return async (month: string, content: string) => {
-    await intentionService.upsertIntention(month, content);
+    await intentionService.upsert(month, content);
     await router.invalidate();
   };
 }

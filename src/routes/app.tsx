@@ -4,12 +4,12 @@ import type { Goal, Intention } from "@/db/schema";
 import { CreateDialog } from "@/features/entries";
 import { TasksDialog } from "@/features/tasks";
 import { goalRepo } from "@/repos/goal-repo";
-import { intentionRepo } from "@/repos/intention-repo";
 import { getIncompleteTasks } from "@/services/tasks-service";
 import { getCurrentMonth } from "@/utils/date-utils";
 import { ListBulletsIcon, SunHorizonIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { intentionService } from "@/app";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/app")({
     const currentMonth = getCurrentMonth();
     const [tasks, intention, goals] = await Promise.all([
       getIncompleteTasks(),
-      intentionRepo.findByMonth(currentMonth),
+      intentionService.getByMonth(currentMonth),
       goalRepo.findByMonth(currentMonth),
     ]);
     return { ...tasks, intention: intention ?? null, goals, month: currentMonth };

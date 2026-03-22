@@ -11,22 +11,13 @@ import { cx } from "cva";
 
 const UNDO_DELAY_MS = 3000;
 
-function TaskButton({
-  icon,
-  onClick,
-  children,
-}: {
-  icon?: ReactNode;
-  onClick: () => void;
-  children: ReactNode;
-}) {
+function TaskButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className="flex items-center gap-1.5 rounded-md bg-slate-light px-2.5 py-1.5 text-xs font-medium text-ivory-light transition-transform active:scale-105"
     >
-      {icon}
       {children}
     </button>
   );
@@ -181,10 +172,12 @@ function TodayTaskItem({
         </div>
       ) : (
         <div className="flex gap-1">
-          <TaskButton onClick={onComplete} icon={<CheckSquareIcon className="size-3" />}>
+          <TaskButton onClick={onComplete}>
+            <CheckSquareIcon className="size-3" />
             Complete
           </TaskButton>
-          <TaskButton onClick={onCancel} icon={<XSquareIcon className="size-3" />}>
+          <TaskButton onClick={onCancel}>
+            <XSquareIcon className="size-3" />
             Cancel
           </TaskButton>
         </div>
@@ -229,13 +222,16 @@ function PriorTaskItem({
         </div>
       ) : (
         <div className="flex gap-1">
-          <TaskButton onClick={onRollover} icon={<ArrowSquareRightIcon className="size-3" />}>
+          <TaskButton onClick={onRollover}>
+            <ArrowSquareRightIcon className="size-3" />
             Roll over
           </TaskButton>
-          <TaskButton onClick={onComplete} icon={<CheckSquareIcon className="size-3" />}>
+          <TaskButton onClick={onComplete}>
+            <CheckSquareIcon className="size-3" />
             Complete
           </TaskButton>
-          <TaskButton onClick={onCancel} icon={<XSquareIcon className="size-3" />}>
+          <TaskButton onClick={onCancel}>
+            <XSquareIcon className="size-3" />
             Cancel
           </TaskButton>
         </div>

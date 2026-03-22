@@ -19,8 +19,9 @@ import {
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRolloverTask, useUpdateTaskStatus } from "@/features/tasks";
-import { IntentionSection, useAddGoal } from "@/features/monthly-log";
+import { taskService, goalService } from "@/app";
+import { useMutation } from "@/utils/use-mutation";
+import { IntentionSection } from "@/features/monthly-log";
 import { useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNowStrict, parseISO } from "date-fns";
 
@@ -45,10 +46,8 @@ export function TasksDialog({
   open: boolean;
   onClose: () => void;
 }) {
-  const updateTaskStatus = useUpdateTaskStatus();
-  const rollover = useRolloverTask();
+  const mutation = useMutation();
   const navigate = useNavigate();
-  const addGoal = useAddGoal();
   const empty = todayTasks.length === 0 && priorTasks.length === 0;
   const [activeTab, setActiveTab] = useState<"tasks" | "goals">("tasks");
   const [createGoalOpen, setCreateGoalOpen] = useState(false);
@@ -64,10 +63,10 @@ export function TasksDialog({
     commitTimerRef.current = null;
     const today = new Date().toLocaleDateString("en-CA");
     updates.forEach((update, taskId) => {
-      if (update.action === "status") updateTaskStatus({ id: taskId, status: update.status });
-      else rollover(taskId, today);
+      if (update.action === "status") mutation(() => taskService.update(taskId, { status: update.status }));
+      else mutation(() => taskService.rollover(taskId, today));
     });
-  }, [updateTaskStatus, rollover]);
+  }, [mutation]);
 
   const schedulePendingCommit = () => {
     if (commitTimerRef.current) clearTimeout(commitTimerRef.current);
@@ -289,7 +288,7 @@ export function TasksDialog({
         open={createGoalOpen}
         onClose={() => setCreateGoalOpen(false)}
         onSave={async (content) => {
-          await addGoal(month, content);
+          await mutation(() => goalService.create(month, content));
           setCreateGoalOpen(false);
         }}
         title="New goal"

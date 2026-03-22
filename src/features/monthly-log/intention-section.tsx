@@ -1,7 +1,8 @@
 import { Renderer } from "@/components/lexical/renderer";
 import { TextareaDialog } from "@/components/textarea-dialog";
 import type { Intention } from "@/models";
-import { useUpdateIntention } from "./use-monthly-log";
+import { intentionService } from "@/app";
+import { useMutation } from "@/utils/use-mutation";
 import { useState } from "react";
 import { FlowerLotusIcon } from "@phosphor-icons/react";
 
@@ -13,7 +14,7 @@ export function IntentionSection({
   month: string;
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const updateIntention = useUpdateIntention();
+  const mutation = useMutation();
 
   const hasContent = !!intention;
 
@@ -35,7 +36,7 @@ export function IntentionSection({
       <TextareaDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        onSave={(content) => updateIntention(month, content)}
+        onSave={(content) => mutation(() => intentionService.upsert(month, content))}
         title="Monthly intention"
         placeholder="What's your intention for this month?"
         initialContent={intention?.content ?? ""}

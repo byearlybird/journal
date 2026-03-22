@@ -10,7 +10,8 @@ import {
 } from "@/components";
 import { SwipeBackEdge } from "@/components/swipe-back-edge";
 import { taskService } from "@/app";
-import { EditTaskDialog, useUpdateTaskStatus } from "@/features/tasks";
+import { EditTaskDialog } from "@/features/tasks";
+import { useMutation } from "@/utils/use-mutation";
 import {
   ArrowCounterClockwiseIcon,
   ArrowSquareRightIcon,
@@ -53,19 +54,19 @@ function RouteComponent() {
   const { task, rolledTask } = Route.useLoaderData();
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const updateTaskStatus = useUpdateTaskStatus();
+  const mutation = useMutation();
   const [editOpen, setEditOpen] = useState(false);
 
   const handleComplete = () => {
-    updateTaskStatus({ id: task.id, status: "complete" });
+    mutation(() => taskService.update(task.id, { status: "complete" }));
   };
 
   const handleCancel = () => {
-    updateTaskStatus({ id: task.id, status: "canceled" });
+    mutation(() => taskService.update(task.id, { status: "canceled" }));
   };
 
   const handleReset = () => {
-    updateTaskStatus({ id: task.id, status: "incomplete" });
+    mutation(() => taskService.update(task.id, { status: "incomplete" }));
   };
 
   const handleDelete = () => {

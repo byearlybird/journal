@@ -10,8 +10,8 @@ import {
   TextareaDialog,
 } from "@/components";
 import { SwipeBackEdge } from "@/components/swipe-back-edge";
-import { useDeleteGoal, useSetGoalStatus, useUpdateGoal } from "@/features/monthly-log";
 import { goalService } from "@/app";
+import { useMutation } from "@/utils/use-mutation";
 import {
   ArrowCounterClockwiseIcon,
   CaretLeftIcon,
@@ -38,9 +38,7 @@ function RouteComponent() {
   const { goal } = Route.useLoaderData();
   const navigate = Route.useNavigate();
   const [editOpen, setEditOpen] = useState(false);
-  const setGoalStatus = useSetGoalStatus();
-  const deleteGoal = useDeleteGoal();
-  const updateGoal = useUpdateGoal();
+  const mutation = useMutation();
 
   const isComplete = goal.status === "complete";
 
@@ -78,7 +76,7 @@ function RouteComponent() {
                 </MenuItem>
                 <MenuItem
                   onClick={async () => {
-                    await deleteGoal(goal.id);
+                    await mutation(() => goalService.delete(goal.id));
                     goBack();
                   }}
                   className="text-error flex gap-2"
@@ -96,12 +94,12 @@ function RouteComponent() {
 
       <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
         {isComplete ? (
-          <Button variant="slate" onClick={() => setGoalStatus(goal.id, "incomplete")}>
+          <Button variant="slate" onClick={() => mutation(() => goalService.setStatus(goal.id, "incomplete"))}>
             <ArrowCounterClockwiseIcon />
             Complete
           </Button>
         ) : (
-          <Button onClick={() => setGoalStatus(goal.id, "complete")}>
+          <Button onClick={() => mutation(() => goalService.setStatus(goal.id, "complete"))}>
             <StarIcon />
             Complete
           </Button>
@@ -112,7 +110,7 @@ function RouteComponent() {
         open={editOpen}
         onClose={() => setEditOpen(false)}
         onSave={async (content) => {
-          await updateGoal(goal.id, { content });
+          await mutation(() => goalService.update(goal.id, { content }));
           setEditOpen(false);
         }}
         title="Edit goal"

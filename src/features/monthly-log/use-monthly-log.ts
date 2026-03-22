@@ -1,4 +1,4 @@
-import type { Goal } from "@/db/schema";
+import type { Goal } from "@/models";
 import { goalService, intentionService } from "@/app";
 import { useRouter } from "@tanstack/react-router";
 

@@ -1,5 +1,5 @@
 import { taskService } from "@/app";
-import type { Task } from "@/db";
+import type { Task } from "@/models";
 import { useRouter } from "@tanstack/react-router";
 
 export function useCreateTask() {

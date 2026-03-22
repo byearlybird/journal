@@ -57,7 +57,7 @@ function RouteComponent() {
   };
 
   const formattedDate = format(parseISO(note.date), "MMMM d");
-  const createdTime = format(parseISO(note.created_at), "h:mm a");
+  const createdTime = format(parseISO(note.createdAt), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
@@ -75,7 +75,7 @@ function RouteComponent() {
           <time className="font-medium" dateTime={note.date}>
             {formattedDate}
           </time>
-          <time className="block text-xs text-cloud-medium" dateTime={note.created_at}>
+          <time className="block text-xs text-cloud-medium" dateTime={note.createdAt}>
             {createdTime}
           </time>
         </div>
@@ -100,7 +100,7 @@ function RouteComponent() {
         </MenuRoot>
       </header>
       {/* Content area */}
-      <TextContent content={note.content} updatedAt={note.updated_at} createdAt={note.created_at} />
+      <TextContent content={note.content} updatedAt={note.updatedAt} createdAt={note.createdAt} />
       <EditNoteDialog open={editOpen} onClose={() => setEditOpen(false)} note={note} />
       <SwipeBackEdge onBack={goBack} />
     </div>

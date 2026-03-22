@@ -1,66 +1,36 @@
 import type { Database } from "@/db/schema";
-import type { TimelineItem } from "@/features/entries/types";
+import { toEntry, type Entry } from "@/models";
 import type { Kysely } from "kysely";
 
 export function createEntryService(db: Kysely<Database>) {
   return {
-    async getToday(): Promise<TimelineItem[]> {
+    async getToday(): Promise<Entry[]> {
       const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD
-      const [notes, tasks] = await Promise.all([
-        db.selectFrom("notes").selectAll().where("date", "=", today).orderBy("created_at", "desc").execute(),
-        db.selectFrom("tasks").selectAll().where("date", "=", today).orderBy("created_at", "desc").execute(),
-      ]);
+      const entries = await db
+        .selectFrom("entries")
+        .selectAll()
+        .where("date", "=", today)
+        .where("type", "in", ["note", "task"])
+        .orderBy("createdAt", "desc")
+        .execute();
 
-      const entries: TimelineItem[] = [
-        ...notes.map((note) => ({ ...note, type: "note" as const })),
-        ...tasks.map((task) => ({ ...task, type: "task" as const })),
-      ];
-
-      return entries.sort((a, b) => b.created_at.localeCompare(a.created_at));
+      return entries.map(toEntry);
     },
 
-    async getGroupedByDate(): Promise<Record<string, TimelineItem[]>> {
-      const [notes, tasks, intentions, goals] = await Promise.all([
-        db.selectFrom("notes").selectAll().orderBy("created_at", "desc").execute(),
-        db.selectFrom("tasks").selectAll().orderBy("created_at", "desc").execute(),
-        db.selectFrom("intentions").selectAll().orderBy("month", "desc").execute(),
-        db.selectFrom("goals").selectAll().orderBy("created_at", "asc").execute(),
-      ]);
+    async getGroupedByDate(): Promise<Record<string, Entry[]>> {
+      const entryRows = await db
+        .selectFrom("entries")
+        .selectAll()
+        .where("type", "in", ["note", "task"])
+        .orderBy("createdAt", "desc")
+        .execute();
 
-      const noteEntries: TimelineItem[] = notes.map((note) => ({
-        ...note,
-        type: "note" as const,
-      }));
+      const entries = entryRows.map(toEntry);
 
-      const taskEntries: TimelineItem[] = tasks.map((task) => ({
-        ...task,
-        type: "task" as const,
-      }));
-
-      const intentionEntries: TimelineItem[] = intentions.map((intention) => ({
-        id: intention.id,
-        content: intention.content,
-        created_at: intention.created_at,
-        type: "intention" as const,
-      }));
-
-      const goalEntries: TimelineItem[] = goals.map((goal) => ({
-        id: goal.id,
-        content: goal.content,
-        created_at: goal.created_at,
-        status: goal.status,
-        type: "goal" as const,
-      }));
-
-      const allEntries = [...noteEntries, ...taskEntries, ...intentionEntries, ...goalEntries].sort(
-        (a, b) => b.created_at.localeCompare(a.created_at),
-      );
-
-      const entriesByDate: Record<string, TimelineItem[]> = {};
-      for (const entry of allEntries) {
-        const date = new Date(entry.created_at).toLocaleDateString("en-CA"); // YYYY-MM-DD
-        entriesByDate[date] ??= [];
-        entriesByDate[date].push(entry);
+      const entriesByDate: Record<string, Entry[]> = {};
+      for (const entry of entries) {
+        entriesByDate[entry.date] ??= [];
+        entriesByDate[entry.date].push(entry);
       }
 
       return entriesByDate;

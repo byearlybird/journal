@@ -1,23 +1,46 @@
-import { type Database, noteSchema } from "@/db";
+import type { Database } from "@/db/schema";
+import { toNote, type Note } from "@/models";
 import type { Kysely } from "kysely";
 
 export function createNoteService(db: Kysely<Database>) {
   return {
-    create: (content: string) => {
-      const note = noteSchema.parse({ content });
-      return db.insertInto("notes").values(note).execute();
+    create: async (content: string) => {
+      const now = new Date().toISOString();
+      await db
+        .insertInto("entries")
+        .values({
+          id: crypto.randomUUID(),
+          date: new Date().toLocaleDateString("en-CA"),
+          content,
+          type: "note",
+          status: null,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .execute();
     },
-    get: async (id: string) => {
-      return db.selectFrom("notes").where("id", "=", id).selectAll().executeTakeFirst();
+    get: async (id: string): Promise<Note | undefined> => {
+      const result = await db
+        .selectFrom("entries")
+        .selectAll()
+        .where("id", "=", id)
+        .where("type", "=", "note")
+        .executeTakeFirst();
+      return result ? toNote(result) : undefined;
     },
     update: async (id: string, { content }: { content: string }) => {
-      const finalUpdates = { content, updated_at: new Date().toLocaleString("en-CA") };
-      return db.updateTable("notes").set(finalUpdates).where("id", "=", id).execute();
+      await db
+        .updateTable("entries")
+        .set({
+          content,
+          updatedAt: new Date().toISOString(),
+        })
+        .where("id", "=", id)
+        .where("type", "=", "note")
+        .execute();
     },
-    delete: (id: string) => {
-      return db.deleteFrom("notes").where("id", "=", id).execute();
+    delete: async (id: string) => {
+      await db.deleteFrom("entries").where("id", "=", id).where("type", "=", "note").execute();
     },
   };
 }
-
-export type NoteService = ReturnType<typeof createNoteService>;

@@ -1,6 +1,6 @@
 import { Renderer } from "@/components/lexical/renderer";
 import { TextareaDialog } from "@/components/textarea-dialog";
-import type { Intention } from "@/db/schema";
+import type { Intention } from "@/models";
 import { useUpdateIntention } from "./use-monthly-log";
 import { useState } from "react";
 import { FlowerLotusIcon } from "@phosphor-icons/react";

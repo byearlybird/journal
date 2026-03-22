@@ -1,7 +1,7 @@
 import { entryService, intentionService } from "@/app";
 import { Renderer } from "@/components/lexical/renderer";
 import { Timeline } from "@/features/entries/timeline";
-import type { TimelineItem } from "@/features/entries/types";
+import type { Entry } from "@/models";
 import { formatDayOfWeek, formatMonthDate, getCurrentMonth } from "@/utils/date-utils";
 import { FlowerLotusIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -22,7 +22,7 @@ function JournalPage() {
   const { entries, intention } = Route.useLoaderData();
   const empty = entries.length === 0;
 
-  const handleEntryClick = (entry: TimelineItem) => {
+  const handleEntryClick = (entry: Entry) => {
     if (entry.type === "note") {
       navigate({
         to: "/note/$id",

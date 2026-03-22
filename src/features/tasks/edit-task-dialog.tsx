@@ -1,5 +1,5 @@
 import { TextareaDialog } from "@/components";
-import type { Task } from "@/db";
+import type { Task } from "@/models";
 import { useUpdateTask } from "./use-tasks";
 
 export function EditTaskDialog({

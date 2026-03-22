@@ -1,5 +1,4 @@
-import type { Task } from "@/db";
-import type { Goal, Intention } from "@/db/schema";
+import type { Goal, Intention, Task } from "@/models";
 import { Renderer } from "@/components/lexical";
 import { TextareaDialog } from "@/components";
 import {

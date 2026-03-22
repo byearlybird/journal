@@ -1,22 +1,48 @@
-import { intentionSchema, type Database } from "@/db/schema";
+import type { Database } from "@/db/schema";
+import { toIntention, type Intention } from "@/models";
 import type { Kysely } from "kysely";
 
 export function createIntentionService(db: Kysely<Database>) {
   return {
-    getByMonth: async (month: string) => {
-      return db.selectFrom("intentions").where("month", "=", month).selectAll().executeTakeFirst();
+    getByMonth: async (month: string): Promise<Intention | undefined> => {
+      const result = await db
+        .selectFrom("entries")
+        .where("date", "=", month)
+        .where("type", "=", "intention")
+        .selectAll()
+        .executeTakeFirst();
+      return result ? toIntention(result) : undefined;
     },
     upsert: async (month: string, content: string): Promise<void> => {
-      const intention = intentionSchema.parse({ month, content });
-      await db
-        .insertInto("intentions")
-        .values(intention)
-        .onConflict((oc) =>
-          oc
-            .column("month")
-            .doUpdateSet({ content, updated_at: new Date().toLocaleString("en-CA") }),
-        )
-        .execute();
+      await db.transaction().execute(async (tx) => {
+        const existing = await tx
+          .selectFrom("entries")
+          .where("date", "=", month)
+          .where("type", "=", "intention")
+          .selectAll()
+          .executeTakeFirst();
+
+        if (existing) {
+          await tx
+            .updateTable("entries")
+            .set({ content, updatedAt: new Date().toISOString() })
+            .where("id", "=", existing.id)
+            .execute();
+        } else {
+          const now = new Date().toISOString();
+          await tx
+            .insertInto("entries")
+            .values({
+              id: crypto.randomUUID(),
+              date: month,
+              content,
+              type: "intention",
+              createdAt: now,
+              updatedAt: now,
+            })
+            .execute();
+        }
+      });
     },
   };
 }

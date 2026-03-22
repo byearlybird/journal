@@ -1,6 +1,5 @@
 import { ActionNavbar, Navbar, type NavItemData } from "@/components";
-import { type Task } from "@/db";
-import type { Goal, Intention } from "@/db/schema";
+import type { Goal, Intention, Task } from "@/models";
 import { CreateDialog } from "@/features/entries";
 import { TasksDialog } from "@/features/tasks";
 import { goalService, intentionService, taskService } from "@/app";

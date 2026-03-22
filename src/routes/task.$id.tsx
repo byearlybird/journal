@@ -25,7 +25,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
 import z from "zod";
-import type { Task } from "@/db";
+import type { Task } from "@/models";
 
 const taskSearchSchema = z.object({
   from: z.enum(["index", "entries"]).optional().catch(undefined),
@@ -84,7 +84,7 @@ function RouteComponent() {
   };
 
   const formattedDate = format(parseISO(task.date), "MMMM d");
-  const createdTime = format(parseISO(task.created_at), "h:mm a");
+  const createdTime = format(parseISO(task.createdAt), "h:mm a");
 
   return (
     <div className="flex min-h-screen flex-col max-w-2xl mx-auto pt-safe-top pb-safe-bottom">
@@ -102,7 +102,7 @@ function RouteComponent() {
           <time className="font-medium" dateTime={task.date}>
             {formattedDate}
           </time>
-          <time className="block text-xs text-cloud-medium" dateTime={task.created_at}>
+          <time className="block text-xs text-cloud-medium" dateTime={task.createdAt}>
             {createdTime}
           </time>
         </div>
@@ -127,7 +127,7 @@ function RouteComponent() {
         </MenuRoot>
       </header>
       {/* Content area */}
-      <TextContent content={task.content} updatedAt={task.updated_at} createdAt={task.created_at} />
+      <TextContent content={task.content} updatedAt={task.updatedAt} createdAt={task.createdAt} />
       {/* Controls section */}
       <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
         {task.status === "incomplete" ? (

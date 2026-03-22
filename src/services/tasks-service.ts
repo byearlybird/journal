@@ -1,53 +1,92 @@
-import { taskSchema, type Database, type Task } from "@/db";
+import type { Database } from "@/db/schema";
+import { toTask, type Task } from "@/models";
 import type { Kysely } from "kysely";
 
 export function createTaskService(db: Kysely<Database>) {
   return {
     async create(content: string) {
-      const task = taskSchema.parse({ content, status: "incomplete" });
-      await db.insertInto("tasks").values(task).execute();
+      const now = new Date().toISOString();
+      await db
+        .insertInto("entries")
+        .values({
+          id: crypto.randomUUID(),
+          date: new Date().toLocaleDateString("en-CA"),
+          content,
+          type: "task",
+          status: "incomplete",
+          originId: null,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .execute();
     },
-    async get(id: string) {
-      return db.selectFrom("tasks").selectAll().where("id", "=", id).executeTakeFirst();
+    async get(id: string): Promise<Task | undefined> {
+      const result = await db
+        .selectFrom("entries")
+        .selectAll()
+        .where("id", "=", id)
+        .where("type", "=", "task")
+        .executeTakeFirst();
+      return result ? toTask(result) : undefined;
     },
-    async update(id: string, updates: Partial<Task>) {
-      const finalUpdates: Partial<Task> = {
-        ...updates,
-        updated_at: new Date().toLocaleString("en-CA"),
-      };
-      return db.updateTable("tasks").set(finalUpdates).where("id", "=", id).executeTakeFirst();
+    async update(id: string, updates: Partial<Pick<Task, "content" | "status">>) {
+      await db
+        .updateTable("entries")
+        .set({
+          ...updates,
+          updatedAt: new Date().toISOString(),
+        })
+        .where("id", "=", id)
+        .where("type", "=", "task")
+        .execute();
     },
     async delete(id: string) {
-      return db.deleteFrom("tasks").where("id", "=", id).executeTakeFirst();
+      await db.deleteFrom("entries").where("id", "=", id).where("type", "=", "task").execute();
     },
-    async getByStatus(status: Task["status"]) {
-      return db.selectFrom("tasks").selectAll().where("status", "=", status).execute();
-    },
-    async getFirstByOriginalId(originalId: string) {
-      return db
-        .selectFrom("tasks")
+    async getByStatus(status: Task["status"]): Promise<Task[]> {
+      const result = await db
+        .selectFrom("entries")
         .selectAll()
-        .where("original_id", "=", originalId)
+        .where("type", "=", "task")
+        .where("status", "=", status)
+        .execute();
+      return result.map(toTask);
+    },
+    async getFirstByOriginalId(originId: string): Promise<Task | undefined> {
+      const result = await db
+        .selectFrom("entries")
+        .selectAll()
+        .where("originId", "=", originId)
         .executeTakeFirst();
+      return result ? toTask(result) : undefined;
     },
     async rollover(taskId: string, targetDate: string) {
-      const update: Partial<Task> = {
-        status: "deferred",
-        updated_at: new Date().toLocaleString("en-CA"),
-        date: targetDate,
-      };
       await db.transaction().execute(async (trx) => {
         const existingTask = await trx
-          .updateTable("tasks")
-          .set(update)
+          .updateTable("entries")
+          .set({
+            status: "deferred",
+            updatedAt: new Date().toISOString(),
+            date: targetDate,
+          })
           .where("id", "=", taskId)
+          .where("type", "=", "task")
           .returningAll()
           .executeTakeFirstOrThrow();
-        const newTask = taskSchema.parse({
-          content: existingTask?.content,
-          original_id: existingTask.id,
-        });
-        await trx.insertInto("tasks").values(newTask).execute();
+        const now = new Date().toISOString();
+        await trx
+          .insertInto("entries")
+          .values({
+            id: crypto.randomUUID(),
+            date: targetDate,
+            content: existingTask.content,
+            type: "task",
+            status: "incomplete",
+            originId: existingTask.id,
+            createdAt: now,
+            updatedAt: now,
+          })
+          .execute();
       });
     },
   };

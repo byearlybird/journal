@@ -92,7 +92,7 @@ function RouteComponent() {
         </MenuRoot>
       </header>
 
-      <TextContent content={goal.content} updatedAt={goal.updated_at} createdAt={goal.created_at} />
+      <TextContent content={goal.content} updatedAt={goal.updatedAt} createdAt={goal.createdAt} />
 
       <section className="flex w-full gap-2 px-4 pb-safe-bottom pt-2">
         {isComplete ? (

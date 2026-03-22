@@ -9,7 +9,7 @@ import {
   TextContent,
   TextareaDialog,
 } from "@/components";
-import { SwipeBackEdge } from "@/components/swipe-back-edge";
+import { SwipeBackEdge } from "@/components/navigation/swipe-back-edge";
 import { goalService } from "@/app";
 import { useMutation } from "@/utils/use-mutation";
 import {

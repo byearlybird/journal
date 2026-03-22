@@ -3,11 +3,7 @@ import { type Task, type NewTask, taskSchema } from "@/db/schema";
 
 export const tasksRepo = {
   async findAll(): Promise<Task[]> {
-    return await db
-      .selectFrom("tasks")
-      .selectAll()
-      .orderBy("created_at", "desc")
-      .execute();
+    return await db.selectFrom("tasks").selectAll().orderBy("created_at", "desc").execute();
   },
 
   async findByDate(date: string): Promise<Task[]> {
@@ -29,11 +25,7 @@ export const tasksRepo = {
   },
 
   async findById(id: string): Promise<Task | undefined> {
-    return await db
-      .selectFrom("tasks")
-      .selectAll()
-      .where("id", "=", id)
-      .executeTakeFirst();
+    return await db.selectFrom("tasks").selectAll().where("id", "=", id).executeTakeFirst();
   },
 
   async findByOriginalId(originalId: string): Promise<Task | undefined> {

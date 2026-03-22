@@ -3,11 +3,7 @@ import { type Note, type NewNote, noteSchema } from "@/db/schema";
 
 export const notesRepo = {
   async findAll(): Promise<Note[]> {
-    return await db
-      .selectFrom("notes")
-      .selectAll()
-      .orderBy("created_at", "desc")
-      .execute();
+    return await db.selectFrom("notes").selectAll().orderBy("created_at", "desc").execute();
   },
 
   async findByDate(date: string): Promise<Note[]> {
@@ -20,11 +16,7 @@ export const notesRepo = {
   },
 
   async findById(id: string): Promise<Note | undefined> {
-    return await db
-      .selectFrom("notes")
-      .selectAll()
-      .where("id", "=", id)
-      .executeTakeFirst();
+    return await db.selectFrom("notes").selectAll().where("id", "=", id).executeTakeFirst();
   },
 
   async create(note: NewNote): Promise<Note> {

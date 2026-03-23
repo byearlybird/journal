@@ -7,7 +7,7 @@ export interface DatabaseDump {
 }
 
 /**
- * Dumps the entire database (notes and tasks) as a JSON-serializable object.
+ * Dumps the entire database as a JSON-serializable object.
  */
 export async function dumpDatabase(): Promise<DatabaseDump> {
   const entries = await db.selectFrom("entries").selectAll().execute();

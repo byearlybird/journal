@@ -44,16 +44,16 @@ export function Toolbar() {
       onMouseDown={(e) => e.preventDefault()}
     >
       <FormatButton active={!!(formats & BOLD)} onClick={() => handleFormat("bold")}>
-        <span className="font-bold">B</span>
+        <strong>B</strong>
       </FormatButton>
       <FormatButton active={!!(formats & ITALIC)} onClick={() => handleFormat("italic")}>
-        <span className="italic">I</span>
+        <em>I</em>
       </FormatButton>
       <FormatButton
         active={!!(formats & STRIKETHROUGH)}
         onClick={() => handleFormat("strikethrough")}
       >
-        <span className="line-through">S</span>
+        <del>S</del>
       </FormatButton>
     </motion.div>,
     document.body,

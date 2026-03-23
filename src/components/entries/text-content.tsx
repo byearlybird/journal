@@ -16,9 +16,7 @@ export function TextContent({
   return (
     <section className="flex-1 px-4 py-2 pb-2">
       <div className="rounded-md p-4 items-center flex">
-        <div className="flex flex-col">
-          <Renderer content={content} />
-        </div>
+        <Renderer content={content} />
       </div>
       {editedTime && (
         <time

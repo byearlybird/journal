@@ -7,13 +7,7 @@ import { goalService } from "@/app";
 import { useMutation } from "@/utils/use-mutation";
 import { useNavigate } from "@tanstack/react-router";
 
-export function GoalSection({
-  goals,
-  month,
-}: {
-  goals: Goal[];
-  month: string;
-}) {
+export function GoalSection({ goals, month }: { goals: Goal[]; month: string }) {
   const mutation = useMutation();
   const navigate = useNavigate();
   const [createGoalOpen, setCreateGoalOpen] = useState(false);

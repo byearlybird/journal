@@ -42,7 +42,11 @@ export async function mergeIntoDatabase(dump: DatabaseDump): Promise<void> {
       }
 
       if (remoteEntry.updatedAt > localEntry.updatedAt) {
-        await trx.updateTable("entries").set(remoteEntry).where("id", "=", remoteEntry.id).execute();
+        await trx
+          .updateTable("entries")
+          .set(remoteEntry)
+          .where("id", "=", remoteEntry.id)
+          .execute();
       }
     }
   });

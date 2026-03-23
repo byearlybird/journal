@@ -1,19 +1,12 @@
 import { cx } from "cva";
 import { Button as BaseButton } from "@base-ui/react";
 import { Button } from "@/components/common/button";
-import {
-  DialogBackdrop,
-  DialogRoot,
-  DialogPortal,
-  DialogPopup,
-  DialogTitle,
-} from "@/components/common/dialog";
+import { DialogContent, DialogFooter, DialogRoot, DialogTitle } from "@/components/common/dialog";
 import { CircleIcon, SquareIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { noteService, taskService } from "@/app";
 import { useMutation } from "@/utils/use-mutation";
-import { AnimatePresence, motion } from "motion/react";
 import { Editor, useEditor, readEditorContent } from "@/components/lexical";
 import { $getRoot, $createParagraphNode } from "lexical";
 
@@ -49,64 +42,29 @@ export function CreateDialog({ open, onClose }: { open: boolean; onClose: () => 
 
   return (
     <DialogRoot open={open} onOpenChange={handleClose}>
-      <AnimatePresence>
-        {open && (
-          <>
-            <DialogPortal keepMounted>
-              <DialogBackdrop
-                render={
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  />
-                }
-              />
-              <div className="fixed inset-x-0 -top-10 flex h-1/2 w-full max-w-2xl mx-auto">
-                <DialogPopup
-                  className="flex h-full w-full flex-col overflow-y-auto p-2 pt-[calc(var(--safe-top)+var(--spacing)*10)]"
-                  render={
-                    <motion.div
-                      initial={{ y: "-100%", opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: "-100%", opacity: 0 }}
-                      transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                    />
-                  }
-                >
-                  <DialogTitle>Create a new entry</DialogTitle>
-                  <Editor
-                    editor={editor}
-                    onEmptyChange={setIsEmpty}
-                    placeholder="What's on your mind?"
-                  />
-                  <div className="flex justify-between gap-4 p-2">
-                    <Button onClick={handleClose} variant="slate">
-                      Cancel
-                    </Button>
-                    <Button disabled={isEmpty} onClick={handleSave} variant="gold">
-                      Save
-                    </Button>
-                  </div>
-                </DialogPopup>
-              </div>
-            </DialogPortal>
-            {createPortal(
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed right-2 z-50 flex items-center gap-1 rounded-lg border bg-slate-medium px-2 py-1"
-                style={{ bottom: "calc(var(--keyboard-height) + var(--spacing)*3)" }}
-                onMouseDown={(e) => e.preventDefault()}
-              >
-                <EntryTypeToggle entryType={entryType} onEntryTypeChange={setEntryType} />
-              </motion.div>,
-              document.body,
-            )}
-          </>
+      <DialogContent>
+        <DialogTitle>Create a new entry</DialogTitle>
+        <Editor editor={editor} onEmptyChange={setIsEmpty} placeholder="What's on your mind?" />
+        <DialogFooter>
+          <Button onClick={handleClose} variant="slate">
+            Cancel
+          </Button>
+          <Button disabled={isEmpty} onClick={handleSave} variant="gold">
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+      {open &&
+        createPortal(
+          <div
+            className="fixed right-2 z-50 flex items-center gap-1 rounded-lg border bg-slate-medium px-2 py-1"
+            style={{ bottom: "calc(var(--keyboard-height) + var(--spacing)*3)" }}
+            onMouseDown={(e) => e.preventDefault()}
+          >
+            <EntryTypeToggle entryType={entryType} onEntryTypeChange={setEntryType} />
+          </div>,
+          document.body,
         )}
-      </AnimatePresence>
     </DialogRoot>
   );
 }

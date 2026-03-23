@@ -1,5 +1,5 @@
 import type { Goal, Intention } from "@/models";
-import { IntentionSection } from "@/components/monthly-log";
+import { IntentionSection } from "./intention-section";
 import { GoalSection } from "./goal-section";
 
 export function MonthlyTab({

@@ -1,22 +1,15 @@
 import {
+  MenuButton,
+  MenuContent,
   MenuItem,
-  MenuPopup,
-  MenuPortal,
-  MenuPositioner,
   MenuRoot,
-  MenuTrigger,
   TextContent,
   TextareaDialog,
 } from "@/components";
 import { SwipeBackEdge } from "@/components/navigation/swipe-back-edge";
 import { intentionService } from "@/app";
 import { useMutation } from "@/utils/use-mutation";
-import {
-  CaretLeftIcon,
-  DotsThreeIcon,
-  PencilSimpleIcon,
-  TrashIcon,
-} from "@phosphor-icons/react";
+import { CaretLeftIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import z from "zod";
@@ -67,33 +60,31 @@ function RouteComponent() {
           <span className="font-medium">Intention</span>
         </div>
         <MenuRoot>
-          <MenuTrigger className="flex size-10 shrink-0 items-center justify-center rounded-md transition-transform active:scale-105">
-            <DotsThreeIcon className="size-6" />
-          </MenuTrigger>
-          <MenuPortal>
-            <MenuPositioner align="end">
-              <MenuPopup>
-                <MenuItem onClick={() => setEditOpen(true)} className="flex gap-2">
-                  <PencilSimpleIcon className="size-4" />
-                  Edit
-                </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    await mutation(() => intentionService.delete(intention.id));
-                    goBack();
-                  }}
-                  className="text-error flex gap-2"
-                >
-                  <TrashIcon className="size-4" />
-                  Delete
-                </MenuItem>
-              </MenuPopup>
-            </MenuPositioner>
-          </MenuPortal>
+          <MenuButton />
+          <MenuContent>
+            <MenuItem onClick={() => setEditOpen(true)}>
+              <PencilSimpleIcon className="size-4" />
+              Edit
+            </MenuItem>
+            <MenuItem
+              onClick={async () => {
+                await mutation(() => intentionService.delete(intention.id));
+                goBack();
+              }}
+              variant="destructive"
+            >
+              <TrashIcon className="size-4" />
+              Delete
+            </MenuItem>
+          </MenuContent>
         </MenuRoot>
       </header>
 
-      <TextContent content={intention.content} updatedAt={intention.updatedAt} createdAt={intention.createdAt} />
+      <TextContent
+        content={intention.content}
+        updatedAt={intention.updatedAt}
+        createdAt={intention.createdAt}
+      />
 
       <TextareaDialog
         open={editOpen}

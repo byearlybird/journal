@@ -4,7 +4,7 @@ export type EntryRow = {
   content: string;
   createdAt: string;
   updatedAt: string;
-  type: "note" | "task" | "intention" | "goal";
+  type: "note" | "task" | "intention";
   status: string | null;
   originId: string | null;
 };

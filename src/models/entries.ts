@@ -3,7 +3,6 @@ import {
   InvalidEntryTypeError,
   UnknownEntryType,
   type Entry,
-  type Goal,
   type Intention,
   type Note,
   type Task,
@@ -56,22 +55,6 @@ export function toTask(row: EntryRow): Task {
   };
 }
 
-export function toGoal(row: EntryRow): Goal {
-  if (row.type !== "goal") {
-    throw new InvalidEntryTypeError("goal");
-  }
-
-  return {
-    id: row.id,
-    date: row.date,
-    content: row.content,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-    type: "goal",
-    status: row.status as Goal["status"],
-  };
-}
-
 export function toEntry(row: EntryRow): Entry {
   switch (row.type) {
     case "note":
@@ -80,8 +63,6 @@ export function toEntry(row: EntryRow): Entry {
       return toIntention(row);
     case "task":
       return toTask(row);
-    case "goal":
-      return toGoal(row);
     default:
       throw new UnknownEntryType(row.type);
   }

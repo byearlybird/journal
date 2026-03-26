@@ -16,12 +16,7 @@ export type Task = BaseEntry & {
   originId: string | null;
 };
 
-export type Goal = BaseEntry & {
-  type: "goal";
-  status: "incomplete" | "complete";
-};
-
-export type Entry = Note | Intention | Task | Goal;
+export type Entry = Note | Intention | Task;
 
 export class InvalidEntryTypeError extends Error {
   constructor(type: string) {

@@ -4,7 +4,6 @@ import {
   CircleIcon,
   FlowerLotusIcon,
   SquareIcon,
-  StarIcon,
   XSquareIcon,
   ArrowSquareRightIcon,
 } from "@phosphor-icons/react";
@@ -66,16 +65,6 @@ function EntryIcon({ entry }: { entry: Entry }) {
       return <TaskIcon status={entry.status} />;
     case "intention":
       return <FlowerLotusIcon className="size-4 text-cloud-light" />;
-    case "goal":
-      return (
-        <StarIcon
-          weight={entry.status === "complete" ? "fill" : "regular"}
-          className={cx(
-            "size-4",
-            entry.status === "complete" ? "text-gold-light" : "text-cloud-light",
-          )}
-        />
-      );
   }
 }
 

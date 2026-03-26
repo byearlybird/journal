@@ -1,7 +1,6 @@
 import { db } from "./db";
 import {
   createEntryService,
-  createGoalService,
   createIntentionService,
   createNoteService,
   createTaskService,
@@ -10,5 +9,4 @@ import {
 export const noteService = createNoteService(db);
 export const taskService = createTaskService(db);
 export const intentionService = createIntentionService(db);
-export const goalService = createGoalService(db);
 export const entryService = createEntryService(db);

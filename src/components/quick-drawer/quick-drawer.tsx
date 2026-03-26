@@ -1,4 +1,4 @@
-import type { Goal, Intention, Task } from "@/models";
+import type { Intention, Task } from "@/models";
 import {
   DrawerContent,
   DrawerRoot,
@@ -9,13 +9,12 @@ import {
   DrawerTitle,
 } from "@/components/common/drawer";
 import { TaskTab } from "./task-tab";
-import { MonthlyTab } from "./monthly-tab";
+import { PinnedTab } from "./pinned-tab";
 
 export function QuickDrawer({
   todayTasks,
   priorTasks,
   intention,
-  goals,
   month,
   open,
   onClose,
@@ -23,7 +22,6 @@ export function QuickDrawer({
   todayTasks: Task[];
   priorTasks: Task[];
   intention: Intention | null;
-  goals: Goal[];
   month: string;
   open: boolean;
   onClose: () => void;
@@ -35,13 +33,13 @@ export function QuickDrawer({
         <DrawerTabRoot defaultValue="tasks">
           <DrawerTabList>
             <DrawerTab value="tasks">Tasks</DrawerTab>
-            <DrawerTab value="monthly">Month</DrawerTab>
+            <DrawerTab value="pinned">Pinned</DrawerTab>
           </DrawerTabList>
           <DrawerTabPanel value="tasks">
             <TaskTab todayTasks={todayTasks} priorTasks={priorTasks} open={open} />
           </DrawerTabPanel>
-          <DrawerTabPanel value="monthly">
-            <MonthlyTab intention={intention} goals={goals} month={month} />
+          <DrawerTabPanel value="pinned">
+            <PinnedTab intention={intention} month={month} />
           </DrawerTabPanel>
         </DrawerTabRoot>
       </DrawerContent>

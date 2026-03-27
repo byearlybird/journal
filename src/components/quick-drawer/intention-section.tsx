@@ -1,8 +1,6 @@
 import { Renderer } from "@/components/lexical/renderer";
-import { TextareaDialog } from "@/components/entries/textarea-dialog";
+import { IntentionDialog } from "@/components/entries/intention-dialog";
 import type { Intention } from "@/models";
-import { intentionService } from "@/app";
-import { useMutation } from "@/utils/use-mutation";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { StarIcon } from "@phosphor-icons/react";
@@ -15,7 +13,6 @@ export function IntentionSection({
   month: string;
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const mutation = useMutation();
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -45,12 +42,10 @@ export function IntentionSection({
         )}
       </button>
 
-      <TextareaDialog
+      <IntentionDialog
+        month={month}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        onSave={(content) => mutation(() => intentionService.upsert(month, content))}
-        title="Monthly intention"
-        placeholder="What's your intention for this month?"
       />
     </>
   );

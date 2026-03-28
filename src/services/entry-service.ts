@@ -1,6 +1,7 @@
 import type { Database } from "@/db/schema";
 import { toEntry, type Entry } from "@/models";
 import type { Kysely } from "kysely";
+import { fetchTagsByEntryIds } from "./tag-helpers";
 
 export function createEntryService(db: Kysely<Database>) {
   return {
@@ -13,7 +14,11 @@ export function createEntryService(db: Kysely<Database>) {
         .orderBy("createdAt", "desc")
         .execute();
 
-      return entries.map(toEntry);
+      const tagMap = await fetchTagsByEntryIds(
+        db,
+        entries.map((e) => e.id),
+      );
+      return entries.map((e) => toEntry(e, tagMap.get(e.id) ?? []));
     },
 
     async getGroupedByDate(): Promise<Record<string, Entry[]>> {
@@ -23,11 +28,16 @@ export function createEntryService(db: Kysely<Database>) {
         .orderBy("createdAt", "desc")
         .execute();
 
+      const tagMap = await fetchTagsByEntryIds(
+        db,
+        entries.map((e) => e.id),
+      );
+
       const entriesByDate: Record<string, Entry[]> = {};
 
       for (const entry of entries) {
         entriesByDate[entry.date] ??= [];
-        entriesByDate[entry.date].push(toEntry(entry));
+        entriesByDate[entry.date].push(toEntry(entry, tagMap.get(entry.id) ?? []));
       }
 
       return entriesByDate;

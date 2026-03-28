@@ -5,10 +5,11 @@ import {
   type Entry,
   type Intention,
   type Note,
+  type Tag,
   type Task,
 } from "./types";
 
-export function toNote(row: EntryRow): Note {
+export function toNote(row: EntryRow, tags: Tag[] = []): Note {
   if (row.type !== "note") {
     throw new InvalidEntryTypeError("note");
   }
@@ -21,6 +22,7 @@ export function toNote(row: EntryRow): Note {
     updatedAt: row.updatedAt,
     type: "note",
     status: row.status as Note["status"],
+    tags,
   };
 }
 
@@ -39,7 +41,7 @@ export function toIntention(row: EntryRow): Intention {
   };
 }
 
-export function toTask(row: EntryRow): Task {
+export function toTask(row: EntryRow, tags: Tag[] = []): Task {
   if (row.type !== "task") {
     throw new InvalidEntryTypeError("task");
   }
@@ -53,17 +55,18 @@ export function toTask(row: EntryRow): Task {
     type: "task",
     status: row.status as Task["status"],
     originId: row.originId,
+    tags,
   };
 }
 
-export function toEntry(row: EntryRow): Entry {
+export function toEntry(row: EntryRow, tags: Tag[] = []): Entry {
   switch (row.type) {
     case "note":
-      return toNote(row);
+      return toNote(row, tags);
     case "intention":
       return toIntention(row);
     case "task":
-      return toTask(row);
+      return toTask(row, tags);
     default:
       throw new UnknownEntryType(row.type);
   }

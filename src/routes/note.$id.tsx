@@ -1,9 +1,10 @@
-import { noteService } from "@/app";
+import { noteService, tagService } from "@/app";
 import {
   MenuButton,
   MenuContent,
   MenuItem,
   MenuRoot,
+  TagPicker,
   TextContent,
   TextareaDialog,
 } from "@/components";
@@ -33,12 +34,13 @@ export const Route = createFileRoute("/note/$id")({
     if (!note) {
       throw notFound();
     }
-    return { note };
+    const allTags = await tagService.getAll();
+    return { note, allTags };
   },
 });
 
 function RouteComponent() {
-  const { note } = Route.useLoaderData();
+  const { note, allTags } = Route.useLoaderData();
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
   const mutation = useMutation();
@@ -50,7 +52,8 @@ function RouteComponent() {
       navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     } else if (from === "entries") {
       navigate({
-        to: "/app/entries",
+        to: "/app",
+        search: { view: "entries" },
         viewTransition: { types: ["slide-right"] },
       });
     } else {
@@ -108,6 +111,15 @@ function RouteComponent() {
       </DetailPageHeader>
       {/* Content area */}
       <TextContent content={note.content} updatedAt={note.updatedAt} createdAt={note.createdAt} />
+      {/* Tag picker */}
+      <div className="mt-auto flex justify-center px-4 pt-2">
+        <TagPicker
+          allTags={allTags}
+          selectedTagIds={note.tags.map((t) => t.id)}
+          onAdd={(tagId) => mutation(() => noteService.addTag(note.id, tagId))}
+          onRemove={(tagId) => mutation(() => noteService.removeTag(note.id, tagId))}
+        />
+      </div>
       <TextareaDialog
         open={editOpen}
         onClose={() => setEditOpen(false)}

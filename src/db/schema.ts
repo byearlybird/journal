@@ -9,6 +9,19 @@ export type EntryRow = {
   originId: string | null;
 };
 
+export type TagRow = {
+  id: string;
+  name: string;
+};
+
+export type EntryTagRow = {
+  id: string;
+  entryId: string;
+  tagId: string;
+};
+
 export type Database = {
   entries: EntryRow;
+  tags: TagRow;
+  entryTags: EntryTagRow;
 };

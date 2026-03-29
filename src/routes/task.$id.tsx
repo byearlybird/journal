@@ -14,7 +14,8 @@ import {
   DetailPageActions,
   DetailPageTitle,
 } from "@/components/page/detail-page";
-import { tagService, taskService } from "@/app";
+import { taskService } from "@/app";
+import { allTagsQueryOptions, taskQueryOptions, rolledTaskQueryOptions } from "@/queries";
 import { useMutation } from "@/utils/use-mutation";
 import {
   ArrowCounterClockwiseIcon,
@@ -24,11 +25,11 @@ import {
   TrashIcon,
   XSquareIcon,
 } from "@phosphor-icons/react";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
 import z from "zod";
-import type { Task } from "@/models";
 
 const taskSearchSchema = z.object({
   from: z.enum(["index", "entries"]).optional().catch(undefined),
@@ -37,28 +38,32 @@ const taskSearchSchema = z.object({
 export const Route = createFileRoute("/task/$id")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => taskSearchSchema.parse(search),
-  loader: async ({ params }) => {
-    try {
-      const task = await taskService.get(params.id);
-      let rolledTask: Task | undefined;
-      if (!task) throw notFound();
-      if (task.status === "deferred") {
-        rolledTask = await taskService.getFirstByOriginalId(task.id);
-      }
-      const allTags = await tagService.getAll();
-      return { task, rolledTask, allTags };
-    } catch {
-      throw notFound();
+  loader: async ({ params, context: { queryClient } }) => {
+    const [task] = await Promise.all([
+      queryClient.ensureQueryData(taskQueryOptions(params.id)),
+      queryClient.ensureQueryData(allTagsQueryOptions()),
+    ]);
+    if (!task) throw notFound();
+    if (task.status === "deferred") {
+      await queryClient.ensureQueryData(rolledTaskQueryOptions(task.id));
     }
   },
 });
 
 function RouteComponent() {
-  const { task, rolledTask, allTags } = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const { data: task } = useSuspenseQuery(taskQueryOptions(id));
+  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
+  const { data: rolledTask } = useQuery({
+    ...rolledTaskQueryOptions(task?.id ?? ""),
+    enabled: task?.status === "deferred",
+  });
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
   const mutation = useMutation();
   const [editOpen, setEditOpen] = useState(false);
+
+  if (!task) return null;
 
   const handleComplete = () => {
     mutation(() => taskService.update(task.id, { status: "complete" }));
@@ -81,7 +86,11 @@ function RouteComponent() {
     if (from === "index") {
       navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     } else if (from === "entries") {
-      navigate({ to: "/app", search: { view: "entries" }, viewTransition: { types: ["slide-right"] } });
+      navigate({
+        to: "/app",
+        search: { view: "entries" },
+        viewTransition: { types: ["slide-right"] },
+      });
     } else {
       navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     }

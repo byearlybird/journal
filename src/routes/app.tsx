@@ -2,44 +2,49 @@ import { ActionNavbar, Navbar, type NavItemData } from "@/components";
 import type { Intention, Note, Tag, Task } from "@/models";
 import { CreateDialog } from "@/components/entries";
 import { QuickDrawer } from "@/components/quick-drawer";
-import { intentionService, noteService, tagService, taskService } from "@/app";
 import { getCurrentMonth } from "@/utils/date-utils";
 import { TagFilterContext } from "@/contexts/tag-filter-context";
+import {
+  allTagsQueryOptions,
+  intentionByMonthQueryOptions,
+  pinnedNotesQueryOptions,
+  tasksByStatusQueryOptions,
+} from "@/queries";
 import { BookOpenIcon, GearSixIcon } from "@phosphor-icons/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
-  loader: async () => {
+  loader: async ({ context: { queryClient } }) => {
     const currentMonth = getCurrentMonth();
-    const [incompleteTasks, intention, pinnedNotes, allTags] = await Promise.all([
-      taskService.getByStatus("incomplete"),
-      intentionService.getByMonth(currentMonth),
-      noteService.getPinned(),
-      tagService.getAll(),
+    await Promise.all([
+      queryClient.ensureQueryData(tasksByStatusQueryOptions("incomplete")),
+      queryClient.ensureQueryData(intentionByMonthQueryOptions(currentMonth)),
+      queryClient.ensureQueryData(pinnedNotesQueryOptions()),
+      queryClient.ensureQueryData(allTagsQueryOptions()),
     ]);
-    const today = new Date().toLocaleDateString("en-CA");
-    const todayTasks = incompleteTasks.filter((t) => t.date === today);
-    const priorTasks = incompleteTasks.filter((t) => t.date < today);
-    return {
-      todayTasks,
-      priorTasks,
-      intention: intention ?? null,
-      month: currentMonth,
-      pinnedNotes,
-      allTags,
-    };
+    return { month: currentMonth };
   },
 });
 
 function RouteComponent() {
-  const { todayTasks, priorTasks, intention, month, pinnedNotes, allTags } = Route.useLoaderData();
+  const { month } = Route.useLoaderData();
+  const { data: incompleteTasks } = useSuspenseQuery(tasksByStatusQueryOptions("incomplete"));
+  const { data: intention } = useSuspenseQuery(intentionByMonthQueryOptions(month));
+  const { data: pinnedNotes } = useSuspenseQuery(pinnedNotesQueryOptions());
+  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
+
+  const today = new Date().toLocaleDateString("en-CA");
+  const todayTasks = incompleteTasks.filter((t) => t.date === today);
+  const priorTasks = incompleteTasks.filter((t) => t.date < today);
+
   return (
     <AppLayout
       todayTasks={todayTasks}
       priorTasks={priorTasks}
-      intention={intention}
+      intention={intention ?? null}
       month={month}
       pinnedNotes={pinnedNotes}
       allTags={allTags}
@@ -98,7 +103,11 @@ function AppLayout({
           onPushpinClick={() => setIsPushpinDialogOpen(true)}
         />
       </div>
-      <CreateDialog open={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} allTags={allTags} />
+      <CreateDialog
+        open={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        allTags={allTags}
+      />
       <QuickDrawer
         todayTasks={todayTasks}
         priorTasks={priorTasks}

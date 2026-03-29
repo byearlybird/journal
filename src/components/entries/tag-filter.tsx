@@ -20,9 +20,9 @@ export function TagFilter({ allTags, selectedTagIds, onChange }: TagFilterProps)
         <Select.Value>
           {active
             ? allTags
-              .filter((t) => selectedTagIds.includes(t.id))
-              .map((t) => t.name)
-              .join(", ")
+                .filter((t) => selectedTagIds.includes(t.id))
+                .map((t) => t.name)
+                .join(", ")
             : "Filter"}
         </Select.Value>
       </Select.Trigger>

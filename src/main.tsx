@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -6,8 +7,17 @@ import { SplashScreen } from "@capacitor/splash-screen";
 import { Keyboard } from "@capacitor/keyboard";
 import "./main.css";
 
+const queryClient = new QueryClient();
+
 // Create router instance
-const router = createRouter({ routeTree, defaultViewTransition: true });
+const router = createRouter({
+  routeTree,
+  defaultViewTransition: true,
+  context: { queryClient },
+  Wrap: ({ children }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  ),
+});
 
 // TypeScript: Register router type
 declare module "@tanstack/react-router" {

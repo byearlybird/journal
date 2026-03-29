@@ -1,14 +1,19 @@
 import { ErrorComponent, Loading } from "@/components";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { migrator } from "@/db";
 import { Dialog } from "@capacitor/dialog";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { Keyboard } from "@capacitor/keyboard";
 import { useEffect } from "react";
+import type { QueryClient } from "@tanstack/react-query";
+
+interface RouterContext {
+  queryClient: QueryClient;
+}
 
 let migrated = false;
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: AppError,

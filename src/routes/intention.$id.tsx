@@ -13,8 +13,10 @@ import {
   DetailPageTitle,
 } from "@/components/page/detail-page";
 import { intentionService } from "@/app";
+import { intentionQueryOptions } from "@/queries";
 import { useMutation } from "@/utils/use-mutation";
 import { PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import z from "zod";
@@ -26,25 +28,29 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/intention/$id")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => searchSchema.parse(search),
-  loader: async ({ params }) => {
-    const intention = await intentionService.get(params.id);
-    if (!intention) {
-      throw notFound();
-    }
-    return { intention };
+  loader: async ({ params, context: { queryClient } }) => {
+    const intention = await queryClient.ensureQueryData(intentionQueryOptions(params.id));
+    if (!intention) throw notFound();
   },
 });
 
 function RouteComponent() {
-  const { intention } = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const { data: intention } = useSuspenseQuery(intentionQueryOptions(id));
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [editOpen, setEditOpen] = useState(false);
   const mutation = useMutation();
 
+  if (!intention) return null;
+
   const goBack = () => {
     if (from === "entries") {
-      navigate({ to: "/app", search: { view: "entries" }, viewTransition: { types: ["slide-right"] } });
+      navigate({
+        to: "/app",
+        search: { view: "entries" },
+        viewTransition: { types: ["slide-right"] },
+      });
     } else {
       navigate({ to: "/app", viewTransition: { types: ["slide-right"] } });
     }

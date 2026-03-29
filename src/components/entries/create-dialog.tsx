@@ -14,7 +14,15 @@ import type { Tag } from "@/models";
 import { Editor, useEditor, readEditorContent } from "@/components/lexical";
 import { $getRoot, $createParagraphNode } from "lexical";
 
-export function CreateDialog({ open, onClose, allTags }: { open: boolean; onClose: () => void; allTags: Tag[] }) {
+export function CreateDialog({
+  open,
+  onClose,
+  allTags,
+}: {
+  open: boolean;
+  onClose: () => void;
+  allTags: Tag[];
+}) {
   const mutation = useMutation();
   const editor = useEditor();
   const [isEmpty, setIsEmpty] = useState(true);
@@ -83,7 +91,10 @@ export function CreateDialog({ open, onClose, allTags }: { open: boolean; onClos
         createPortal(
           <div
             className="fixed right-2 z-50 flex items-center gap-1 rounded-lg border bg-slate-medium px-2 py-1"
-            style={{ bottom: "calc(max(var(--keyboard-height), env(safe-area-inset-bottom, 0px)) + var(--spacing)*3)" }}
+            style={{
+              bottom:
+                "calc(max(var(--keyboard-height), env(safe-area-inset-bottom, 0px)) + var(--spacing)*3)",
+            }}
             onMouseDown={(e) => e.preventDefault()}
           >
             <EntryTypeToggle entryType={entryType} onEntryTypeChange={setEntryType} />

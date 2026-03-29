@@ -1,4 +1,4 @@
-import { noteService, tagService } from "@/app";
+import { noteService } from "@/app";
 import {
   MenuButton,
   MenuContent,
@@ -15,8 +15,10 @@ import {
   DetailPageActions,
   DetailPageTitle,
 } from "@/components/page/detail-page";
+import { allTagsQueryOptions, noteQueryOptions } from "@/queries";
 import { useMutation } from "@/utils/use-mutation";
 import { PencilSimpleIcon, PushPinSimpleIcon, TrashIcon } from "@phosphor-icons/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
@@ -29,22 +31,26 @@ const noteSearchSchema = z.object({
 export const Route = createFileRoute("/note/$id")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => noteSearchSchema.parse(search),
-  loader: async ({ params }) => {
-    const note = await noteService.get(params.id);
-    if (!note) {
-      throw notFound();
-    }
-    const allTags = await tagService.getAll();
-    return { note, allTags };
+  loader: async ({ params, context: { queryClient } }) => {
+    const [note] = await Promise.all([
+      queryClient.ensureQueryData(noteQueryOptions(params.id)),
+      queryClient.ensureQueryData(allTagsQueryOptions()),
+    ]);
+    if (!note) throw notFound();
   },
 });
 
 function RouteComponent() {
-  const { note, allTags } = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const { data: note } = useSuspenseQuery(noteQueryOptions(id));
+  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
   const mutation = useMutation();
   const [editOpen, setEditOpen] = useState(false);
+
+  if (!note) return null;
+
   const isPinned = note.status === "pinned";
 
   const goBack = () => {

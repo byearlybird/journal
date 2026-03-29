@@ -11,7 +11,13 @@ type TagPickerProps = {
   side?: "top" | "bottom";
 };
 
-export function TagPicker({ allTags, selectedTagIds, onAdd, onRemove, side = "top" }: TagPickerProps) {
+export function TagPicker({
+  allTags,
+  selectedTagIds,
+  onAdd,
+  onRemove,
+  side = "top",
+}: TagPickerProps) {
   const [optimisticTagIds, setOptimisticTagIds] = useOptimistic(selectedTagIds);
   const selectedTags = allTags.filter((t) => optimisticTagIds.includes(t.id));
 

@@ -1,4 +1,3 @@
-import { entryService, intentionService, tagService } from "@/app";
 import { Renderer } from "@/components/lexical/renderer";
 import { IntentionDialog } from "@/components/entries/intention-dialog";
 import { TagFilter } from "@/components/entries/tag-filter";
@@ -6,8 +5,15 @@ import { DayEntriesItem } from "@/components/entries";
 import { Timeline } from "@/components/entries/timeline";
 import type { Entry } from "@/models";
 import { TagFilterContext } from "@/contexts/tag-filter-context";
+import {
+  allTagsQueryOptions,
+  groupedEntriesQueryOptions,
+  intentionByMonthQueryOptions,
+  todayEntriesQueryOptions,
+} from "@/queries";
 import { formatDayOfWeek, formatMonthDate, getCurrentMonth } from "@/utils/date-utils";
 import { PlusIcon, StarIcon } from "@phosphor-icons/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import z from "zod";
@@ -19,20 +25,26 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/app/")({
   component: JournalPage,
   validateSearch: (search: Record<string, unknown>) => searchSchema.parse(search),
-  loader: async () => {
-    const [entries, intention, entriesByDate, allTags] = await Promise.all([
-      entryService.getToday(),
-      intentionService.getByMonth(getCurrentMonth()),
-      entryService.getGroupedByDate(),
-      tagService.getAll(),
+  loader: async ({ context: { queryClient } }) => {
+    const currentMonth = getCurrentMonth();
+    await Promise.all([
+      queryClient.ensureQueryData(todayEntriesQueryOptions()),
+      queryClient.ensureQueryData(intentionByMonthQueryOptions(currentMonth)),
+      queryClient.ensureQueryData(groupedEntriesQueryOptions()),
+      queryClient.ensureQueryData(allTagsQueryOptions()),
     ]);
-    return { entries, intention: intention?.content ?? null, entriesByDate, allTags };
+    return { month: currentMonth };
   },
 });
 
 function JournalPage() {
   const navigate = useNavigate();
-  const { entries, intention, entriesByDate, allTags } = Route.useLoaderData();
+  const { month } = Route.useLoaderData();
+  const { data: entries } = useSuspenseQuery(todayEntriesQueryOptions());
+  const { data: intentionData } = useSuspenseQuery(intentionByMonthQueryOptions(month));
+  const { data: entriesByDate } = useSuspenseQuery(groupedEntriesQueryOptions());
+  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
+  const intention = intentionData?.content ?? null;
   const { view } = Route.useSearch();
   const [filterTagIds, setFilterTagIds] = useContext(TagFilterContext);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -123,10 +135,16 @@ function JournalPage() {
           <header className="sticky top-0 backdrop-blur-md bg-slate-medium py-1">
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-extrabold">{formatMonthDate(new Date())}</span>
-              <span className="font-bold text-sm text-cloud-light">{formatDayOfWeek(new Date())}</span>
+              <span className="font-bold text-sm text-cloud-light">
+                {formatDayOfWeek(new Date())}
+              </span>
               {allTags.length > 0 && (
                 <div className="ml-auto">
-                  <TagFilter allTags={allTags} selectedTagIds={filterTagIds} onChange={setFilterTagIds} />
+                  <TagFilter
+                    allTags={allTags}
+                    selectedTagIds={filterTagIds}
+                    onChange={setFilterTagIds}
+                  />
                 </div>
               )}
             </div>

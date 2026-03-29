@@ -10,18 +10,22 @@ import { ExportDialog } from "@/components/entries/export-dialog";
 import { ImportDialog } from "@/components/entries/import-dialog";
 import { MenuButton, MenuContent, MenuItem, MenuRoot } from "@/components";
 import { tagService } from "@/app";
+import { allTagsQueryOptions } from "@/queries";
 import { useMutation } from "@/utils/use-mutation";
 import { Dialog } from "@capacitor/dialog";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { Tag } from "@/models";
 
 export const Route = createFileRoute("/app/settings")({
   component: RouteComponent,
-  loader: async () => ({ tags: await tagService.getAll() }),
+  loader: async ({ context: { queryClient } }) => {
+    await queryClient.ensureQueryData(allTagsQueryOptions());
+  },
 });
 
 function RouteComponent() {
-  const { tags } = Route.useLoaderData();
+  const { data: tags } = useSuspenseQuery(allTagsQueryOptions());
 
   return (
     <div className="px-4 py-2 space-y-4">

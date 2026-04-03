@@ -1,3 +1,5 @@
+import type { Generated } from "kysely";
+
 export type EntryRow = {
   id: string;
   date: string;
@@ -8,11 +10,15 @@ export type EntryRow = {
   status: string | null;
   originId: string | null;
   labelId: string | null;
+  isDeleted: number;
 };
 
 export type LabelRow = {
   id: string;
   name: string;
+  isDeleted: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type EntrySearchMetaRow = {
@@ -24,4 +30,14 @@ export type Database = {
   entries: EntryRow;
   labels: LabelRow;
   entrySearchMeta: EntrySearchMetaRow;
+  _changelog: {
+    id: Generated<number>;
+    recordId: string;
+    recordType: string;
+    payload: string;
+  };
+  _sync_meta: {
+    key: "cursor";
+    value: string;
+  };
 };

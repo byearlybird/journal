@@ -4,7 +4,7 @@ import {
   MenuContent,
   MenuItem,
   MenuRoot,
-  TagPicker,
+  LabelPicker,
   TextContent,
   TextareaDialog,
 } from "@/components";
@@ -15,7 +15,7 @@ import {
   DetailPageTitle,
 } from "@/components/page/detail-page";
 import { taskService } from "@/app";
-import { allTagsQueryOptions, taskQueryOptions, rolledTaskQueryOptions } from "@/queries";
+import { allLabelsQueryOptions, taskQueryOptions, rolledTaskQueryOptions } from "@/queries";
 import { useMutation } from "@/utils/use-mutation";
 import {
   ArrowCounterClockwiseIcon,
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/task/$id")({
   loader: async ({ params, context: { queryClient } }) => {
     const [task] = await Promise.all([
       queryClient.ensureQueryData(taskQueryOptions(params.id)),
-      queryClient.ensureQueryData(allTagsQueryOptions()),
+      queryClient.ensureQueryData(allLabelsQueryOptions()),
     ]);
     if (!task) throw notFound();
     if (task.status === "deferred") {
@@ -53,7 +53,7 @@ export const Route = createFileRoute("/task/$id")({
 function RouteComponent() {
   const { id } = Route.useParams();
   const { data: task } = useSuspenseQuery(taskQueryOptions(id));
-  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
+  const { data: allLabels } = useSuspenseQuery(allLabelsQueryOptions());
   const { data: rolledTask } = useQuery({
     ...rolledTaskQueryOptions(task?.id ?? ""),
     enabled: task?.status === "deferred",
@@ -129,13 +129,12 @@ function RouteComponent() {
       </DetailPageHeader>
       {/* Content area */}
       <TextContent content={task.content} updatedAt={task.updatedAt} createdAt={task.createdAt} />
-      {/* Tag picker */}
+      {/* Label picker */}
       <div className="mt-auto flex justify-center px-4 pt-2 pb-3">
-        <TagPicker
-          allTags={allTags}
-          selectedTagIds={task.tags.map((t) => t.id)}
-          onAdd={(tagId) => mutation(() => taskService.addTag(task.id, tagId))}
-          onRemove={(tagId) => mutation(() => taskService.removeTag(task.id, tagId))}
+        <LabelPicker
+          allLabels={allLabels}
+          selectedLabelId={task.label?.id ?? null}
+          onChange={(labelId) => mutation(() => taskService.setLabel(task.id, labelId))}
         />
       </div>
       {/* Controls section */}

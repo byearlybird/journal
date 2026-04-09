@@ -1,14 +1,19 @@
 import { db } from "./db";
+import { createEntryRepo } from "./repos/entry-repo";
+import { createLabelRepo } from "./repos/label-repo";
 import {
   createEntryService,
   createIntentionService,
+  createLabelService,
   createNoteService,
-  createTagService,
   createTaskService,
 } from "./services";
 
-export const noteService = createNoteService(db);
-export const taskService = createTaskService(db);
-export const intentionService = createIntentionService(db);
-export const entryService = createEntryService(db);
-export const tagService = createTagService(db);
+const entryRepo = createEntryRepo(db);
+const labelRepo = createLabelRepo(db);
+
+export const noteService = createNoteService(entryRepo, labelRepo);
+export const taskService = createTaskService(entryRepo, labelRepo);
+export const intentionService = createIntentionService(entryRepo);
+export const entryService = createEntryService(entryRepo, labelRepo);
+export const labelService = createLabelService(labelRepo);

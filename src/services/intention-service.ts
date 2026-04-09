@@ -1,73 +1,37 @@
-import type { Database } from "@/db/schema";
 import { toIntention, type Intention } from "@/models";
+import type { EntryRepo } from "@/repos/entry-repo";
 import { getTodayISODate } from "@/utils/date-utils";
-import { type Kysely, sql } from "kysely";
 
-export function createIntentionService(db: Kysely<Database>) {
+export function createIntentionService(entryRepo: EntryRepo) {
   return {
     getByMonth: async (month: string): Promise<Intention | undefined> => {
-      const result = await db
-        .selectFrom("entries")
-        .where(sql`strftime('%Y-%m', date)`, "=", month)
-        .where("type", "=", "intention")
-        .selectAll()
-        .executeTakeFirst();
+      const result = await entryRepo.getByMonth(month);
       return result ? toIntention(result) : undefined;
     },
     upsert: async (month: string, content: string): Promise<void> => {
-      await db.transaction().execute(async (tx) => {
-        const existing = await tx
-          .selectFrom("entries")
-          .where(sql`strftime('%Y-%m', date)`, "=", month)
-          .where("type", "=", "intention")
-          .selectAll()
-          .executeTakeFirst();
-
-        if (existing) {
-          await tx
-            .updateTable("entries")
-            .set({ content, updatedAt: new Date().toISOString() })
-            .where("id", "=", existing.id)
-            .execute();
-        } else {
-          const now = new Date().toISOString();
-          await tx
-            .insertInto("entries")
-            .values({
-              id: crypto.randomUUID(),
-              date: getTodayISODate(),
-              content,
-              type: "intention",
-              createdAt: now,
-              updatedAt: now,
-            })
-            .execute();
-        }
-      });
+      const existing = await entryRepo.getByMonth(month);
+      if (existing) {
+        await entryRepo.update(existing.id, { content });
+      } else {
+        await entryRepo.create({
+          date: getTodayISODate(),
+          content,
+          type: "intention",
+          status: null,
+          originId: null,
+          labelId: null,
+        });
+      }
     },
     get: async (id: string): Promise<Intention | undefined> => {
-      const result = await db
-        .selectFrom("entries")
-        .selectAll()
-        .where("id", "=", id)
-        .where("type", "=", "intention")
-        .executeTakeFirst();
-
+      const result = await entryRepo.get(id);
       return result ? toIntention(result) : undefined;
     },
     update: async (id: string, updates: { content: string }): Promise<void> => {
-      await db
-        .updateTable("entries")
-        .set({
-          ...updates,
-          updatedAt: new Date().toISOString(),
-        })
-        .where("id", "=", id)
-        .where("type", "=", "intention")
-        .execute();
+      await entryRepo.update(id, updates);
     },
     delete: async (id: string): Promise<void> => {
-      await db.deleteFrom("entries").where("id", "=", id).where("type", "=", "intention").execute();
+      await entryRepo.delete(id);
     },
   };
 }

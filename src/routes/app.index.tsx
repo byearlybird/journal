@@ -1,18 +1,19 @@
 import { Renderer } from "@/components/lexical/renderer";
 import { IntentionDialog } from "@/components/entries/intention-dialog";
-import { TagFilter } from "@/components/entries/tag-filter";
+import { SearchDrawer } from "@/components/entries/search-drawer";
+import { LabelFilter } from "@/components/entries/label-filter";
 import { DayEntriesItem } from "@/components/entries";
 import { Timeline } from "@/components/entries/timeline";
 import type { Entry } from "@/models";
-import { TagFilterContext } from "@/contexts/tag-filter-context";
+import { LabelFilterContext } from "@/contexts/label-filter-context";
 import {
-  allTagsQueryOptions,
+  allLabelsQueryOptions,
   groupedEntriesQueryOptions,
   intentionByMonthQueryOptions,
   todayEntriesQueryOptions,
 } from "@/queries";
 import { formatDayOfWeek, formatMonthDate, getCurrentMonth } from "@/utils/date-utils";
-import { PlusIcon, StarIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, PlusIcon, StarIcon } from "@phosphor-icons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/app/")({
       queryClient.ensureQueryData(todayEntriesQueryOptions()),
       queryClient.ensureQueryData(intentionByMonthQueryOptions(currentMonth)),
       queryClient.ensureQueryData(groupedEntriesQueryOptions()),
-      queryClient.ensureQueryData(allTagsQueryOptions()),
+      queryClient.ensureQueryData(allLabelsQueryOptions()),
     ]);
     return { month: currentMonth };
   },
@@ -43,31 +44,32 @@ function JournalPage() {
   const { data: entries } = useSuspenseQuery(todayEntriesQueryOptions());
   const { data: intentionData } = useSuspenseQuery(intentionByMonthQueryOptions(month));
   const { data: entriesByDate } = useSuspenseQuery(groupedEntriesQueryOptions());
-  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
+  const { data: allLabels } = useSuspenseQuery(allLabelsQueryOptions());
   const intention = intentionData?.content ?? null;
   const { view } = Route.useSearch();
-  const [filterTagIds, setFilterTagIds] = useContext(TagFilterContext);
+  const [filterLabelId, setFilterLabelId] = useContext(LabelFilterContext);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const filterEntries = (items: Entry[]) =>
-    filterTagIds.length === 0
+    filterLabelId === null
       ? items
-      : items.filter((e) => "tags" in e && e.tags.some((t) => filterTagIds.includes(t.id)));
+      : items.filter((e) => "label" in e && e.label?.id === filterLabelId);
 
-  const filteredEntries = useMemo(() => filterEntries(entries), [entries, filterTagIds]);
+  const filteredEntries = useMemo(() => filterEntries(entries), [entries, filterLabelId]);
   const filteredEntriesByDate = useMemo(() => {
-    if (filterTagIds.length === 0) return entriesByDate;
+    if (filterLabelId === null) return entriesByDate;
     const result: Record<string, Entry[]> = {};
     for (const [date, items] of Object.entries(entriesByDate)) {
       const filtered = filterEntries(items);
       if (filtered.length > 0) result[date] = filtered;
     }
     return result;
-  }, [entriesByDate, filterTagIds]);
+  }, [entriesByDate, filterLabelId]);
 
   const empty = filteredEntries.length === 0;
-  const filtering = filterTagIds.length > 0;
+  const filtering = filterLabelId !== null;
 
   useEffect(() => {
     if (view === "entries" && scrollRef.current) {
@@ -138,15 +140,22 @@ function JournalPage() {
               <span className="font-bold text-sm text-cloud-light">
                 {formatDayOfWeek(new Date())}
               </span>
-              {allTags.length > 0 && (
-                <div className="ml-auto">
-                  <TagFilter
-                    allTags={allTags}
-                    selectedTagIds={filterTagIds}
-                    onChange={setFilterTagIds}
+              <div className="ml-auto flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(true)}
+                  className="flex items-center text-cloud-light"
+                >
+                  <MagnifyingGlassIcon className="size-4" />
+                </button>
+                {allLabels.length > 0 && (
+                  <LabelFilter
+                    allLabels={allLabels}
+                    selectedLabelId={filterLabelId}
+                    onChange={setFilterLabelId}
                   />
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </header>
           {empty ? (
@@ -202,6 +211,7 @@ function JournalPage() {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
       />
+      <SearchDrawer open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

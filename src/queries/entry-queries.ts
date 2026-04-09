@@ -12,3 +12,10 @@ export const groupedEntriesQueryOptions = () =>
     queryKey: ["entries", "grouped"],
     queryFn: () => entryService.getGroupedByDate(),
   });
+
+export const searchEntriesQueryOptions = (query: string) =>
+  queryOptions({
+    queryKey: ["entries", "search", query],
+    queryFn: () => entryService.search(query),
+    enabled: query.length > 0,
+  });

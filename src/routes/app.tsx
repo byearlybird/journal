@@ -1,11 +1,11 @@
 import { ActionNavbar, Navbar, type NavItemData } from "@/components";
-import type { Intention, Note, Tag, Task } from "@/models";
+import type { Intention, Label, Note, Task } from "@/models";
 import { CreateDialog } from "@/components/entries";
 import { QuickDrawer } from "@/components/quick-drawer";
 import { getCurrentMonth } from "@/utils/date-utils";
-import { TagFilterContext } from "@/contexts/tag-filter-context";
+import { LabelFilterContext } from "@/contexts/label-filter-context";
 import {
-  allTagsQueryOptions,
+  allLabelsQueryOptions,
   intentionByMonthQueryOptions,
   pinnedNotesQueryOptions,
   tasksByStatusQueryOptions,
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/app")({
       queryClient.ensureQueryData(tasksByStatusQueryOptions("incomplete")),
       queryClient.ensureQueryData(intentionByMonthQueryOptions(currentMonth)),
       queryClient.ensureQueryData(pinnedNotesQueryOptions()),
-      queryClient.ensureQueryData(allTagsQueryOptions()),
+      queryClient.ensureQueryData(allLabelsQueryOptions()),
     ]);
     return { month: currentMonth };
   },
@@ -34,7 +34,7 @@ function RouteComponent() {
   const { data: incompleteTasks } = useSuspenseQuery(tasksByStatusQueryOptions("incomplete"));
   const { data: intention } = useSuspenseQuery(intentionByMonthQueryOptions(month));
   const { data: pinnedNotes } = useSuspenseQuery(pinnedNotesQueryOptions());
-  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
+  const { data: allLabels } = useSuspenseQuery(allLabelsQueryOptions());
 
   const today = new Date().toLocaleDateString("en-CA");
   const todayTasks = incompleteTasks.filter((t) => t.date === today);
@@ -47,7 +47,7 @@ function RouteComponent() {
       intention={intention ?? null}
       month={month}
       pinnedNotes={pinnedNotes}
-      allTags={allTags}
+      allLabels={allLabels}
     >
       <Outlet />
     </AppLayout>
@@ -61,7 +61,7 @@ function AppLayout({
   intention,
   month,
   pinnedNotes,
-  allTags,
+  allLabels,
 }: {
   children: React.ReactNode;
   todayTasks: Task[];
@@ -69,11 +69,11 @@ function AppLayout({
   intention: Intention | null;
   month: string;
   pinnedNotes: Note[];
-  allTags: Tag[];
+  allLabels: Label[];
 }) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isPushpinDialogOpen, setIsPushpinDialogOpen] = useState(false);
-  const [filterTagIds, setFilterTagIds] = useState<string[]>([]);
+  const [filterLabelId, setFilterLabelId] = useState<string | null>(null);
 
   const navItems: NavItemData[] = [
     {
@@ -89,7 +89,7 @@ function AppLayout({
   ];
 
   return (
-    <TagFilterContext.Provider value={[filterTagIds, setFilterTagIds]}>
+    <LabelFilterContext.Provider value={[filterLabelId, setFilterLabelId]}>
       <div className="flex h-screen flex-col max-w-2xl mx-auto pt-safe-top">
         <div className="flex-1 overflow-hidden">{children}</div>
         <div className="fixed left-[max(var(--safe-left),1rem)] bottom-[max(var(--safe-bottom),1rem)]">
@@ -106,7 +106,7 @@ function AppLayout({
       <CreateDialog
         open={isCreateDialogOpen}
         onClose={() => setIsCreateDialogOpen(false)}
-        allTags={allTags}
+        allLabels={allLabels}
       />
       <QuickDrawer
         todayTasks={todayTasks}
@@ -117,6 +117,6 @@ function AppLayout({
         open={isPushpinDialogOpen}
         onClose={() => setIsPushpinDialogOpen(false)}
       />
-    </TagFilterContext.Provider>
+    </LabelFilterContext.Provider>
   );
 }

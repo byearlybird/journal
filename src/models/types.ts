@@ -1,4 +1,4 @@
-export type Tag = {
+export type Label = {
   id: string;
   name: string;
 };
@@ -9,12 +9,12 @@ type BaseEntry = {
   content: string;
   createdAt: string;
   updatedAt: string;
-  tags: Tag[];
+  label: Label | null;
 };
 
 export type Note = BaseEntry & { type: "note"; status: null | "pinned" };
 
-export type Intention = Omit<BaseEntry, "tags"> & { type: "intention" };
+export type Intention = Omit<BaseEntry, "label"> & { type: "intention" };
 
 export type Task = BaseEntry & {
   type: "task";

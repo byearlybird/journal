@@ -4,7 +4,7 @@ import {
   MenuContent,
   MenuItem,
   MenuRoot,
-  TagPicker,
+  LabelPicker,
   TextContent,
   TextareaDialog,
 } from "@/components";
@@ -15,7 +15,7 @@ import {
   DetailPageActions,
   DetailPageTitle,
 } from "@/components/page/detail-page";
-import { allTagsQueryOptions, noteQueryOptions } from "@/queries";
+import { allLabelsQueryOptions, noteQueryOptions } from "@/queries";
 import { useMutation } from "@/utils/use-mutation";
 import { PencilSimpleIcon, PushPinSimpleIcon, TrashIcon } from "@phosphor-icons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/note/$id")({
   loader: async ({ params, context: { queryClient } }) => {
     const [note] = await Promise.all([
       queryClient.ensureQueryData(noteQueryOptions(params.id)),
-      queryClient.ensureQueryData(allTagsQueryOptions()),
+      queryClient.ensureQueryData(allLabelsQueryOptions()),
     ]);
     if (!note) throw notFound();
   },
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/note/$id")({
 function RouteComponent() {
   const { id } = Route.useParams();
   const { data: note } = useSuspenseQuery(noteQueryOptions(id));
-  const { data: allTags } = useSuspenseQuery(allTagsQueryOptions());
+  const { data: allLabels } = useSuspenseQuery(allLabelsQueryOptions());
   const { from } = Route.useSearch();
   const navigate = Route.useNavigate();
   const mutation = useMutation();
@@ -117,13 +117,12 @@ function RouteComponent() {
       </DetailPageHeader>
       {/* Content area */}
       <TextContent content={note.content} updatedAt={note.updatedAt} createdAt={note.createdAt} />
-      {/* Tag picker */}
+      {/* Label picker */}
       <div className="mt-auto flex justify-center px-4 pt-2">
-        <TagPicker
-          allTags={allTags}
-          selectedTagIds={note.tags.map((t) => t.id)}
-          onAdd={(tagId) => mutation(() => noteService.addTag(note.id, tagId))}
-          onRemove={(tagId) => mutation(() => noteService.removeTag(note.id, tagId))}
+        <LabelPicker
+          allLabels={allLabels}
+          selectedLabelId={note.label?.id ?? null}
+          onChange={(labelId) => mutation(() => noteService.setLabel(note.id, labelId))}
         />
       </div>
       <TextareaDialog

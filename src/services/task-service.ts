@@ -1,120 +1,65 @@
-import type { Database } from "@/db/schema";
-import { toTask, type Task } from "@/models";
-import type { Kysely } from "kysely";
-import {
-  addTagToEntry,
-  fetchTagsByEntryIds,
-  fetchTagsForEntry,
-  removeTagFromEntry,
-} from "./tag-helpers";
+import { toTask, toTasks, type Task } from "@/models";
+import type { EntryRepo } from "@/repos/entry-repo";
+import type { LabelRepo } from "@/repos/label-repo";
 
-export function createTaskService(db: Kysely<Database>) {
+export function createTaskService(entryRepo: EntryRepo, labelRepo: LabelRepo) {
   return {
-    async create(content: string, tagIds?: string[]) {
-      const id = crypto.randomUUID();
-      const now = new Date().toISOString();
-      await db.transaction().execute(async (trx) => {
-        await trx
-          .insertInto("entries")
-          .values({
-            id,
-            date: new Date().toLocaleDateString("en-CA"),
-            content,
-            type: "task",
-            status: "incomplete",
-            originId: null,
-            createdAt: now,
-            updatedAt: now,
-          })
-          .execute();
-        if (tagIds?.length) {
-          for (const tagId of tagIds) {
-            await addTagToEntry(trx, id, tagId);
-          }
-        }
+    async create(content: string, labelId?: string | null) {
+      await entryRepo.create({
+        date: new Date().toLocaleDateString("en-CA"),
+        content,
+        type: "task",
+        status: "incomplete",
+        originId: null,
+        labelId: labelId ?? null,
       });
     },
     async get(id: string): Promise<Task | undefined> {
-      const result = await db
-        .selectFrom("entries")
-        .selectAll()
-        .where("id", "=", id)
-        .where("type", "=", "task")
-        .executeTakeFirst();
-      if (!result) return undefined;
-      const tags = await fetchTagsForEntry(db, result.id);
-      return toTask(result, tags);
+      const result = await entryRepo.get(id);
+      if (!result || result.type !== "task") return undefined;
+      const label = result.labelId ? ((await labelRepo.get(result.labelId)) ?? null) : null;
+      return toTask(result, label);
     },
     async update(id: string, updates: Partial<Pick<Task, "content" | "status">>) {
-      await db
-        .updateTable("entries")
-        .set({
-          ...updates,
-          updatedAt: new Date().toISOString(),
-        })
-        .where("id", "=", id)
-        .where("type", "=", "task")
-        .execute();
+      await entryRepo.update(id, updates);
     },
     async delete(id: string) {
-      await db.deleteFrom("entries").where("id", "=", id).where("type", "=", "task").execute();
+      await entryRepo.delete(id);
     },
     async getByStatus(status: Task["status"]): Promise<Task[]> {
-      const results = await db
-        .selectFrom("entries")
-        .selectAll()
-        .where("type", "=", "task")
-        .where("status", "=", status)
-        .execute();
-      const tagMap = await fetchTagsByEntryIds(
-        db,
-        results.map((r) => r.id),
-      );
-      return results.map((r) => toTask(r, tagMap.get(r.id) ?? []));
+      const results = await entryRepo.getByStatus("task", status);
+      const ids = results.map((r) => r.labelId).filter((id): id is string => id != null);
+      return toTasks(results, await labelRepo.getByIds(ids));
     },
     async getFirstByOriginalId(originId: string): Promise<Task | undefined> {
-      const result = await db
-        .selectFrom("entries")
-        .selectAll()
-        .where("originId", "=", originId)
-        .executeTakeFirst();
+      const result = await entryRepo.getByOriginId(originId);
       if (!result) return undefined;
-      const tags = await fetchTagsForEntry(db, result.id);
-      return toTask(result, tags);
+      const label = result.labelId ? ((await labelRepo.get(result.labelId)) ?? null) : null;
+      return toTask(result, label);
     },
     async rollover(taskId: string, targetDate: string) {
-      await db.transaction().execute(async (trx) => {
-        const existingTask = await trx
-          .updateTable("entries")
-          .set({
-            status: "deferred",
-            updatedAt: new Date().toISOString(),
-          })
-          .where("id", "=", taskId)
-          .where("type", "=", "task")
-          .returningAll()
-          .executeTakeFirstOrThrow();
-        const now = new Date().toISOString();
-        await trx
-          .insertInto("entries")
-          .values({
-            id: crypto.randomUUID(),
+      const existingTask = await entryRepo.get(taskId);
+      if (!existingTask || existingTask.type !== "task") {
+        throw new Error(`Task ${taskId} not found`);
+      }
+
+      await entryRepo.transaction(async (trx) => {
+        await entryRepo.update(taskId, { status: "deferred" }, trx);
+        await entryRepo.create(
+          {
             date: targetDate,
             content: existingTask.content,
             type: "task",
             status: "incomplete",
             originId: existingTask.id,
-            createdAt: now,
-            updatedAt: now,
-          })
-          .execute();
+            labelId: null,
+          },
+          trx,
+        );
       });
     },
-    async addTag(taskId: string, tagId: string) {
-      await addTagToEntry(db, taskId, tagId);
-    },
-    async removeTag(taskId: string, tagId: string) {
-      await removeTagFromEntry(db, taskId, tagId);
+    async setLabel(taskId: string, labelId: string | null) {
+      await entryRepo.update(taskId, { labelId });
     },
   };
 }

@@ -1,4 +1,8 @@
-export { todayEntriesQueryOptions, groupedEntriesQueryOptions } from "./entry-queries";
+export {
+  todayEntriesQueryOptions,
+  groupedEntriesQueryOptions,
+  searchEntriesQueryOptions,
+} from "./entry-queries";
 export { noteQueryOptions, pinnedNotesQueryOptions } from "./note-queries";
 export {
   taskQueryOptions,
@@ -6,4 +10,4 @@ export {
   rolledTaskQueryOptions,
 } from "./task-queries";
 export { intentionQueryOptions, intentionByMonthQueryOptions } from "./intention-queries";
-export { allTagsQueryOptions } from "./tag-queries";
+export { allLabelsQueryOptions } from "./label-queries";

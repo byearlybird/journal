@@ -3,35 +3,35 @@ import { Button as BaseButton } from "@base-ui/react";
 import { Drawer } from "@base-ui/react/drawer";
 import { Button } from "@/components/common/button";
 import { DrawerRoot, DrawerContent, DrawerTitle } from "@/components/common/drawer";
-import { TagPicker } from "@/components/entries/tag-picker";
-import { TagFilterContext } from "@/contexts/tag-filter-context";
+import { LabelPicker } from "@/components/entries/label-picker";
+import { LabelFilterContext } from "@/contexts/label-filter-context";
 import { CircleIcon, SquareIcon, XIcon } from "@phosphor-icons/react";
 import { useContext, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { noteService, taskService } from "@/app";
 import { useMutation } from "@/utils/use-mutation";
-import type { Tag } from "@/models";
+import type { Label } from "@/models";
 import { Editor, useEditor, readEditorContent } from "@/components/lexical";
 import { $getRoot, $createParagraphNode } from "lexical";
 
 export function CreateDialog({
   open,
   onClose,
-  allTags,
+  allLabels,
 }: {
   open: boolean;
   onClose: () => void;
-  allTags: Tag[];
+  allLabels: Label[];
 }) {
   const mutation = useMutation();
   const editor = useEditor();
   const [isEmpty, setIsEmpty] = useState(true);
   const [entryType, setEntryType] = useState<"note" | "task">("note");
-  const [filterTagIds] = useContext(TagFilterContext);
-  const [selectedTagIds, setSelectedTagIds] = useState(filterTagIds);
+  const [filterLabelId] = useContext(LabelFilterContext);
+  const [selectedLabelId, setSelectedLabelId] = useState<string | null>(filterLabelId);
 
   useEffect(() => {
-    if (open) setSelectedTagIds(filterTagIds);
+    if (open) setSelectedLabelId(filterLabelId);
   }, [open]);
 
   const handleClose = () => {
@@ -42,7 +42,7 @@ export function CreateDialog({
     });
     setIsEmpty(true);
     setEntryType("note");
-    setSelectedTagIds(filterTagIds);
+    setSelectedLabelId(filterLabelId);
     onClose();
   };
 
@@ -51,9 +51,9 @@ export function CreateDialog({
     if (!content) return;
 
     if (entryType === "note") {
-      void mutation(() => noteService.create(content, selectedTagIds));
+      void mutation(() => noteService.create(content, selectedLabelId));
     } else if (entryType === "task") {
-      void mutation(() => taskService.create(content, selectedTagIds));
+      void mutation(() => taskService.create(content, selectedLabelId));
     }
 
     handleClose();
@@ -67,11 +67,10 @@ export function CreateDialog({
           <Drawer.Close className="flex size-8 items-center justify-center justify-self-start rounded-full border bg-slate-medium text-ivory-light transition-transform duration-100 ease-in-out active:scale-105 [&>svg]:size-4">
             <XIcon />
           </Drawer.Close>
-          <TagPicker
-            allTags={allTags}
-            selectedTagIds={selectedTagIds}
-            onAdd={(tagId) => setSelectedTagIds((prev) => [...prev, tagId])}
-            onRemove={(tagId) => setSelectedTagIds((prev) => prev.filter((id) => id !== tagId))}
+          <LabelPicker
+            allLabels={allLabels}
+            selectedLabelId={selectedLabelId}
+            onChange={setSelectedLabelId}
             side="bottom"
           />
           <Button

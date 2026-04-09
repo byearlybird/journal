@@ -4,12 +4,12 @@ import {
   UnknownEntryType,
   type Entry,
   type Intention,
+  type Label,
   type Note,
-  type Tag,
   type Task,
 } from "./types";
 
-export function toNote(row: EntryRow, tags: Tag[] = []): Note {
+export function toNote(row: EntryRow, label: Label | null = null): Note {
   if (row.type !== "note") {
     throw new InvalidEntryTypeError("note");
   }
@@ -22,7 +22,7 @@ export function toNote(row: EntryRow, tags: Tag[] = []): Note {
     updatedAt: row.updatedAt,
     type: "note",
     status: row.status as Note["status"],
-    tags,
+    label,
   };
 }
 
@@ -41,7 +41,7 @@ export function toIntention(row: EntryRow): Intention {
   };
 }
 
-export function toTask(row: EntryRow, tags: Tag[] = []): Task {
+export function toTask(row: EntryRow, label: Label | null = null): Task {
   if (row.type !== "task") {
     throw new InvalidEntryTypeError("task");
   }
@@ -55,18 +55,41 @@ export function toTask(row: EntryRow, tags: Tag[] = []): Task {
     type: "task",
     status: row.status as Task["status"],
     originId: row.originId,
-    tags,
+    label,
   };
 }
 
-export function toEntry(row: EntryRow, tags: Tag[] = []): Entry {
+function toLabelMap(labels: Label[]): Map<string, Label> {
+  return new Map(labels.map((l) => [l.id, l]));
+}
+
+function resolveLabel(row: EntryRow, labelMap: Map<string, Label>): Label | null {
+  return row.labelId ? (labelMap.get(row.labelId) ?? null) : null;
+}
+
+export function toEntries(rows: EntryRow[], labels: Label[]): Entry[] {
+  const labelMap = toLabelMap(labels);
+  return rows.map((row) => toEntry(row, resolveLabel(row, labelMap)));
+}
+
+export function toNotes(rows: EntryRow[], labels: Label[]): Note[] {
+  const labelMap = toLabelMap(labels);
+  return rows.map((row) => toNote(row, resolveLabel(row, labelMap)));
+}
+
+export function toTasks(rows: EntryRow[], labels: Label[]): Task[] {
+  const labelMap = toLabelMap(labels);
+  return rows.map((row) => toTask(row, resolveLabel(row, labelMap)));
+}
+
+export function toEntry(row: EntryRow, label: Label | null = null): Entry {
   switch (row.type) {
     case "note":
-      return toNote(row, tags);
+      return toNote(row, label);
     case "intention":
       return toIntention(row);
     case "task":
-      return toTask(row, tags);
+      return toTask(row, label);
     default:
       throw new UnknownEntryType(row.type);
   }

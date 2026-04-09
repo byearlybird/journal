@@ -9,23 +9,23 @@ import {
 import { ExportDialog } from "@/components/entries/export-dialog";
 import { ImportDialog } from "@/components/entries/import-dialog";
 import { MenuButton, MenuContent, MenuItem, MenuRoot } from "@/components";
-import { tagService } from "@/app";
-import { allTagsQueryOptions } from "@/queries";
+import { labelService } from "@/app";
+import { allLabelsQueryOptions } from "@/queries";
 import { useMutation } from "@/utils/use-mutation";
 import { Dialog } from "@capacitor/dialog";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import type { Tag } from "@/models";
+import type { Label } from "@/models";
 
 export const Route = createFileRoute("/app/settings")({
   component: RouteComponent,
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.ensureQueryData(allTagsQueryOptions());
+    await queryClient.ensureQueryData(allLabelsQueryOptions());
   },
 });
 
 function RouteComponent() {
-  const { data: tags } = useSuspenseQuery(allTagsQueryOptions());
+  const { data: labels } = useSuspenseQuery(allLabelsQueryOptions());
 
   return (
     <div className="px-4 py-2 space-y-4">
@@ -33,7 +33,7 @@ function RouteComponent() {
         <span className="text-2xl font-extrabold">Settings</span>
       </header>
       <DataSection />
-      <TagsSection tags={tags} />
+      <LabelsSection labels={labels} />
     </div>
   );
 }
@@ -69,66 +69,66 @@ function DataSection() {
   );
 }
 
-function TagsSection({ tags }: { tags: Tag[] }) {
+function LabelsSection({ labels }: { labels: Label[] }) {
   const mutate = useMutation();
 
   const handleCreate = async () => {
     const { value, cancelled } = await Dialog.prompt({
-      title: "New Tag",
-      message: "Enter a name for the tag",
-      inputPlaceholder: "Tag name",
+      title: "New Label",
+      message: "Enter a name for the label",
+      inputPlaceholder: "Label name",
       okButtonTitle: "Save",
     });
     if (cancelled || !value.trim()) return;
-    await mutate(() => tagService.create(value.trim()));
+    await mutate(() => labelService.create(value.trim()));
   };
 
-  const handleEdit = async (tag: Tag) => {
+  const handleEdit = async (label: Label) => {
     const { value, cancelled } = await Dialog.prompt({
-      title: "Rename Tag",
-      message: "Enter a new name for the tag",
-      inputPlaceholder: "Tag name",
-      inputText: tag.name,
+      title: "Rename Label",
+      message: "Enter a new name for the label",
+      inputPlaceholder: "Label name",
+      inputText: label.name,
       okButtonTitle: "Save",
     });
     if (cancelled || !value.trim()) return;
-    await mutate(() => tagService.update(tag.id, value.trim()));
+    await mutate(() => labelService.update(label.id, value.trim()));
   };
 
-  const handleDelete = async (tag: Tag) => {
-    await mutate(() => tagService.delete(tag.id));
+  const handleDelete = async (label: Label) => {
+    await mutate(() => labelService.delete(label.id));
   };
 
   return (
     <section className="space-y-1">
       <div className="flex items-center justify-between px-2">
-        <h2 className="font-medium">Tags</h2>
+        <h2 className="font-medium">Labels</h2>
         <button
           type="button"
           onClick={handleCreate}
           className="flex size-8 items-center justify-center rounded-md transition-transform active:scale-105"
-          aria-label="Create tag"
+          aria-label="Create label"
         >
           <PlusIcon className="size-4" />
         </button>
       </div>
-      {tags.length === 0 ? (
+      {labels.length === 0 ? (
         <div className="rounded-lg border border-slate-light bg-slate-medium p-4 text-center text-sm text-cloud-medium">
-          No tags yet
+          No labels yet
         </div>
       ) : (
         <div className="flex flex-col divide-y rounded-lg border border-slate-light bg-slate-medium">
-          {tags.map((tag) => (
-            <div key={tag.id} className="flex items-center justify-between p-4">
-              <span>{tag.name}</span>
+          {labels.map((label) => (
+            <div key={label.id} className="flex items-center justify-between p-4">
+              <span>{label.name}</span>
               <MenuRoot>
                 <MenuButton />
                 <MenuContent>
-                  <MenuItem onClick={() => handleEdit(tag)}>
+                  <MenuItem onClick={() => handleEdit(label)}>
                     <PencilSimpleIcon className="size-4" />
                     Edit
                   </MenuItem>
-                  <MenuItem variant="destructive" onClick={() => handleDelete(tag)}>
+                  <MenuItem variant="destructive" onClick={() => handleDelete(label)}>
                     <TrashIcon className="size-4" />
                     Delete
                   </MenuItem>

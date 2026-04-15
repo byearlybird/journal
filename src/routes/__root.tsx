@@ -1,6 +1,14 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { migrator } from "../db/migrator";
+
+let hasMigrated = false;
 
 export const Route = createRootRoute({
+    beforeLoad: async () => {
+        if (hasMigrated) return;
+        await migrator.migrateToLatest();
+        hasMigrated = true;
+    },
     component: () => (
         <div className="min-h-screen">
             <nav className="flex gap-4 border-b p-4">

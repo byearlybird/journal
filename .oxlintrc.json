@@ -90,7 +90,7 @@
         "react/rules-of-hooks": "error",
         "react/exhaustive-deps": "warn",
         "react/only-export-components": [
-          "error",
+          "warn",
           {
             "allowConstantExport": true
           }

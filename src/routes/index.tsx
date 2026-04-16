@@ -1,9 +1,9 @@
 // oxlint-disable typescript/no-explicit-any
 import { createFileRoute } from "@tanstack/react-router";
-import { useReactiveQuery } from "sqlocal/react";
 import { useAuth } from "@clerk/react";
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { db, sqlocal } from "../db/client";
+import { db } from "../db/client";
+import { useQuery } from "../db/context";
 import { fullSync } from "../sync";
 import { isVaultUnlocked, lockVault, tryRestoreFromCache } from "../vault";
 import { VaultPrompt } from "../components/VaultPrompt";
@@ -35,25 +35,21 @@ function IndexPage() {
     if (renamingId) renamingInputRef.current?.focus();
   }, [renamingId]);
 
-  const { data: allTodos } = useReactiveQuery(
-    sqlocal,
+  const allTodos = useQuery(
     db
       .selectFrom("todos")
       .selectAll()
       .where("is_deleted", "=", 0)
       .orderBy("completed", "asc")
-      .orderBy("created_at", "desc")
-      .compile(),
+      .orderBy("created_at", "desc"),
   );
 
-  const { data: categories } = useReactiveQuery(
-    sqlocal,
+  const categories = useQuery(
     db
       .selectFrom("categories")
       .selectAll()
       .where("is_deleted", "=", 0)
-      .orderBy("created_at", "asc")
-      .compile(),
+      .orderBy("created_at", "asc"),
   );
 
   const todos = useMemo(

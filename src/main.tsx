@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { ClerkProvider } from "@clerk/react";
 import { routeTree } from "./routeTree.gen";
+import { DBProvider } from "./db/context";
 import "./index.css";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -18,7 +19,9 @@ declare module "@tanstack/react-router" {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <RouterProvider router={router} />
+      <DBProvider>
+        <RouterProvider router={router} />
+      </DBProvider>
     </ClerkProvider>
   </StrictMode>,
 );

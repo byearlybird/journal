@@ -3,13 +3,14 @@ import { RPCHandler } from "@orpc/server/fetch";
 import { onError } from "@orpc/server";
 import { appContract } from "./contract";
 import { migrateToLatest } from "./migrator";
+import { authenticateRequest } from "./auth";
 import type { ChangeLog } from "./db";
 
-const os = implement(appContract).$context<{ db: D1Database }>();
+const os = implement(appContract).$context<{ db: D1Database; userId: string }>();
 
-const pushChanges = os.pushChanges.handler(async ({ input, context: { db } }) => {
+const pushChanges = os.pushChanges.handler(async ({ input, context: { db, userId } }) => {
   const stmt = db.prepare("INSERT INTO changes (user_id, cyphertext) VALUES (?, ?) RETURNING seq");
-  const batch = input.changes.map((cyphertext) => stmt.bind("default_user", cyphertext));
+  const batch = input.changes.map((cyphertext) => stmt.bind(userId, cyphertext));
   const results = await db.batch<Pick<ChangeLog, "seq">>(batch);
 
   const seqs = results.flatMap((r) => r.results.map((row) => row.seq));
@@ -22,10 +23,10 @@ const pushChanges = os.pushChanges.handler(async ({ input, context: { db } }) =>
   };
 });
 
-const pullChanges = os.pullChanges.handler(async ({ input, context: { db } }) => {
+const pullChanges = os.pullChanges.handler(async ({ input, context: { db, userId } }) => {
   const { results: changes } = await db
-    .prepare("SELECT seq, cyphertext FROM changes WHERE seq > ? ORDER BY seq")
-    .bind(input.since)
+    .prepare("SELECT seq, cyphertext FROM changes WHERE seq > ? AND user_id = ? ORDER BY seq")
+    .bind(input.since, userId)
     .all<Pick<ChangeLog, "seq" | "cyphertext">>();
 
   const max_seq = changes.length > 0 ? changes[changes.length - 1].seq : input.since;
@@ -64,9 +65,17 @@ export default {
       console.error("Migration failed:", error);
     }
     console.log("Migrations complete.");
+
+    let userId: string;
+    try {
+      userId = await authenticateRequest(request, env);
+    } catch {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const { matched, response } = await handler.handle(request, {
       prefix: "/api",
-      context: { db },
+      context: { db, userId },
     });
 
     if (matched) {

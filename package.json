@@ -13,6 +13,8 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@clerk/backend": "^3.2.11",
+    "@clerk/react": "^6.4.1",
     "@hono/standard-validator": "^0.2.2",
     "@orpc/client": "^1.13.14",
     "@orpc/contract": "^1.13.14",

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useReactiveQuery } from "sqlocal/react";
+import { useAuth } from "@clerk/react";
 import { db, sqlocal } from "../db/client";
 import { fullSync } from "../sync";
 
@@ -8,6 +9,7 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexPage() {
+  const { isSignedIn } = useAuth();
   const { data: notes } = useReactiveQuery(
     sqlocal,
     db
@@ -59,8 +61,9 @@ function IndexPage() {
         Log sync_changes
       </button>
       <button
-        className="mt-4 ml-2 rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+        className="mt-4 ml-2 rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={fullSync}
+        disabled={!isSignedIn}
       >
         Sync
       </button>

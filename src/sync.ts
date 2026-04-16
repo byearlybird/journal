@@ -91,6 +91,7 @@ async function pushChanges() {
   }
 
   const payloads: string[] = [];
+  const pushed: { table_name: keyof DBSchema; row_id: string; hlc: string }[] = [];
 
   for (const change of changes) {
     const { table_name, row_id } = change;
@@ -103,6 +104,8 @@ async function pushChanges() {
     if (!row) {
       continue;
     }
+
+    pushed.push({ table_name, row_id, hlc: row.hlc });
 
     const payload: SyncPayload<SyncableRow> = {
       tableName: table_name,
@@ -118,19 +121,14 @@ async function pushChanges() {
     changes: payloads,
   });
 
-  await db
-    .deleteFrom("sync_changes")
-    .where("sync_changes.table_name", "=", "notes")
-    .where((eb) =>
-      eb.exists(
-        eb
-          .selectFrom("notes")
-          .select("notes.id")
-          .whereRef("notes.id", "=", "sync_changes.row_id")
-          .whereRef("notes.hlc", "=", "sync_changes.hlc"),
-      ),
-    )
-    .execute();
+  for (const entry of pushed) {
+    await db
+      .deleteFrom("sync_changes")
+      .where("table_name", "=", entry.table_name)
+      .where("row_id", "=", entry.row_id)
+      .where("hlc", "=", entry.hlc)
+      .execute();
+  }
 }
 
 export const fullSync = async () => {

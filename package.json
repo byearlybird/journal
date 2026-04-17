@@ -15,11 +15,13 @@
   "dependencies": {
     "@clerk/backend": "^3.2.11",
     "@clerk/react": "^6.4.1",
+    "@nanostores/react": "^1.1.0",
     "@orpc/client": "^1.13.14",
     "@orpc/contract": "^1.13.14",
     "@orpc/server": "^1.13.14",
     "@tanstack/react-router": "^1.168.21",
     "kysely": "^0.28.16",
+    "nanostores": "^1.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "sqlocal": "^0.17.0",

@@ -1,7 +1,7 @@
 import { RPCLink } from "@orpc/client/fetch";
 import { createORPCClient } from "@orpc/client";
 import type { ContractRouterClient } from "@orpc/contract";
-import { appContract } from "../../worker/contract";
+import { appContract } from "@worker/contract";
 import { atom } from "nanostores";
 
 export type APIClient = ContractRouterClient<typeof appContract>;

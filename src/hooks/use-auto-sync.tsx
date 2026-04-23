@@ -1,12 +1,12 @@
 import { useAuth } from "@clerk/react";
 import { useEffect } from "react";
-import { $syncState, clearAuth, setAuth, sync } from "../stores/sync-client";
-import { useDB, useQuery } from "../db/context";
+import { $syncState, clearAuth, setAuth, sync } from "@/stores/sync-client";
+import { useDBQuery } from "./use-db-query";
 import { useStore } from "@nanostores/react";
 
 export function useAutoSync() {
   useSyncAuthStatus();
-  const changes = useDBChanges();
+  const changes = useDBQuery((db) => db.selectFrom("sync_changes").selectAll());
   const client = useStore($syncState);
 
   useEffect(() => {
@@ -30,11 +30,4 @@ function useSyncAuthStatus() {
   }, [isSignedIn, getToken]);
 
   return {};
-}
-
-function useDBChanges() {
-  const db = useDB();
-  const changes = useQuery(db.selectFrom("sync_changes").selectAll());
-
-  return changes;
 }

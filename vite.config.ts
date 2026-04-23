@@ -7,6 +7,12 @@ import sqlocal from "sqlocal/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@/": `${import.meta.dirname}/src/`,
+      "@worker/": `${import.meta.dirname}/worker/`,
+    },
+  },
   plugins: [
     tanstackRouter({
       target: "react",

@@ -1,7 +1,7 @@
-import { db } from "../db/client";
-import { mergeHlc, parseHlc } from "../db/hlc";
-import type { DBSchema, SyncableRow } from "../db/schema";
-import { encrypt, decrypt } from "../crypto";
+import { db } from "@/db/client";
+import { mergeHlc, parseHlc } from "@/db/hlc";
+import type { DBSchema, SyncableRow } from "@/db/schema";
+import { encrypt, decrypt } from "@/crypto";
 import type { Selectable } from "kysely";
 
 export type ChangeTransport = {

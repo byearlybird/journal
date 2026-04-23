@@ -1,4 +1,4 @@
-import * as Crypto from "../crypto";
+import * as Crypto from "@/crypto";
 import { computed, type ReadableAtom } from "nanostores";
 import { $dek, clearDEK, setDEK } from "./dek";
 import {

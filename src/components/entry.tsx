@@ -1,6 +1,6 @@
 import { SquareIcon, CircleIcon } from "@phosphor-icons/react";
-import type { DBSchema } from "../db/schema";
-import { formatTime } from "../utils/dates";
+import type { DBSchema } from "@/db/schema";
+import { formatTime } from "@/utils/dates";
 
 type TimelineView = DBSchema["timeline"];
 
@@ -12,7 +12,7 @@ export function Entry({
 }: TimelineView & { onClick?: () => void }) {
   return (
     <div
-      className="rounded-lg px-2 py-4 mb-4 hover:bg-neutral-700/50 transition-all cursor-pointer"
+      className="rounded-xl px-2 py-4 mb-4 hover:bg-neutral-700/50 transition-all cursor-pointer"
       onClick={onClick}
     >
       <div className="flex gap-2.5 items-center mb-2">

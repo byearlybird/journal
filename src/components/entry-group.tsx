@@ -1,5 +1,5 @@
-import type { DBSchema } from "../db/schema";
-import { formatDate } from "../utils/dates";
+import type { DBSchema } from "@/db/schema";
+import { formatDate } from "@/utils/dates";
 import { Entry } from "./entry";
 
 type TimelineView = DBSchema["timeline"];

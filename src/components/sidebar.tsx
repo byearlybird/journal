@@ -10,7 +10,7 @@ const navItems = linkOptions([
 
 export function Sidebar() {
   return (
-    <div className="size-full space-y-2 z-50 flex flex-col p-2 rounded-xl">
+    <div className="size-full space-y-2 z-50 flex flex-col px-2 rounded-xl">
       {navItems.map(({ icon, label, ...item }) => (
         <NavLink key={item.to} {...item} icon={icon} label={label} />
       ))}

@@ -1,7 +1,7 @@
 import { Drawer } from "@base-ui/react/drawer";
 import { XIcon } from "@phosphor-icons/react";
-import type { DBSchema } from "../db/schema";
-import { formatDateTime } from "../utils/dates";
+import type { DBSchema } from "@/db/schema";
+import { formatDateTime } from "@/utils/dates";
 
 type TimelineView = DBSchema["timeline"];
 

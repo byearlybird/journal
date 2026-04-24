@@ -7,6 +7,7 @@ import { useEntries } from "@/hooks/use-entries";
 import { openEntryDetail } from "@/stores/entry-detail";
 import { $debouncedSearchTerm, $labelFilter } from "@/stores/entry-search";
 import type { DBSchema } from "@/db/schema";
+import { NoteIcon } from "@phosphor-icons/react";
 
 type TimelineView = DBSchema["timeline"];
 
@@ -42,6 +43,12 @@ function TimelinePage() {
           onSelect={(entry) => openEntryDetail(entry.id)}
         />
       ))}
+      {groupedEntries.length === 0 && (
+        <div className="text-foreground-muted/70 flex justify-center items-center flex-col space-y-2 size-full">
+          <NoteIcon weight="light" className="size-8" />
+          <h2>No entries yet</h2>
+        </div>
+      )}
     </Page>
   );
 }

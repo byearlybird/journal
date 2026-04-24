@@ -31,7 +31,7 @@ export function LabelPicker({
       </Select.Trigger>
       <Select.Portal>
         <Select.Positioner side="top" align="start" sideOffset={8} alignItemWithTrigger={false}>
-          <Select.Popup className="min-w-40 max-h-96 overflow-y-auto bg-background outline outline-border rounded-xl p-1 shadow-lg data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
+          <Select.Popup className="min-w-40 max-h-96 overflow-y-auto bg-surface outline outline-border rounded-xl p-1 shadow-lg data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
             <LabelItem value={null} name="None" />
             {labels?.map((label) => (
               <LabelItem key={label.id} value={label.id} name={label.name} />

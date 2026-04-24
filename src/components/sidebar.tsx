@@ -5,7 +5,6 @@ import {
   GearIcon,
   PushPinSimpleIcon,
   ArrowSquareRightIcon,
-  StarIcon,
   GlobeSimpleXIcon,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
@@ -15,7 +14,6 @@ import { PinnedNotesPreview } from "./pinned-notes-preview";
 import { RolloverTasksPreview } from "./rollover-tasks-preview";
 import { IntentionPreview } from "./intention-preview";
 import { usePriorTasks } from "@/hooks/use-prior-tasks";
-import { useMonthIntention } from "@/hooks/use-month-intention";
 import { $syncState } from "@/stores/sync-client";
 
 const navItems = linkOptions([
@@ -40,8 +38,6 @@ function NavButton({ to, children }: { to: LinkProps["to"]; children: ReactNode 
 export function Sidebar() {
   const priorTasks = usePriorTasks();
   const hasPriorTasks = !!priorTasks?.length;
-  const monthIntention = useMonthIntention();
-  const hasIntention = !!monthIntention;
   const syncState = useStore($syncState);
 
   return (
@@ -65,21 +61,16 @@ export function Sidebar() {
           Prior tasks
         </Button>
       </RolloverTasksPreview>
-      <IntentionPreview>
-        <Button variant="ghost" align="start">
-          <StarIcon className={!hasIntention ? "text-accent" : undefined} />
-          Intention
-        </Button>
-      </IntentionPreview>
 
       <div className="mt-auto space-y-2">
+        <IntentionPreview />
+        <div className="border-t border-dashed border-border mt-4 mb-4 space-y-2" />
         {syncState.status !== "unlocked" && (
-          <p className="border border-accent w-fit px-2 py-1 mx-auto rounded-full flex items-center justify-center gap-2 text-sm text-accent">
+          <p className="text-foreground-muted w-fit px-3 py-0.5 rounded-full flex items-center justify-center gap-2 text-sm border border-accent-foreground/10">
             <GlobeSimpleXIcon />
             Not syncing
           </p>
         )}
-        <div className="border-t border-dashed border-border mt-4 space-y-2" />
         <NavButton to="/settings">
           <GearIcon />
           Settings

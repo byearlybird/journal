@@ -1,16 +1,13 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useStore } from "@nanostores/react";
 import { Page, PageHeader, PageTitle } from "@/components/page-layout";
 import { Entry } from "@/components/entry";
-import { TextareaDialog } from "@/components/shared/textarea-dialog";
 import { useTodayDate } from "@/hooks/use-today-date";
 import { useEntriesOnDate } from "@/hooks/use-entries-on-date";
-import { useMonthIntention } from "@/hooks/use-month-intention";
-import { intentionService } from "@/services/intention-service";
 import { openEntryDetail } from "@/stores/entry-detail";
-import { formatDate } from "@/utils/dates";
+import { formatDate, formatWeekday } from "@/utils/dates";
 import { $debouncedSearchTerm, $labelFilter } from "@/stores/entry-search";
+import { NoteIcon } from "@phosphor-icons/react";
 
 export const Route = createFileRoute("/")({
   component: IndexPage,
@@ -24,46 +21,26 @@ function IndexPage() {
     searchTerm: searchTerm || undefined,
     labelName: labelFilter?.name,
   });
-  const intention = useMonthIntention();
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  function handleSave(value: string) {
-    intentionService.setCurrentMonthIntention(value);
-  }
 
   return (
     <Page>
       <PageHeader>
-        <PageTitle>{formatDate(date)}</PageTitle>
+        <PageTitle>
+          {formatDate(date)}{" "}
+          <span className="ms-2 font-normal text-foreground-muted text-sm">
+            {formatWeekday(date)}
+          </span>
+        </PageTitle>
       </PageHeader>
       {entries.map((entry) => (
         <Entry key={entry.id} {...entry} onClick={() => openEntryDetail(entry.id)} />
       ))}
       {entries.length === 0 && (
-        <div className="flex items-center justify-center h-48">
-          {intention ? (
-            <p className="text-2xl font-serif text-foreground-muted text-center px-4">
-              {intention.content}
-            </p>
-          ) : (
-            <button
-              onClick={() => setDialogOpen(true)}
-              className="text-sm text-foreground-muted hover:text-foreground-muted transition-colors"
-            >
-              Set an intention for this month +
-            </button>
-          )}
+        <div className="text-foreground-muted/70 flex justify-center items-center flex-col space-y-2 size-full">
+          <NoteIcon weight="light" className="size-8" />
+          <h2>No entries yet today</h2>
         </div>
       )}
-      <TextareaDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        title="Set intention"
-        initialValue=""
-        placeholder="What's your intention for this month?"
-        size="small"
-        onSave={handleSave}
-      />
     </Page>
   );
 }

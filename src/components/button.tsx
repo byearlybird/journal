@@ -20,10 +20,10 @@ export function Button({
     <BaseButton
       className={clsx(
         "[&>svg]:size-4 min-h-9 flex gap-2 text-sm font-medium items-center rounded-2xl px-2.5 transition-all active:scale-105 py-1.5 cursor-default focus:outline-1 focus:outline-accent focus:outline-offset-2",
-        variant === "primary" && "bg-accent hover:bg-accent text-accent-foreground",
+        variant === "primary" &&
+          "outline outline-accent-foreground/10 bg-accent hover:bg-accent text-accent-foreground",
         variant === "secondary" && "bg-foreground/15 text-foreground hover:bg-foreground/20",
-        variant === "outline" &&
-          "outline outline-border hover:bg-foreground/10 text-foreground/70",
+        variant === "outline" && "outline outline-border hover:bg-foreground/10 text-foreground/70",
         variant === "ghost" && "hover:bg-foreground/10 text-foreground/70",
         radius === "outermost" && "rounded-2xl",
         radius === "inner" && "rounded-xl",

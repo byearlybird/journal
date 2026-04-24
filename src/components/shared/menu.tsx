@@ -22,7 +22,7 @@ export function Menu({ children }: { children: ReactNode }) {
   return (
     <BaseMenu.Portal>
       <BaseMenu.Positioner side="bottom" align="end" sideOffset={8}>
-        <BaseMenu.Popup className="min-w-36 bg-background outline outline-border rounded-xl p-1 shadow-lg origin-top data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
+        <BaseMenu.Popup className="min-w-36 bg-surface outline outline-border rounded-xl p-1 shadow-lg origin-top data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
           {children}
         </BaseMenu.Popup>
       </BaseMenu.Positioner>

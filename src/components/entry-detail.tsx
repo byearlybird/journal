@@ -15,7 +15,7 @@ import {
 } from "@phosphor-icons/react";
 import { useStore } from "@nanostores/react";
 import type { DBSchema, TaskTable } from "@/db/schema";
-import { formatDateTime } from "@/utils/dates";
+import { formatLongDate, formatTime } from "@/utils/dates";
 import { notesService } from "@/services/note-service";
 import { taskService } from "@/services/task-service";
 import { useDBQuery } from "@/hooks/use-db-query";
@@ -81,8 +81,11 @@ function EntryDetailContent({
   return (
     <>
       <div className="px-4 py-3 flex items-center justify-between border-b border-dashed border-border">
-        <Drawer.Title className="text-lg font-semibold font-serif">
-          {formatDateTime(entry.created_at)}
+        <Drawer.Title className="text-lg font-bold">
+          {formatLongDate(entry.created_at)}
+          <span className="ms-2 text-sm font-normal text-foreground-muted">
+            {formatTime(entry.created_at)}
+          </span>
         </Drawer.Title>
         <div className="flex gap-2">
           <MenuRoot>
@@ -111,7 +114,7 @@ function EntryDetailContent({
 
       <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3">
         {entry.type === "task" && entry.status && <TaskStatusRow status={entry.status} />}
-        <p className="text-foreground">{entry.content}</p>
+        <p className="text-foreground font-serif">{entry.content}</p>
       </div>
 
       <div className="border-t border-dashed border-border p-4 flex items-center justify-between">

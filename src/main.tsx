@@ -42,7 +42,12 @@ declare module "@tanstack/react-router" {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignOutUrl="/"
+      signUpForceRedirectUrl="/settings/sync"
+      signInForceRedirectUrl="/settings/sync"
+    >
       <RouterProvider router={router} />
     </ClerkProvider>
   </StrictMode>,

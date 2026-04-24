@@ -5,10 +5,13 @@ import {
   ListBulletsIcon,
   GearIcon,
   PushPinSimpleIcon,
+  ArrowSquareRightIcon,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { Button } from "./button";
 import { PinnedNotesPreview } from "./pinned-notes-preview";
+import { RolloverTasksPreview } from "./rollover-tasks-preview";
+import { usePriorTasks } from "@/hooks/use-prior-tasks";
 
 const navItems = linkOptions([
   { to: "/", label: "Today", Icon: SunHorizonIcon },
@@ -29,6 +32,9 @@ function NavButton({ to, children }: { to: LinkProps["to"]; children: ReactNode 
 }
 
 export function Sidebar() {
+  const priorTasks = usePriorTasks();
+  const hasPriorTasks = !!priorTasks?.length;
+
   return (
     <div className="size-full space-y-2 z-50 flex flex-col px-2 rounded-xl">
       {navItems.map(({ Icon, label, to }) => (
@@ -37,12 +43,19 @@ export function Sidebar() {
           {label}
         </NavButton>
       ))}
+      <div className="h-1 my-2 border-t border-dashed w-full border-neutral-700" />
       <PinnedNotesPreview>
         <Button variant="ghost">
           <PushPinSimpleIcon />
           Pins
         </Button>
       </PinnedNotesPreview>
+      <RolloverTasksPreview>
+        <Button variant="ghost">
+          <ArrowSquareRightIcon className={hasPriorTasks ? "text-yellow-300" : undefined} />
+          Prior tasks
+        </Button>
+      </RolloverTasksPreview>
       <div className="mt-auto">
         <Show when="signed-in">
           <NavButton to="/settings">

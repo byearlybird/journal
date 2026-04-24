@@ -12,7 +12,7 @@ export const Route = createFileRoute("/settings")({
 function RouteComponent() {
   return (
     <div className="flex flex-1 size-full overflow-hidden">
-      <section className="pt-2 pr-4 shrink-0 px-2 space-y-2 border-r border-neutral-700">
+      <section className="pt-2 pr-4 shrink-0 px-2 space-y-2 border-r border-neutral-700 min-w-50">
         {navItems.map(({ label, ...item }) => (
           <Link
             key={item.to}

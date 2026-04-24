@@ -18,9 +18,9 @@ export function LabelRow({ label }: { label: LabelRowData }) {
         </Menu.Trigger>
         <Menu.Portal>
           <Menu.Positioner side="bottom" align="end" sideOffset={8}>
-            <Menu.Popup className="min-w-36 bg-neutral-800 outline outline-neutral-700 rounded-xl p-1 shadow-lg origin-top data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
+            <Menu.Popup className="min-w-36 bg-neutral-900 outline outline-neutral-800 rounded-xl p-1 shadow-lg origin-top data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
               <Menu.Item
-                className="rounded-lg px-2 py-1.5 text-sm text-neutral-200 cursor-default data-highlighted:bg-neutral-700/60"
+                className="rounded-lg px-2 py-1.5 text-sm text-neutral-200 cursor-default data-highlighted:bg-neutral-800"
                 onClick={() => {
                   const next = window.prompt("Rename label", label.name)?.trim();
                   if (next && next !== label.name) labelsService.renameLabel(label.id, next);
@@ -29,7 +29,7 @@ export function LabelRow({ label }: { label: LabelRowData }) {
                 Rename
               </Menu.Item>
               <Menu.Item
-                className="rounded-lg px-2 py-1.5 text-sm text-red-400 cursor-default data-highlighted:bg-neutral-700/60"
+                className="rounded-lg px-2 py-1.5 text-sm text-red-400 cursor-default data-highlighted:bg-neutral-800"
                 onClick={() => {
                   if (label.item_count && label.item_count > 0) {
                     const ok = window.confirm(

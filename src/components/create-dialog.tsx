@@ -52,9 +52,8 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
         <Dialog.Backdrop className="fixed inset-0 bg-black/70 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-200" />
         <Dialog.Viewport className="fixed inset-0 flex items-start justify-center pt-[8vh] sm:pt-[20vh] p-4">
           <Dialog.Popup className="w-full max-w-md sm:max-w-xl rounded-2xl bg-neutral-800 outline outline-neutral-700 p-6 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 transition-all duration-200 ease-out">
-            <div className="-mx-2 flex items-center justify-between gap-2">
+            <div className="-mx-2">
               <EntryTypeToggle value={entryType} onValueChange={handleTypeChange} />
-              <LabelPicker value={labelId} onValueChange={setLabelId} radius="outermost" />
             </div>
             <textarea
               className="w-full mt-4 mb-6 bg-transparent text-neutral-100 placeholder:text-neutral-500 resize-none outline-none text-sm leading-relaxed min-h-32 sm:min-h-48"
@@ -66,13 +65,16 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
               }}
               autoFocus
             />
-            <div className="flex justify-end gap-2">
-              <Dialog.Close render={(props) => <Button variant="secondary" {...props} />}>
-                Cancel
-              </Dialog.Close>
-              <Button onClick={handleSubmit} disabled={!content.trim()}>
-                Done
-              </Button>
+            <div className="flex items-center justify-between gap-2">
+              <LabelPicker value={labelId} onValueChange={setLabelId} radius="outermost" />
+              <div className="flex gap-2">
+                <Dialog.Close render={(props) => <Button variant="secondary" {...props} />}>
+                  Cancel
+                </Dialog.Close>
+                <Button onClick={handleSubmit} disabled={!content.trim()}>
+                  Done
+                </Button>
+              </div>
             </div>
           </Dialog.Popup>
         </Dialog.Viewport>

@@ -3,7 +3,9 @@ import {
   CircleIcon,
   CheckSquareIcon,
   XSquareIcon,
+  ArrowSquareRightIcon,
   TagSimpleIcon,
+  PushPinSimpleIcon,
 } from "@phosphor-icons/react";
 import type { DBSchema, TaskTable } from "@/db/schema";
 import { formatTime } from "@/utils/dates";
@@ -32,7 +34,10 @@ export function Entry({
     >
       <EntryGlyph id={id} type={type} status={status} pinned={pinned} />
       <div className="flex-1 flex flex-col gap-1.5">
-        <div className="text-xs text-neutral-400">{formatTime(created_at)}</div>
+        <div className="text-xs text-neutral-400 flex items-center gap-1">
+          {formatTime(created_at)}
+          {type === "note" && pinned === 1 && <PushPinSimpleIcon className="size-3" />}
+        </div>
         <div className={clsx(compact && "line-clamp-3")}>{content}</div>
         {label_name && (
           <div className="flex items-center gap-1 text-xs text-neutral-400">
@@ -63,11 +68,13 @@ function EntryGlyph(props: {
   return (
     <button onClick={handleClick} className="rounded-lg hover:bg-neutral-50/10 p-0.5 -mt-0.5">
       {props.type === "note" ? (
-        <CircleIcon weight={props.pinned ? "duotone" : "regular"} className="size-4.5" />
+        <CircleIcon className="size-4.5" />
       ) : props.status === "complete" ? (
         <CheckSquareIcon className="size-4.5 text-yellow-200" />
       ) : props.status === "cancelled" ? (
         <XSquareIcon className="size-4.5 text-neutral-400" />
+      ) : props.status === "deferred" ? (
+        <ArrowSquareRightIcon className="size-4.5 text-neutral-400" />
       ) : (
         <SquareIcon className="size-4.5" />
       )}

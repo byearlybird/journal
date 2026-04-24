@@ -1,9 +1,9 @@
 import { Drawer } from "@base-ui/react/drawer";
 import {
   ArrowCounterClockwiseIcon,
+  ArrowSquareRightIcon,
   CheckIcon,
   CheckSquareIcon,
-  PushPinIcon,
   PushPinSimpleIcon,
   SquareIcon,
   XIcon,
@@ -35,8 +35,8 @@ export function EntryDetail() {
     >
       <Drawer.Portal>
         <Drawer.Backdrop className="fixed inset-0 bg-black/70 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
-        <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-end">
-          <Drawer.Popup className="relative w-full sm:max-w-2/3 lg:max-w-1/2 h-full bg-neutral-800 outline outline-neutral-700 transition-transform duration-300 data-starting-style:translate-x-full data-ending-style:translate-x-full">
+        <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-end p-2">
+          <Drawer.Popup className="relative w-full rounded-2xl sm:max-w-2/3 lg:max-w-1/2 h-full bg-neutral-800 outline outline-neutral-700 transition-transform duration-300 data-starting-style:translate-x-full data-ending-style:translate-x-full">
             <Drawer.Content className="h-full flex flex-col">
               {id && <EntryDetailContent id={id} />}
             </Drawer.Content>
@@ -98,6 +98,8 @@ function TaskStatusRow({ status }: { status: TaskTable["status"] }) {
         <CheckSquareIcon className="size-4.5 text-yellow-200" />
       ) : status === "cancelled" ? (
         <XSquareIcon className="size-4.5 text-neutral-400" />
+      ) : status === "deferred" ? (
+        <ArrowSquareRightIcon className="size-4.5 text-neutral-400" />
       ) : (
         <SquareIcon className="size-4.5" />
       )}
@@ -111,15 +113,13 @@ function EntryActions({ entry }: { entry: TimelineView }) {
     const isPinned = entry.pinned === 1;
     return (
       <Button radius="inner" variant="outline" onClick={() => notesService.togglePin(entry.id)}>
-        {isPinned ? <PushPinIcon /> : <PushPinSimpleIcon />}
+        <PushPinSimpleIcon weight={isPinned ? "fill" : "regular"} />
         {isPinned ? "Pinned" : "Pin"}
       </Button>
     );
   }
 
-  const isOpen = entry.status === "incomplete" || entry.status === "deferred";
-
-  if (isOpen) {
+  if (entry.status === "incomplete") {
     return (
       <>
         <Button
@@ -142,14 +142,18 @@ function EntryActions({ entry }: { entry: TimelineView }) {
     );
   }
 
-  return (
-    <Button
-      radius="inner"
-      variant="outline"
-      onClick={() => taskService.setStatus(entry.id, "incomplete")}
-    >
-      <ArrowCounterClockwiseIcon />
-      Reopen
-    </Button>
-  );
+  if (entry.status === "complete" || entry.status === "cancelled") {
+    return (
+      <Button
+        radius="inner"
+        variant="outline"
+        onClick={() => taskService.setStatus(entry.id, "incomplete")}
+      >
+        <ArrowCounterClockwiseIcon />
+        Reopen
+      </Button>
+    );
+  }
+
+  return null;
 }

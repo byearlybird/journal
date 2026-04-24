@@ -35,7 +35,7 @@ function RouteComponent() {
   return (
     <>
       <Button
-        variant="secondary"
+        variant="outline"
         className="mb-4"
         onClick={() => {
           const name = window.prompt("Label name");

@@ -1,0 +1,75 @@
+import { Popover } from "@base-ui/react/popover";
+import type { ReactElement } from "react";
+import type { DBSchema } from "@/db/schema";
+import { usePriorTasks } from "@/hooks/use-prior-tasks";
+import { formatDate } from "@/utils/dates";
+import { ArrowSquareRightIcon, CheckSquareIcon, XSquareIcon } from "@phosphor-icons/react";
+import { taskService } from "@/services/task-service";
+
+type Task = DBSchema["tasks"];
+
+export function RolloverTasksPreview({ children }: { children: ReactElement }) {
+  const tasks = usePriorTasks();
+
+  return (
+    <Popover.Root>
+      <Popover.Trigger openOnHover delay={150} closeDelay={150} render={children} />
+      <Popover.Portal>
+        <Popover.Positioner side="right" align="start" sideOffset={8}>
+          <Popover.Popup className="w-80 max-h-96 overflow-y-auto bg-neutral-900 outline outline-neutral-800 rounded-xl p-2 shadow-lg origin-left data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
+            {tasks && tasks.length > 0 ? (
+              tasks.map((task) => <RolloverTaskRow key={task.id} task={task} />)
+            ) : (
+              <div className="px-2 py-3 text-sm text-neutral-500">No prior tasks</div>
+            )}
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+
+function RolloverTaskRow({ task }: { task: Task }) {
+  return (
+    <div className="w-full rounded-lg px-2 py-2">
+      <div className="text-xs text-neutral-400 mb-0.5">{formatDate(task.date)}</div>
+      <div className="flex items-center gap-1">
+        <div className="text-sm text-neutral-200 line-clamp-1 flex-1 min-w-0">{task.content}</div>
+        <div className="flex items-center gap-0.5 shrink-0">
+          <ActionButton onClick={() => taskService.setStatus(task.id, "complete")} label="Complete">
+            <CheckSquareIcon />
+          </ActionButton>
+          <ActionButton onClick={() => taskService.setStatus(task.id, "cancelled")} label="Cancel">
+            <XSquareIcon />
+          </ActionButton>
+          <ActionButton onClick={() => taskService.rolloverTask(task.id)} label="Rollover">
+            <ArrowSquareRightIcon />
+          </ActionButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ActionButton({
+  children,
+  onClick,
+  label,
+}: {
+  children: ReactElement;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      aria-label={label}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      className="p-1 rounded-lg text-neutral-400 hover:text-neutral-200 hover:bg-neutral-600/60 transition-colors [&>svg]:size-4"
+    >
+      {children}
+    </button>
+  );
+}

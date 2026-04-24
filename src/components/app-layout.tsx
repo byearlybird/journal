@@ -8,6 +8,7 @@ import { CreateDialog } from "./create-dialog";
 import { EntryDetail } from "./entry-detail";
 import { LabelFilter } from "./label-filter";
 import { $searchTerm } from "@/stores/entry-search";
+import { usePriorTasks } from "@/hooks/use-prior-tasks";
 
 type AppLayoutProps = { sidebar: ReactNode; children: ReactNode };
 
@@ -15,16 +16,22 @@ export function AppLayout(props: AppLayoutProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const searchTerm = useStore($searchTerm);
+  const hasPriorTasks = !!usePriorTasks()?.length;
 
   return (
     <>
       <header className="sm:hidden fixed top-0 inset-x-0 h-14 flex items-center gap-2 px-2">
-        <Button variant="outline" onClick={() => setDrawerOpen(true)}>
-          <ListIcon className="size-5" />
-        </Button>
+        <div className="relative">
+          <Button variant="outline" onClick={() => setDrawerOpen(true)}>
+            <ListIcon className="size-5" />
+          </Button>
+          {hasPriorTasks && (
+            <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-yellow-300 ring-2 ring-neutral-900" />
+          )}
+        </div>
         <input
           placeholder="Search"
-          className="flex-1 min-w-0 border border-neutral-700 rounded-2xl min-h-9 px-2.5 text-neutral-200"
+          className="flex-1 min-w-0 border border-neutral-700 rounded-xl min-h-9 px-2.5 text-neutral-200"
           value={searchTerm}
           onChange={(e) => $searchTerm.set(e.currentTarget.value)}
         />
@@ -42,17 +49,17 @@ export function AppLayout(props: AppLayoutProps) {
           <div className="flex gap-2">
             <input
               placeholder="Search"
-              className="border border-neutral-700 rounded-2xl min-h-9 px-2.5 text-neutral-200"
+              className="border border-neutral-700 rounded-xl min-h-9 px-2.5 text-neutral-200"
               value={searchTerm}
               onChange={(e) => $searchTerm.set(e.currentTarget.value)}
             />
             <LabelFilter />
           </div>
           <Button onClick={() => setCreateOpen(true)}>
-            Create <PlusIcon />
+            Create entry <PlusIcon />
           </Button>
         </div>
-        <div className="pointer-events-auto max-w-4xl w-full bg-neutral-800 rounded-2xl flex-1 min-h-0 overflow-auto p-2 outline outline-neutral-700">
+        <div className="pointer-events-auto max-w-4xl w-full bg-neutral-800 rounded-xl flex-1 min-h-0 overflow-auto p-2 outline outline-neutral-700">
           {props.children}
         </div>
       </main>
@@ -60,16 +67,13 @@ export function AppLayout(props: AppLayoutProps) {
       <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen} swipeDirection="left">
         <Drawer.Portal>
           <Drawer.Backdrop className="fixed inset-0 bg-black/50 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
-          <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-start">
-            <Drawer.Popup className="w-44 h-full bg-neutral-900 transition-transform duration-300 data-starting-style:-translate-x-full data-ending-style:-translate-x-full">
-              <Drawer.Content className="h-full p-2 border-r border-neutral-200/10">
-                {props.sidebar}
-              </Drawer.Content>
+          <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-start p-2">
+            <Drawer.Popup className="w-4/5 bg-neutral-900 rounded-xl outline outline-neutral-800 transition-transform duration-300 data-starting-style:-translate-x-full data-ending-style:-translate-x-full">
+              <Drawer.Content className="h-full p-2">{props.sidebar}</Drawer.Content>
             </Drawer.Popup>
           </Drawer.Viewport>
         </Drawer.Portal>
       </Drawer.Root>
-
       <CreateDialog open={createOpen} onOpenChange={setCreateOpen} />
       <EntryDetail />
     </>

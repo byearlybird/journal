@@ -4,7 +4,7 @@ import { toLocalISO } from "@/utils/dates";
 
 export const taskService = {
   async delete(id: string) {
-    await db.updateTable("tasks").set({ is_deleted: 1 }).where("id", "=", id).execute();
+    await db.deleteFrom("tasks").where("id", "=", id).execute();
   },
   async updateContent(id: string, content: string) {
     await db

@@ -9,11 +9,21 @@ export type ChangeTransport = {
   pushChanges(changes: string[]): Promise<void>;
 };
 
-type SyncPayload<T extends Selectable<SyncableRow>> = {
+type MutatePayload<T extends Selectable<SyncableRow>> = {
+  type: "mutate";
   tableName: keyof DBSchema;
   rowId: string;
   data: T;
 };
+
+type TombstonePayload = {
+  type: "tombstone";
+  tableName: keyof DBSchema;
+  rowId: string;
+  hlc: string;
+};
+
+type SyncPayload<T extends Selectable<SyncableRow>> = MutatePayload<T> | TombstonePayload;
 
 async function pullChanges(dek: CryptoKey, transport: ChangeTransport) {
   const { last_server_seq } = await db
@@ -31,40 +41,56 @@ async function pullChanges(dek: CryptoKey, transport: ChangeTransport) {
   );
 
   await db.transaction().execute(async (trx) => {
+    // Suppress the BEFORE DELETE tombstone trigger while we apply remote deletes.
+    await trx.updateTable("client_state").set({ is_applying_remote: 1 }).execute();
+
     let maxRemoteHlc = "";
 
     for (const payload of payloads) {
-      const { tableName, rowId, data } = payload;
+      const incomingHlc =
+        payload.type === "mutate" ? String(payload.data.hlc) : payload.hlc;
+      if (incomingHlc > maxRemoteHlc) maxRemoteHlc = incomingHlc;
 
-      if (String(data.hlc) > maxRemoteHlc) {
-        maxRemoteHlc = String(data.hlc);
+      if (payload.type === "tombstone") {
+        await trx
+          .insertInto("tombstone_table")
+          .values({ row_id: payload.rowId, hlc: payload.hlc })
+          .onConflict((oc) => oc.column("row_id").doNothing())
+          .execute();
+
+        await trx.deleteFrom(payload.tableName).where("id", "=", payload.rowId).execute();
+        continue;
       }
 
+      const tombstoned = await trx
+        .selectFrom("tombstone_table")
+        .select("row_id")
+        .where("row_id", "=", payload.rowId)
+        .executeTakeFirst();
+
+      if (tombstoned) continue;
+
       const existing = await trx
-        .selectFrom(tableName)
+        .selectFrom(payload.tableName)
         .selectAll()
-        .where("id", "=", rowId)
+        .where("id", "=", payload.rowId)
         .executeTakeFirst();
 
       if (!existing) {
-        await trx.insertInto(tableName).values(data).execute();
+        await trx.insertInto(payload.tableName).values(payload.data).execute();
         continue;
       }
 
-      // Higher HLC string wins; equal HLC means identical event (idempotent)
-      if (String(existing.hlc) >= String(data.hlc)) {
-        continue;
-      }
+      if (String(existing.hlc) >= String(payload.data.hlc)) continue;
 
       await trx
-        .updateTable(tableName)
+        .updateTable(payload.tableName)
         .set({
-          ...data,
-          hlc: String(data.hlc),
-          is_deleted: Number(data.is_deleted),
-          id: rowId,
+          ...payload.data,
+          hlc: String(payload.data.hlc),
+          id: payload.rowId,
         })
-        .where("id", "=", rowId)
+        .where("id", "=", payload.rowId)
         .execute();
     }
 
@@ -89,7 +115,12 @@ async function pullChanges(dek: CryptoKey, transport: ChangeTransport) {
 
     await trx
       .updateTable("client_state")
-      .set({ last_server_seq: remoteChanges.maxSeq, hlc_wall: newWall, hlc_count: newCount })
+      .set({
+        last_server_seq: remoteChanges.maxSeq,
+        hlc_wall: newWall,
+        hlc_count: newCount,
+        is_applying_remote: 0,
+      })
       .execute();
   });
 }
@@ -104,25 +135,25 @@ async function pushChanges(dek: CryptoKey, transport: ChangeTransport) {
   const pushed: { table_name: keyof DBSchema; row_id: string; hlc: string }[] = [];
 
   for (const change of changes) {
-    const { table_name, row_id } = change;
-    const row = await db
-      .selectFrom(table_name)
-      .selectAll()
-      .where("id", "=", row_id)
-      .executeTakeFirst();
+    const { table_name, row_id, hlc, operation } = change;
 
-    if (!row) {
-      continue;
+    let payload: SyncPayload<Selectable<SyncableRow>>;
+
+    if (operation === "tombstone") {
+      payload = { type: "tombstone", tableName: table_name, rowId: row_id, hlc };
+    } else {
+      const row = await db
+        .selectFrom(table_name)
+        .selectAll()
+        .where("id", "=", row_id)
+        .executeTakeFirst();
+
+      if (!row) continue;
+
+      payload = { type: "mutate", tableName: table_name, rowId: row_id, data: row };
     }
 
-    pushed.push({ table_name, row_id, hlc: row.hlc });
-
-    const payload: SyncPayload<Selectable<SyncableRow>> = {
-      tableName: table_name,
-      rowId: row_id,
-      data: row,
-    };
-
+    pushed.push({ table_name, row_id, hlc });
     payloads.push(await encrypt(JSON.stringify(payload), dek));
   }
 

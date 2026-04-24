@@ -5,12 +5,12 @@ type ClientState = {
   hlc_wall: number;
   hlc_count: number;
   node_id: string;
+  is_applying_remote: number;
 };
 
 export type SyncableRow = {
   id: string;
   hlc: ColumnType<string, string | undefined, string | undefined>;
-  is_deleted: ColumnType<number, number | undefined, number | undefined>;
 };
 
 export type NoteTable = SyncableRow & {
@@ -56,7 +56,10 @@ type SyncChanges = {
   table_name: keyof DBSchema;
   row_id: string;
   hlc: string;
+  operation: "mutate" | "tombstone";
 };
+
+type TombstoneTable = { row_id: string; hlc: string };
 
 export type DBSchema = {
   notes: NoteTable;
@@ -66,4 +69,5 @@ export type DBSchema = {
   labels: LabelTable;
   sync_changes: SyncChanges;
   client_state: ClientState;
+  tombstone_table: TombstoneTable;
 };

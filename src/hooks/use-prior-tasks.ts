@@ -12,7 +12,6 @@ export function usePriorTasks(): Task[] | undefined {
       .selectAll()
       .where("status", "=", "incomplete")
       .where("date", "<", today)
-      .where("is_deleted", "=", 0)
       .orderBy("date", "asc"),
   ) as Task[] | undefined;
 }

@@ -7,11 +7,12 @@ export const M001_init: Migration = {
     // 1. client_state — singleton row holds the local clock and node identity
     await sql`
       CREATE TABLE IF NOT EXISTS client_state (
-        id              INTEGER PRIMARY KEY CHECK (id = 1),
-        last_server_seq INTEGER NOT NULL DEFAULT 0,
-        hlc_wall        INTEGER NOT NULL DEFAULT 0,
-        hlc_count       INTEGER NOT NULL DEFAULT 0,
-        node_id         TEXT    NOT NULL DEFAULT (hex(randomblob(16)))
+        id                  INTEGER PRIMARY KEY CHECK (id = 1),
+        last_server_seq     INTEGER NOT NULL DEFAULT 0,
+        hlc_wall            INTEGER NOT NULL DEFAULT 0,
+        hlc_count           INTEGER NOT NULL DEFAULT 0,
+        node_id             TEXT    NOT NULL DEFAULT (hex(randomblob(16))),
+        is_applying_remote  INTEGER NOT NULL DEFAULT 0
       )
     `.execute(db);
 
@@ -24,7 +25,16 @@ export const M001_init: Migration = {
       .addColumn("table_name", "text", (cb) => cb.notNull())
       .addColumn("row_id", "text", (cb) => cb.notNull())
       .addColumn("hlc", "text", (cb) => cb.notNull())
+      .addColumn("operation", "text", (cb) => cb.notNull())
       .addPrimaryKeyConstraint("sync_changes_pk", ["table_name", "row_id"])
+      .execute();
+
+    // 3. tombstone_table — records deletions so subsequent mutates can be rejected
+    await db.schema
+      .createTable("tombstone_table")
+      .ifNotExists()
+      .addColumn("row_id", "text", (cb) => cb.primaryKey())
+      .addColumn("hlc", "text", (cb) => cb.notNull())
       .execute();
   },
 };

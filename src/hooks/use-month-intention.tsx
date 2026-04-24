@@ -9,12 +9,7 @@ export function useMonthIntention(): Intention | undefined {
   const month = today.slice(0, 7);
 
   const results = useDBQuery((db) =>
-    db
-      .selectFrom("intentions")
-      .selectAll()
-      .where("month", "=", month)
-      .where("is_deleted", "=", 0)
-      .limit(1),
+    db.selectFrom("intentions").selectAll().where("month", "=", month).limit(1),
   ) as Intention[] | undefined;
 
   return results?.[0];

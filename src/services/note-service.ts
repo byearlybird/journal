@@ -16,7 +16,7 @@ export const notesService = {
       .execute();
   },
   async delete(id: string) {
-    await db.updateTable("notes").set({ is_deleted: 1 }).where("id", "=", id).execute();
+    await db.deleteFrom("notes").where("id", "=", id).execute();
   },
   async updateContent(id: string, content: string) {
     await db

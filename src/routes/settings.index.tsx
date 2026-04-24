@@ -16,7 +16,6 @@ function RouteComponent() {
   const labels = useDBQuery((db) =>
     db
       .selectFrom("labels")
-      .where("is_deleted", "=", 0)
       .orderBy("name", "asc")
       .selectAll()
       .select((eb) =>
@@ -24,13 +23,11 @@ function RouteComponent() {
           eb
             .selectFrom("notes")
             .whereRef("notes.label", "=", "labels.id")
-            .where("notes.is_deleted", "=", 0)
             .select(eb.fn.countAll<number>().as("c")),
           "+",
           eb
             .selectFrom("tasks")
             .whereRef("tasks.label", "=", "labels.id")
-            .where("tasks.is_deleted", "=", 0)
             .select(eb.fn.countAll<number>().as("c")),
         ).as("item_count"),
       ),

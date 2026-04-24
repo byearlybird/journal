@@ -45,13 +45,11 @@ export const M002_schema: Migration = {
       CREATE VIEW IF NOT EXISTS timeline AS
       SELECT n.id, 'note' AS type, n.content, n.created_at, NULL AS status, n.pinned, l.name AS label_name
       FROM notes n
-      LEFT JOIN labels l ON l.id = n.label AND l.is_deleted = 0
-      WHERE n.is_deleted = 0
+      LEFT JOIN labels l ON l.id = n.label
       UNION ALL
       SELECT t.id, 'task' AS type, t.content, t.created_at, t.status, 0 AS pinned, l.name AS label_name
       FROM tasks t
-      LEFT JOIN labels l ON l.id = t.label AND l.is_deleted = 0
-      WHERE t.is_deleted = 0
+      LEFT JOIN labels l ON l.id = t.label
     `.execute(db);
   },
 };

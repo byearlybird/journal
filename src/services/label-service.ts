@@ -21,7 +21,7 @@ export const labelsService = {
     await db.transaction().execute(async (trx) => {
       await trx.updateTable("notes").set({ label: null }).where("label", "=", id).execute();
       await trx.updateTable("tasks").set({ label: null }).where("label", "=", id).execute();
-      await trx.updateTable("labels").set({ is_deleted: 1 }).where("id", "=", id).execute();
+      await trx.deleteFrom("labels").where("id", "=", id).execute();
     });
   },
 };

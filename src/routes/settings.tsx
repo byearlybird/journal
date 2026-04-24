@@ -2,6 +2,7 @@ import { createFileRoute, Link, linkOptions, Outlet } from "@tanstack/react-rout
 
 const navItems = linkOptions([
   { to: "/settings", label: "Labels", activeOptions: { exact: true } },
+  { to: "/settings/sync", label: "Sync" },
   { to: "/settings/profile", label: "Account" },
 ]);
 

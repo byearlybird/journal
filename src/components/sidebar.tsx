@@ -7,14 +7,17 @@ import {
   PushPinSimpleIcon,
   ArrowSquareRightIcon,
   StarIcon,
+  GlobeSimpleXIcon,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
+import { useStore } from "@nanostores/react";
 import { Button } from "./button";
 import { PinnedNotesPreview } from "./pinned-notes-preview";
 import { RolloverTasksPreview } from "./rollover-tasks-preview";
 import { IntentionPreview } from "./intention-preview";
 import { usePriorTasks } from "@/hooks/use-prior-tasks";
 import { useMonthIntention } from "@/hooks/use-month-intention";
+import { $syncState } from "@/stores/sync-client";
 
 const navItems = linkOptions([
   { to: "/", label: "Today", Icon: SunHorizonIcon },
@@ -39,6 +42,7 @@ export function Sidebar() {
   const hasPriorTasks = !!priorTasks?.length;
   const monthIntention = useMonthIntention();
   const hasIntention = !!monthIntention;
+  const syncState = useStore($syncState);
 
   return (
     <div className="size-full space-y-2 z-50 flex flex-col px-2 rounded-xl">
@@ -67,7 +71,14 @@ export function Sidebar() {
           Intention
         </Button>
       </IntentionPreview>
+
       <div className="mt-auto border-t border-dashed border-neutral-700 pt-2">
+        {syncState.status !== "unlocked" && (
+          <p className="flex items-center gap-2 px-2.5 py-1 text-sm text-neutral-500">
+            <GlobeSimpleXIcon />
+            Not syncing
+          </p>
+        )}
         <Show when="signed-in">
           <NavButton to="/settings">
             <GearIcon />

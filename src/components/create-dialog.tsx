@@ -56,7 +56,7 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
               <EntryTypeToggle value={entryType} onValueChange={handleTypeChange} />
             </div>
             <textarea
-              className="w-full mt-4 mb-6 bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-sm leading-relaxed min-h-32 sm:min-h-48 font-serif"
+              className="w-full mt-4 mb-6 bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-base leading-relaxed min-h-32 sm:min-h-48 font-serif"
               placeholder="What's on your mind?"
               value={content}
               onChange={(e) => setContent(e.target.value)}

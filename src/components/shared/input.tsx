@@ -8,7 +8,7 @@ export function Input({ className, ...props }: InputProps) {
     <input
       {...props}
       className={clsx(
-        "border border-border rounded-xl min-h-9 px-2.5 text-foreground focus:outline-1 focus:outline-accent focus:outline-offset-2",
+        "border border-border rounded-xl min-h-9 px-2.5 text-base text-foreground focus:outline-1 focus:outline-accent focus:outline-offset-2",
         className,
       )}
     />

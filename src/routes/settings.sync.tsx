@@ -165,7 +165,7 @@ function PasswordField({
         if (e.key === "Enter") onSubmit();
       }}
       placeholder={placeholder}
-      className="w-full bg-background outline outline-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted focus:outline-foreground-muted"
+      className="w-full bg-background outline outline-border rounded-xl px-3 py-2 text-base text-foreground placeholder:text-foreground-muted focus:outline-foreground-muted"
     />
   );
 }

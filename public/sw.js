@@ -1,12 +1,12 @@
-const CACHE_VERSION = "v1";
-const CACHE_NAME = `journal-${CACHE_VERSION}`;
-const SHELL_URLS = ["/", "/manifest.webmanifest"];
+const CACHE_NAME = "journal-__PRECACHE_HASH__";
+const PRECACHE = __PRECACHE_MANIFEST__;
+const SHELL = "/index.html";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(SHELL_URLS))
+      .then((cache) => cache.addAll(PRECACHE))
       .then(() => self.skipWaiting()),
   );
 });
@@ -34,7 +34,7 @@ self.addEventListener("fetch", (event) => {
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(() =>
-        caches.match("/", { ignoreSearch: true }).then(
+        caches.match(SHELL).then(
           (cached) =>
             cached ??
             new Response("Offline", {
@@ -50,15 +50,16 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.open(CACHE_NAME).then(async (cache) => {
       const cached = await cache.match(request);
-      const network = fetch(request)
-        .then((response) => {
-          if (response.ok && response.type === "basic") {
-            cache.put(request, response.clone());
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached ?? network;
+      if (cached) return cached;
+      try {
+        const response = await fetch(request);
+        if (response.ok && response.type === "basic") {
+          cache.put(request, response.clone());
+        }
+        return response;
+      } catch {
+        return new Response("", { status: 504 });
+      }
     }),
   );
 });

@@ -33,7 +33,7 @@ export function CreateLabelDialog() {
               New label
             </Dialog.Title>
             <input
-              className="w-full bg-transparent text-foreground placeholder:text-foreground-muted outline-none text-sm leading-relaxed mb-6 font-serif"
+              className="w-full bg-transparent text-foreground placeholder:text-foreground-muted outline-none text-base leading-relaxed mb-6 font-serif"
               placeholder="Label name"
               value={name}
               onChange={(e) => setName(e.target.value)}

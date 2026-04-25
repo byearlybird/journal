@@ -27,7 +27,7 @@ function PinnedRow({ note }: { note: TimelineView }) {
   return (
     <button
       onClick={() => openEntryDetail(note.id)}
-      className="w-full text-left rounded-lg px-2 py-2 hover:bg-surface transition-colors"
+      className="w-full text-left rounded-lg px-2 py-2 hover:bg-foreground/5 transition-colors"
     >
       <div className="text-xs text-foreground-muted mb-0.5">{formatDateTime(note.created_at)}</div>
       <div className="text-sm text-foreground line-clamp-1">{note.content}</div>

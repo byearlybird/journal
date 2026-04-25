@@ -5,6 +5,7 @@ import { Drawer } from "@base-ui/react/drawer";
 import { ListIcon, PlusIcon } from "@phosphor-icons/react";
 import { Button } from "./button";
 import { CreateDialog } from "./create-dialog";
+import { CreateLabelDialog } from "./create-label-dialog";
 import { EntryDetail } from "./entry-detail";
 import { LabelFilter } from "./label-filter";
 import { OnboardingDialog } from "./onboarding-dialog";
@@ -78,6 +79,7 @@ export function AppLayout(props: AppLayoutProps) {
         </Drawer.Portal>
       </Drawer.Root>
       <CreateDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <CreateLabelDialog />
       <EntryDetail />
       <OnboardingDialog />
     </>

@@ -1,6 +1,7 @@
 import { Select } from "@base-ui/react/select";
 import { CheckIcon, TagSimpleIcon } from "@phosphor-icons/react";
 import { useLabels } from "@/hooks/use-labels";
+import { openCreateLabel } from "@/stores/create-label";
 import { Button } from "./button";
 
 type LabelPickerProps = {
@@ -32,10 +33,22 @@ export function LabelPicker({
       <Select.Portal>
         <Select.Positioner side="top" align="start" sideOffset={8} alignItemWithTrigger={false}>
           <Select.Popup className="min-w-40 max-h-96 overflow-y-auto bg-surface outline outline-border rounded-xl p-1 shadow-lg data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 transition-all duration-100 ease-out">
-            <LabelItem value={null} name="None" />
-            {labels?.map((label) => (
-              <LabelItem key={label.id} value={label.id} name={label.name} />
-            ))}
+            {labels.length === 0 ? (
+              <button
+                className="w-full flex items-center rounded-lg px-2 py-1.5 text-sm text-foreground/60 hover:bg-accent-hover/60 cursor-default transition-colors"
+                onPointerDown={(e) => e.preventDefault()}
+                onClick={openCreateLabel}
+              >
+                Add a label +
+              </button>
+            ) : (
+              <>
+                <LabelItem value={null} name="None" />
+                {labels.map((label) => (
+                  <LabelItem key={label.id} value={label.id} name={label.name} />
+                ))}
+              </>
+            )}
           </Select.Popup>
         </Select.Positioner>
       </Select.Portal>

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export function Page({ children }: { children: ReactNode }) {
-  return <div className="h-full px-1 pb-2 overflow-y-auto">{children}</div>;
+  return <div className="h-full flex flex-col px-1 pb-2 overflow-y-auto">{children}</div>;
 }
 
 export function PageHeader({ children }: { children: ReactNode }) {

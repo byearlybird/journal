@@ -36,7 +36,7 @@ function IndexPage() {
         <Entry key={entry.id} {...entry} onClick={() => openEntryDetail(entry.id)} />
       ))}
       {entries.length === 0 && (
-        <div className="text-foreground-muted/70 flex justify-center items-center flex-col space-y-2 size-full">
+        <div className="text-foreground-muted/70 flex justify-center items-center flex-col space-y-2 flex-1 w-full">
           <NoteIcon weight="light" className="size-8" />
           <h2>No entries yet today</h2>
         </div>

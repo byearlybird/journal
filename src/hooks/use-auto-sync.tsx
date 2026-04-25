@@ -22,18 +22,11 @@ export function useAutoSync() {
 
   useEffect(() => {
     if (client.status !== "unlocked") {
-      console.log("locked");
       return;
     }
 
     const id = setInterval(() => {
-      sync().then((result) => {
-        if (result.result === "error") {
-          console.error("sync error:", result.error);
-        } else {
-          console.log("ran sync:", result.result);
-        }
-      });
+      sync();
     }, SYNC_INTERVAL_MS);
 
     return () => clearInterval(id);

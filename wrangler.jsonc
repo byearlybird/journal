@@ -4,7 +4,7 @@
  */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "notebook-1",
+  "name": "journal",
   "main": "worker/index.ts",
   "compatibility_date": "2026-04-14",
   "assets": {
@@ -18,7 +18,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "notebook-1",
+      "database_name": "journal-db",
       "database_id": "e43d63c8-a27e-48ad-a83a-720d1d19165b",
       "migrations_dir": "migrations",
     },

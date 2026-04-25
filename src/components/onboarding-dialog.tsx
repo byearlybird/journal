@@ -27,7 +27,7 @@ export function OnboardingDialog() {
   }, [step, isSignedIn]);
 
   return (
-    <Dialog.Root open={open} dismissible={false}>
+    <Dialog.Root open={open}>
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 bg-black/70 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-200" />
         <Dialog.Viewport className="fixed inset-0 flex items-end sm:items-start justify-center sm:pt-[15vh] p-0 sm:p-4">
@@ -153,7 +153,6 @@ function SignInStep({ onSkip }: { onSkip: () => void }) {
       />
       <div className="flex justify-center mb-4">
         <SignIn
-          routing="virtual"
           appearance={{
             elements: {
               rootBox: "w-full",

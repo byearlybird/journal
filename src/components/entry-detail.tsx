@@ -20,6 +20,7 @@ import { notesService } from "@/services/note-service";
 import { taskService } from "@/services/task-service";
 import { useDBQuery } from "@/hooks/use-db-query";
 import { useEntry } from "@/hooks/use-entry";
+import { useTodayDate } from "@/hooks/use-today-date";
 import { labelsService } from "@/services/label-service";
 import { $selectedEntryId, closeEntryDetail } from "@/stores/entry-detail";
 import { Button } from "./button";
@@ -167,17 +168,17 @@ function EntryActions({ entry }: { entry: TimelineView }) {
     );
   }
 
+  return <TaskActions entry={entry} />;
+}
+
+function TaskActions({ entry }: { entry: TimelineView }) {
+  const task = useEntry("task", entry.id);
+  const today = useTodayDate();
+  const isPriorTask = task ? task.date < today : false;
+
   if (entry.status === "incomplete") {
     return (
       <>
-        <Button
-          radius="inner"
-          variant="outline"
-          onClick={() => taskService.setStatus(entry.id, "complete")}
-        >
-          <CheckIcon />
-          Complete
-        </Button>
         <Button
           radius="inner"
           variant="outline"
@@ -185,6 +186,24 @@ function EntryActions({ entry }: { entry: TimelineView }) {
         >
           <XIcon />
           Cancel
+        </Button>
+        {isPriorTask && (
+          <Button
+            radius="inner"
+            variant="outline"
+            onClick={() => taskService.rolloverTask(entry.id)}
+          >
+            <ArrowSquareRightIcon />
+            Defer
+          </Button>
+        )}
+        <Button
+          radius="inner"
+          variant="outline"
+          onClick={() => taskService.setStatus(entry.id, "complete")}
+        >
+          <CheckIcon />
+          Complete
         </Button>
       </>
     );

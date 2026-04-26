@@ -5,6 +5,7 @@ const navItems = linkOptions([
   { to: "/settings", label: "Labels", activeOptions: { exact: true } },
   { to: "/settings/theme", label: "Theme" },
   { to: "/settings/sync", label: "Sync" },
+  { to: "/settings/data", label: "Data" },
 ]);
 
 export const Route = createFileRoute("/settings")({

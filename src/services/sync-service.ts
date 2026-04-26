@@ -168,8 +168,10 @@ async function pushChanges(dek: CryptoKey, transport: ChangeTransport) {
   }
 }
 
-export async function fullSync(dek: CryptoKey | null, transport: ChangeTransport): Promise<void> {
-  if (!dek) return;
-  await pullChanges(dek, transport);
-  await pushChanges(dek, transport);
-}
+export const syncService = {
+  async fullSync(dek: CryptoKey | null, transport: ChangeTransport): Promise<void> {
+    if (!dek) return;
+    await pullChanges(dek, transport);
+    await pushChanges(dek, transport);
+  },
+};

@@ -16,6 +16,7 @@ import { Route as SettingsIndexRouteImport } from './routes/settings.index'
 import { Route as SettingsThemeRouteImport } from './routes/settings.theme'
 import { Route as SettingsSyncRouteImport } from './routes/settings.sync'
 import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
+import { Route as SettingsDataRouteImport } from './routes/settings.data'
 
 const TimelineRoute = TimelineRouteImport.update({
   id: '/timeline',
@@ -52,11 +53,17 @@ const SettingsProfileRoute = SettingsProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => SettingsRoute,
 } as any)
+const SettingsDataRoute = SettingsDataRouteImport.update({
+  id: '/data',
+  path: '/data',
+  getParentRoute: () => SettingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/settings': typeof SettingsRouteWithChildren
   '/timeline': typeof TimelineRoute
+  '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
   '/settings/theme': typeof SettingsThemeRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/timeline': typeof TimelineRoute
+  '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
   '/settings/theme': typeof SettingsThemeRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/settings': typeof SettingsRouteWithChildren
   '/timeline': typeof TimelineRoute
+  '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
   '/settings/theme': typeof SettingsThemeRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/'
     | '/settings'
     | '/timeline'
+    | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
     | '/settings/theme'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/timeline'
+    | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
     | '/settings/theme'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/settings'
     | '/timeline'
+    | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
     | '/settings/theme'
@@ -166,10 +178,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsProfileRouteImport
       parentRoute: typeof SettingsRoute
     }
+    '/settings/data': {
+      id: '/settings/data'
+      path: '/data'
+      fullPath: '/settings/data'
+      preLoaderRoute: typeof SettingsDataRouteImport
+      parentRoute: typeof SettingsRoute
+    }
   }
 }
 
 interface SettingsRouteChildren {
+  SettingsDataRoute: typeof SettingsDataRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
   SettingsSyncRoute: typeof SettingsSyncRoute
   SettingsThemeRoute: typeof SettingsThemeRoute
@@ -177,6 +197,7 @@ interface SettingsRouteChildren {
 }
 
 const SettingsRouteChildren: SettingsRouteChildren = {
+  SettingsDataRoute: SettingsDataRoute,
   SettingsProfileRoute: SettingsProfileRoute,
   SettingsSyncRoute: SettingsSyncRoute,
   SettingsThemeRoute: SettingsThemeRoute,

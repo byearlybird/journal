@@ -7,7 +7,7 @@ import {
   setAuthed as setAPIAuthed,
   setUnauthed as setAPIUnauthed,
 } from "./api";
-import { fullSync, type ChangeTransport } from "./sync";
+import { syncService, type ChangeTransport } from "@/services/sync-service";
 
 type SyncClientStore =
   | {
@@ -146,7 +146,7 @@ export async function sync(): Promise<
   };
 
   try {
-    await fullSync(state.dek, transport);
+    await syncService.fullSync(state.dek, transport);
     return { result: "success" } as const;
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error));

@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { Button } from "@/components/button";
 import { LabelRow } from "@/components/label-row";
-import { TextareaDialog } from "@/components/shared/textarea-dialog";
 import { useDBQuery } from "@/hooks/use-db-query";
-import { labelsService } from "@/services/label-service";
+import { openCreateLabel } from "@/stores/create-label";
 import { PlusIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -12,7 +10,6 @@ export const Route = createFileRoute("/settings/")({
 });
 
 function RouteComponent() {
-  const [createOpen, setCreateOpen] = useState(false);
   const labels = useDBQuery((db) =>
     db
       .selectFrom("labels")
@@ -34,18 +31,10 @@ function RouteComponent() {
   );
   return (
     <>
-      <Button variant="outline" className="mb-4" onClick={() => setCreateOpen(true)}>
+      <Button variant="outline" className="mb-4" onClick={openCreateLabel}>
         Create label
         <PlusIcon />
       </Button>
-      <TextareaDialog
-        open={createOpen}
-        onOpenChange={setCreateOpen}
-        title="Create label"
-        placeholder="Label name"
-        size="small"
-        onSave={(name) => labelsService.createLabel(name)}
-      />
       {labels?.length === 0 ? (
         <p className="px-5 py-3 min-h-36 flex items-center justify-center text-sm bg-background/30 rounded-xl text-center text-foreground-muted">
           No labels yet

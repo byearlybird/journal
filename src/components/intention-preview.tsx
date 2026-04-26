@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StarIcon } from "@phosphor-icons/react";
 import { useMonthIntention } from "@/hooks/use-month-intention";
 import { intentionService } from "@/services/intention-service";
-import { TextareaDialog } from "@/components/shared/textarea-dialog";
+import { InputDialog } from "@/components/shared/input-dialog";
 
 export function IntentionPreview() {
   const intention = useMonthIntention();
@@ -23,13 +23,12 @@ export function IntentionPreview() {
           {intention ? intention.content : "Set an intention for the month"}
         </span>
       </button>
-      <TextareaDialog
+      <InputDialog
         open={editOpen}
         onOpenChange={setEditOpen}
         title={intention ? "Edit intention" : "Set intention"}
         initialValue={intention?.content ?? ""}
         placeholder="What's your intention for this month?"
-        size="small"
         onSave={handleSave}
       />
     </>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { DotsThreeVerticalIcon } from "@phosphor-icons/react";
 import { labelsService } from "@/services/label-service";
 import { MenuRoot, Menu, MenuTrigger, MenuItem } from "@/components/shared/menu";
-import { TextareaDialog } from "@/components/shared/textarea-dialog";
+import { InputDialog } from "@/components/shared/input-dialog";
 
 type LabelRowData = { id: string; name: string; item_count: number | null };
 
@@ -43,13 +43,12 @@ export function LabelRow({ label }: { label: LabelRowData }) {
           </Menu>
         </MenuRoot>
       </li>
-      <TextareaDialog
+      <InputDialog
         open={renameOpen}
         onOpenChange={setRenameOpen}
         title="Rename label"
         initialValue={label.name}
         placeholder="Label name"
-        size="small"
         onSave={(name) => labelsService.renameLabel(label.id, name)}
       />
     </>

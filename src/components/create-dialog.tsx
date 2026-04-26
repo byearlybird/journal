@@ -51,7 +51,7 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 bg-black/70 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-200" />
-        <Dialog.Viewport className="fixed inset-x-1 top-1 sm:inset-0 sm:flex sm:items-start sm:justify-center sm:pt-[20vh] sm:p-4">
+        <Dialog.Viewport className="fixed inset-x-1 top-1 sm:inset-0 sm:flex sm:items-start sm:justify-center sm:pt-[16vh] sm:p-4">
           <Dialog.Popup className="w-full sm:max-w-xl rounded-2xl bg-surface outline outline-border p-6 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 transition-all duration-200 ease-out">
             <div className="-mx-2">
               <EntryTypeToggle value={entryType} onValueChange={handleTypeChange} />

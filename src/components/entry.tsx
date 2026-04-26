@@ -38,7 +38,9 @@ export function Entry({
           {formatTime(created_at)}
           {type === "note" && pinned === 1 && <PushPinSimpleIcon className="size-3" />}
         </div>
-        <div className={clsx("font-serif", compact && "line-clamp-3")}>{content}</div>
+        <div className={clsx("font-serif whitespace-pre-wrap", compact && "line-clamp-3")}>
+          {content}
+        </div>
         {label_name && (
           <div className="flex items-center gap-1 text-xs text-foreground-muted">
             <TagSimpleIcon className="size-3" />

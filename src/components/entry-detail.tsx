@@ -115,7 +115,7 @@ function EntryDetailContent({
 
       <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3">
         {entry.type === "task" && entry.status && <TaskStatusRow status={entry.status} />}
-        <p className="text-foreground font-serif">{entry.content}</p>
+        <p className="text-foreground font-serif whitespace-pre-wrap">{entry.content}</p>
       </div>
 
       <div className="border-t border-dashed border-border p-4 flex items-center justify-between">

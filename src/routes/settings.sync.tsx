@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useStore } from "@nanostores/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@/components/button";
+import { Button } from "@/components/shared/button";
 import { $syncState, createKey, hasRemoteKey, loadRemoteKey, lock } from "@/stores/sync-client";
 
 export const Route = createFileRoute("/settings/sync")({

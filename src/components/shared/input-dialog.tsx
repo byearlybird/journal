@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
-import { Button } from "@/components/button";
+import { Button } from "@/components/shared/button";
 
 export function InputDialog({
   open,

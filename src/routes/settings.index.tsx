@@ -1,4 +1,4 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/shared/button";
 import { LabelRow } from "@/components/label-row";
 import { useDBQuery } from "@/hooks/use-db-query";
 import { openCreateLabel } from "@/stores/create-label";

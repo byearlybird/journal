@@ -1,6 +1,6 @@
 import { Menu as BaseMenu } from "@base-ui/react/menu";
 import type { ReactNode } from "react";
-import { Button } from "@/components/button";
+import { Button } from "@/components/shared/button";
 
 export const MenuRoot = BaseMenu.Root;
 

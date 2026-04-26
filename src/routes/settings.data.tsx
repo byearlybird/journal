@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@/components/button";
+import { Button } from "@/components/shared/button";
 import { dataService } from "@/services/data-service";
 
 export const Route = createFileRoute("/settings/data")({

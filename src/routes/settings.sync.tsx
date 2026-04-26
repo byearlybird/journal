@@ -87,7 +87,7 @@ function UnlockVaultForm() {
         onSubmit={handleUnlock}
         placeholder="Vault password"
       />
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
       <Button onClick={handleUnlock} disabled={!password || busy}>
         {busy ? "Unlocking…" : "Unlock"}
       </Button>
@@ -131,8 +131,8 @@ function CreateVaultForm() {
         onSubmit={handleCreate}
         placeholder="Confirm password"
       />
-      {mismatch && <p className="text-sm text-red-400">Passwords don't match.</p>}
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {mismatch && <p className="text-sm text-danger">Passwords don't match.</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
       <Button onClick={handleCreate} disabled={!password || password !== confirm || busy}>
         {busy ? "Creating…" : "Create vault"}
       </Button>
@@ -193,7 +193,7 @@ function Message({
   tone?: "muted" | "error";
 }) {
   return (
-    <p className={tone === "error" ? "text-sm text-red-400" : "text-sm text-foreground-muted"}>
+    <p className={tone === "error" ? "text-sm text-danger" : "text-sm text-foreground-muted"}>
       {children}
     </p>
   );

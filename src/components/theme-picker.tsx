@@ -24,7 +24,7 @@ export function ThemePicker() {
               "flex-1 rounded-xl px-3 py-2 text-sm transition-colors cursor-default outline",
               selected
                 ? "outline-2 outline-accent text-foreground"
-                : "outline-border text-foreground-muted hover:text-foreground hover:bg-foreground/5",
+                : "outline-border text-foreground-muted hover:text-foreground hover:bg-surface-tint",
             )}
           >
             {label}

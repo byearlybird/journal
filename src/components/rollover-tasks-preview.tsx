@@ -26,7 +26,7 @@ export function RolloverTasksPreview({ children }: { children: ReactElement }) {
 function RolloverTaskRow({ task }: { task: Task }) {
   return (
     <button
-      className="w-full rounded-lg px-2 py-2 text-start hover:bg-foreground/5 transition-colors cursor-default"
+      className="w-full rounded-lg px-2 py-2 text-start hover:bg-surface-tint transition-colors cursor-default"
       onClick={() => openEntryDetail(task.id)}
     >
       <div className="text-xs text-foreground-muted mb-0.5">{formatDate(task.date)}</div>
@@ -64,7 +64,7 @@ function ActionButton({
         e.stopPropagation();
         onClick();
       }}
-      className="p-1 rounded-lg text-foreground-muted hover:text-foreground hover:bg-foreground/10 transition-colors [&>svg]:size-4"
+      className="p-1 rounded-lg text-foreground-muted hover:text-foreground hover:bg-surface-tint transition-colors [&>svg]:size-4"
     >
       {children}
     </button>

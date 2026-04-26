@@ -29,7 +29,7 @@ export function Entry({
 }: TimelineView & { onClick?: () => void; compact?: boolean }) {
   return (
     <div
-      className="rounded-xl px-2 py-4 mb-4 hover:bg-foreground/10 transition-all flex gap-2.5 items-start"
+      className="rounded-xl px-2 py-4 mb-4 hover:bg-surface-tint transition-all flex gap-2.5 items-start"
       onClick={onClick}
     >
       <EntryGlyph id={id} type={type} status={status} pinned={pinned} />
@@ -68,7 +68,7 @@ function EntryGlyph(props: {
   };
 
   return (
-    <button onClick={handleClick} className="rounded-lg hover:bg-foreground/5 p-0.5 -mt-0.5">
+    <button onClick={handleClick} className="rounded-lg hover:bg-surface-tint p-0.5 -mt-0.5">
       {props.type === "note" ? (
         <CircleIcon className="size-4" />
       ) : props.status === "complete" ? (

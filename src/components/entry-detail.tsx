@@ -42,7 +42,7 @@ export function EntryDetail() {
         }}
       >
         <Drawer.Portal>
-          <Drawer.Backdrop className="fixed inset-0 bg-black/70 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
+          <Drawer.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
           <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-end p-2">
             <Drawer.Popup className="relative w-full rounded-2xl sm:max-w-2/3 lg:max-w-1/2 h-full bg-surface outline outline-border transition-transform duration-300 data-starting-style:translate-x-full data-ending-style:translate-x-full">
               <Drawer.Content className="h-full flex flex-col">
@@ -120,7 +120,7 @@ function EntryDetailContent({
           <button
             type="button"
             onClick={() => onEditClick(entry)}
-            className="text-left text-foreground font-serif whitespace-pre-wrap rounded-lg -mx-2 px-2 py-1 hover:bg-foreground/5 transition-colors"
+            className="text-left text-foreground font-serif whitespace-pre-wrap rounded-lg -mx-2 px-2 py-1 hover:bg-surface-tint transition-colors"
           >
             {entry.content}
           </button>
@@ -128,7 +128,7 @@ function EntryDetailContent({
         <button
           type="button"
           onClick={() => onEditClick(entry)}
-          className="absolute top-2 right-3 rounded-md bg-surface outline outline-border p-1 opacity-0 group-hover/content:opacity-100 hover:bg-foreground/5 transition-opacity"
+          className="absolute top-2 right-3 rounded-md bg-surface outline outline-border p-1 opacity-0 group-hover/content:opacity-100 hover:bg-surface-tint transition-opacity"
         >
           <PencilSimpleIcon className="size-4 text-foreground-muted" />
         </button>

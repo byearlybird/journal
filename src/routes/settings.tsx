@@ -20,7 +20,7 @@ function RouteComponent() {
           <Link
             key={item.to}
             {...item}
-            className="shrink-0 sm:w-full px-3 py-2 rounded-2xl transition-all hover:bg-foreground/5 whitespace-nowrap"
+            className="shrink-0 sm:w-full px-3 py-2 rounded-2xl transition-all hover:bg-surface-tint whitespace-nowrap"
             activeProps={{ className: "bg-background" }}
           >
             {label}
@@ -29,7 +29,7 @@ function RouteComponent() {
         <div className="shrink-0 sm:mt-auto sm:pt-2 sm:border-t sm:border-dashed sm:border-border">
           <Show when="signed-out">
             <SignInButton>
-              <button className="shrink-0 sm:w-full px-3 py-2 rounded-2xl transition-all hover:bg-foreground/5 text-left whitespace-nowrap">
+              <button className="shrink-0 sm:w-full px-3 py-2 rounded-2xl transition-all hover:bg-surface-tint text-left whitespace-nowrap">
                 Sign in
               </button>
             </SignInButton>

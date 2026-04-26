@@ -41,7 +41,7 @@ export function MenuItem({
 }) {
   return (
     <BaseMenu.Item
-      className={`transition-all rounded-lg px-2 py-1.5 text-sm cursor-default ${variant === "destructive" ? "text-red-400 data-highlighted:bg-red-500 data-highlighted:text-white" : "text-foreground data-highlighted:bg-accent-hover/60"}`}
+      className={`transition-all rounded-lg px-2 py-1.5 text-sm cursor-default ${variant === "destructive" ? "text-danger data-highlighted:bg-danger-hover data-highlighted:text-danger-foreground" : "text-foreground data-highlighted:bg-accent-hover/60"}`}
       onClick={onClick}
     >
       {children}

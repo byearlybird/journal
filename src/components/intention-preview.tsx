@@ -16,7 +16,7 @@ export function IntentionPreview() {
     <>
       <button
         onClick={() => setEditOpen(true)}
-        className="w-full flex flex-col items-center gap-1 text-center px-2.5 py-2 rounded-xl text-sm text-foreground/70 hover:bg-foreground/10 transition-colors leading-relaxed"
+        className="w-full flex flex-col items-center gap-1 text-center px-2.5 py-2 rounded-xl text-sm text-foreground/70 hover:bg-surface-tint transition-colors leading-relaxed"
       >
         <StarIcon className={`size-4 ${!intention ? "text-accent" : ""}`} />
         <span className="font-serif">

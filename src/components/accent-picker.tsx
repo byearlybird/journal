@@ -2,15 +2,6 @@ import { clsx } from "clsx";
 import { useStore } from "@nanostores/react";
 import { $userSettings, ACCENT_COLORS, type AccentColor } from "@/stores/user-settings";
 
-const SWATCH_CLASS: Record<AccentColor, string> = {
-  yellow: "bg-yellow-400",
-  orange: "bg-orange-400",
-  rose: "bg-rose-400",
-  violet: "bg-violet-400",
-  sky: "bg-sky-400",
-  emerald: "bg-emerald-400",
-};
-
 const LABEL: Record<AccentColor, string> = {
   yellow: "Yellow",
   orange: "Orange",
@@ -18,6 +9,15 @@ const LABEL: Record<AccentColor, string> = {
   violet: "Violet",
   sky: "Sky",
   emerald: "Emerald",
+};
+
+const SWATCH_CLASS: Record<AccentColor, string> = {
+  yellow: "bg-(--accent-yellow)",
+  orange: "bg-(--accent-orange)",
+  rose: "bg-(--accent-rose)",
+  violet: "bg-(--accent-violet)",
+  sky: "bg-(--accent-sky)",
+  emerald: "bg-(--accent-emerald)",
 };
 
 export function AccentPicker() {
@@ -34,8 +34,8 @@ export function AccentPicker() {
             aria-pressed={selected}
             className={clsx(
               "flex flex-col items-center gap-2 rounded-xl px-3 py-3 transition-colors cursor-default",
-              "outline outline-border hover:bg-foreground/5",
-              selected && "outline-2 outline-accent bg-foreground/5",
+              "outline hover:bg-surface-tint",
+              selected ? "outline-2 outline-foreground-muted" : "outline-border",
             )}
           >
             <span

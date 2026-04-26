@@ -10,10 +10,43 @@
   --color-border: var(--border);
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
+  --color-surface-tint: color-mix(in oklab, var(--foreground) 10%, transparent);
+  --color-backdrop: oklch(0 0 0 / 0.7);
 
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-foreground: var(--danger-foreground);
+
+}
+
+:root {
+  --accent-yellow: oklch(0.852 0.199 91.936);
+  --accent-yellow-hover: oklch(0.905 0.182 98.111);
+  --accent-yellow-foreground: oklch(0.286 0.066 53.813);
+
+  --accent-orange: oklch(0.837 0.128 66.29);
+  --accent-orange-hover: oklch(0.901 0.096 70.378);
+  --accent-orange-foreground: oklch(0.266 0.079 36.259);
+
+  --accent-violet: oklch(0.811 0.111 293.571);
+  --accent-violet-hover: oklch(0.89 0.057 293.283);
+  --accent-violet-foreground: oklch(0.283 0.141 291.089);
+
+  --accent-emerald: oklch(0.845 0.143 164.978);
+  --accent-emerald-hover: oklch(0.905 0.093 164.15);
+  --accent-emerald-foreground: oklch(0.262 0.051 172.552);
+
+  --accent-sky: oklch(0.828 0.111 230.318);
+  --accent-sky-hover: oklch(0.901 0.058 230.902);
+  --accent-sky-foreground: oklch(0.293 0.066 243.157);
+
+  --accent-rose: oklch(0.81 0.117 11.638);
+  --accent-rose-hover: oklch(0.899 0.061 12.422);
+  --accent-rose-foreground: oklch(0.271 0.105 12.094);
 }
 
 :root,
@@ -23,6 +56,9 @@
   --border: var(--color-neutral-700);
   --foreground: var(--color-neutral-200);
   --foreground-muted: var(--color-neutral-500);
+  --danger: var(--color-red-400);
+  --danger-hover: var(--color-red-500);
+  --danger-foreground: var(--color-white);
 }
 
 :root[data-theme="light"] {
@@ -31,43 +67,46 @@
   --border: var(--color-neutral-300);
   --foreground: var(--color-neutral-900);
   --foreground-muted: var(--color-neutral-500);
+  --danger: var(--color-red-600);
+  --danger-hover: var(--color-red-700);
+  --danger-foreground: var(--color-white);
 }
 
 :root,
 :root[data-accent="yellow"] {
-  --accent-hover: oklch(0.905 0.182 98.111);
-  --accent: oklch(0.852 0.199 91.936);
-  --accent-foreground: oklch(0.286 0.066 53.813);
+  --accent: var(--accent-yellow);
+  --accent-hover: var(--accent-yellow-hover);
+  --accent-foreground: var(--accent-yellow-foreground);
 }
 
 :root[data-accent="orange"] {
-  --accent-hover: oklch(0.901 0.096 70.378);
-  --accent: oklch(0.837 0.128 66.29);
-  --accent-foreground: oklch(0.266 0.079 36.259);
+  --accent: var(--accent-orange);
+  --accent-hover: var(--accent-orange-hover);
+  --accent-foreground: var(--accent-orange-foreground);
 }
 
 :root[data-accent="violet"] {
-  --accent-hover: oklch(0.89 0.057 293.283);
-  --accent: oklch(0.811 0.111 293.571);
-  --accent-foreground: oklch(0.283 0.141 291.089);
+  --accent: var(--accent-violet);
+  --accent-hover: var(--accent-violet-hover);
+  --accent-foreground: var(--accent-violet-foreground);
 }
 
 :root[data-accent="emerald"] {
-  --accent-hover: oklch(0.905 0.093 164.15);
-  --accent: oklch(0.845 0.143 164.978);
-  --accent-foreground: oklch(0.262 0.051 172.552);
+  --accent: var(--accent-emerald);
+  --accent-hover: var(--accent-emerald-hover);
+  --accent-foreground: var(--accent-emerald-foreground);
 }
 
 :root[data-accent="sky"] {
-  --accent-hover: oklch(0.901 0.058 230.902);
-  --accent: oklch(0.828 0.111 230.318);
-  --accent-foreground: oklch(0.293 0.066 243.157);
+  --accent: var(--accent-sky);
+  --accent-hover: var(--accent-sky-hover);
+  --accent-foreground: var(--accent-sky-foreground);
 }
 
 :root[data-accent="rose"] {
-  --accent-hover: oklch(0.899 0.061 12.422);
-  --accent: oklch(0.81 0.117 11.638);
-  --accent-foreground: oklch(0.271 0.105 12.094);
+  --accent: var(--accent-rose);
+  --accent-hover: var(--accent-rose-hover);
+  --accent-foreground: var(--accent-rose-foreground);
 }
 
 body {

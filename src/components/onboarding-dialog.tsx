@@ -29,7 +29,7 @@ export function OnboardingDialog() {
   return (
     <Dialog.Root open={open}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 bg-black/70 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-200" />
+        <Dialog.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-200" />
         <Dialog.Viewport className="fixed inset-0 flex items-end sm:items-start justify-center sm:pt-[15vh] p-0 sm:p-4">
           <Dialog.Popup className="flex flex-col w-full max-w-md rounded-t-2xl sm:rounded-2xl bg-surface outline outline-border p-6 min-h-2/3 sm:min-h-0 max-h-[90vh] sm:max-h-[84vh] overflow-auto data-starting-style:translate-y-4 sm:data-starting-style:translate-y-0 sm:data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:translate-y-4 sm:data-ending-style:translate-y-0 sm:data-ending-style:scale-95 data-ending-style:opacity-0 transition-all duration-200 ease-out">
             <ProgressBar step={step} />
@@ -47,7 +47,7 @@ export function OnboardingDialog() {
 function ProgressBar({ step }: { step: number }) {
   const pct = (step / TOTAL_STEPS) * 100;
   return (
-    <div className="h-1 w-full rounded-full bg-foreground/10 overflow-hidden mb-6">
+    <div className="h-1 w-full rounded-full bg-surface-tint overflow-hidden mb-6">
       <div
         className="h-full bg-accent transition-all duration-300 ease-out"
         style={{ width: `${pct}%` }}

@@ -70,7 +70,7 @@ export function AppLayout(props: AppLayoutProps) {
 
       <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen} swipeDirection="left">
         <Drawer.Portal>
-          <Drawer.Backdrop className="fixed inset-0 bg-black/50 data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
+          <Drawer.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
           <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-start p-2">
             <Drawer.Popup className="w-4/5 bg-background rounded-xl outline outline-border transition-transform duration-300 data-starting-style:-translate-x-full data-ending-style:-translate-x-full">
               <Drawer.Content className="h-full p-2">{props.sidebar}</Drawer.Content>

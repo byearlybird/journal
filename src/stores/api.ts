@@ -31,7 +31,7 @@ export function setUnauthed() {
 
 function createAPIClient(getToken: () => Promise<string | null>): APIClient {
   const link = new RPCLink({
-    url: "http://localhost:5173/api",
+    url: `${window.location.origin}/api`,
     headers: async () => {
       const token = await getToken();
       return token ? { Authorization: `Bearer ${token}` } : {};

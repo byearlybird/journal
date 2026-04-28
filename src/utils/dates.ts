@@ -28,6 +28,21 @@ export function formatTime(iso: string): string {
   );
 }
 
+export function relativeDate(iso: string, today: string): string {
+  const taskDate = new Date(`${iso.slice(0, 10)}T00:00:00`);
+  const todayDate = new Date(`${today.slice(0, 10)}T00:00:00`);
+  const days = Math.round((todayDate.getTime() - taskDate.getTime()) / 86400000);
+  if (days <= 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days === 2) return "Two days ago";
+  if (days < 7) return "A few days ago";
+  if (days < 14) return "Last week";
+  if (days < 21) return "Two weeks ago";
+  if (days < 28) return "Three weeks ago";
+  if (days < 60) return "Last month";
+  return "Over a month ago";
+}
+
 export function formatDateTime(iso: string): string {
   return new Intl.DateTimeFormat("en-US", {
     month: "long",

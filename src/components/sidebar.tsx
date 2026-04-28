@@ -3,8 +3,8 @@ import {
   SunHorizonIcon,
   ListBulletsIcon,
   GearIcon,
-  PushPinSimpleIcon,
-  ArrowSquareRightIcon,
+  CircleIcon,
+  SquareIcon,
   GlobeSimpleXIcon,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
@@ -14,6 +14,7 @@ import { PinnedNotesPreview } from "./pinned-notes-preview";
 import { RolloverTasksPreview } from "./rollover-tasks-preview";
 import { IntentionPreview } from "./intention-preview";
 import { usePriorTasks } from "@/hooks/use-prior-tasks";
+import { useTodayDate } from "@/hooks/use-today-date";
 import { $syncState } from "@/stores/sync-client";
 
 const navItems = linkOptions([
@@ -36,8 +37,9 @@ function NavButton({ to, children }: { to: LinkProps["to"]; children: ReactNode 
 }
 
 export function Sidebar() {
-  const priorTasks = usePriorTasks();
-  const hasPriorTasks = !!priorTasks?.length;
+  const tasks = usePriorTasks();
+  const today = useTodayDate();
+  const hasPriorTasks = !!tasks?.some((t) => t.date < today);
   const syncState = useStore($syncState);
 
   return (
@@ -51,14 +53,14 @@ export function Sidebar() {
       <div className="h-1 my-3 border-t border-dashed w-full border-border" />
       <PinnedNotesPreview>
         <Button variant="ghost" align="start">
-          <PushPinSimpleIcon />
-          Pins
+          <CircleIcon />
+          Pinned
         </Button>
       </PinnedNotesPreview>
       <RolloverTasksPreview>
         <Button variant="ghost" align="start">
-          <ArrowSquareRightIcon className={hasPriorTasks ? "text-accent" : undefined} />
-          Prior tasks
+          <SquareIcon className={hasPriorTasks ? "text-accent" : undefined} />
+          Active
         </Button>
       </RolloverTasksPreview>
 

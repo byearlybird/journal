@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TimelineRouteImport } from './routes/timeline'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as AllEntriesRouteImport } from './routes/all-entries'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings.index'
 import { Route as SettingsThemeRouteImport } from './routes/settings.theme'
@@ -18,14 +18,14 @@ import { Route as SettingsSyncRouteImport } from './routes/settings.sync'
 import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
 import { Route as SettingsDataRouteImport } from './routes/settings.data'
 
-const TimelineRoute = TimelineRouteImport.update({
-  id: '/timeline',
-  path: '/timeline',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AllEntriesRoute = AllEntriesRouteImport.update({
+  id: '/all-entries',
+  path: '/all-entries',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -61,8 +61,8 @@ const SettingsDataRoute = SettingsDataRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/all-entries': typeof AllEntriesRoute
   '/settings': typeof SettingsRouteWithChildren
-  '/timeline': typeof TimelineRoute
   '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
@@ -71,7 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/timeline': typeof TimelineRoute
+  '/all-entries': typeof AllEntriesRoute
   '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
@@ -81,8 +81,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/all-entries': typeof AllEntriesRoute
   '/settings': typeof SettingsRouteWithChildren
-  '/timeline': typeof TimelineRoute
   '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
@@ -93,8 +93,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/all-entries'
     | '/settings'
-    | '/timeline'
     | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
@@ -103,7 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/timeline'
+    | '/all-entries'
     | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
@@ -112,8 +112,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/all-entries'
     | '/settings'
-    | '/timeline'
     | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
@@ -123,24 +123,24 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AllEntriesRoute: typeof AllEntriesRoute
   SettingsRoute: typeof SettingsRouteWithChildren
-  TimelineRoute: typeof TimelineRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/timeline': {
-      id: '/timeline'
-      path: '/timeline'
-      fullPath: '/timeline'
-      preLoaderRoute: typeof TimelineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/settings': {
       id: '/settings'
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/all-entries': {
+      id: '/all-entries'
+      path: '/all-entries'
+      fullPath: '/all-entries'
+      preLoaderRoute: typeof AllEntriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -210,8 +210,8 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AllEntriesRoute: AllEntriesRoute,
   SettingsRoute: SettingsRouteWithChildren,
-  TimelineRoute: TimelineRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

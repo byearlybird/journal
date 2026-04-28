@@ -19,7 +19,7 @@ import { $syncState } from "@/stores/sync-client";
 
 const navItems = linkOptions([
   { to: "/", label: "Today", Icon: SunHorizonIcon },
-  { to: "/timeline", label: "Timeline", Icon: ListBulletsIcon },
+  { to: "/all-entries", label: "All entries", Icon: ListBulletsIcon },
 ]);
 
 function NavButton({ to, children }: { to: LinkProps["to"]; children: ReactNode }) {

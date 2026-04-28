@@ -11,11 +11,11 @@ import { NoteIcon } from "@phosphor-icons/react";
 
 type TimelineView = DBSchema["timeline"];
 
-export const Route = createFileRoute("/timeline")({
-  component: TimelinePage,
+export const Route = createFileRoute("/all-entries")({
+  component: AllEntriesPage,
 });
 
-function TimelinePage() {
+function AllEntriesPage() {
   const searchTerm = useStore($debouncedSearchTerm);
   const labelFilter = useStore($labelFilter);
   const entries = useEntries({

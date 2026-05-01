@@ -14,22 +14,22 @@ export const Route = createFileRoute("/settings")({
 
 function RouteComponent() {
   return (
-    <div className="flex flex-col sm:flex-row flex-1 size-full overflow-hidden">
-      <section className="flex flex-row sm:flex-col justify-between sm:justify-start shrink-0 sm:min-w-50 gap-2 sm:gap-0 sm:space-y-2 overflow-x-auto sm:overflow-x-visible border-b sm:border-b-0 sm:border-r border-border p-2 sm:pt-2 sm:pr-4 sm:px-2">
+    <div className="flex flex-col md:flex-row flex-1 size-full overflow-hidden">
+      <section className="flex flex-row md:flex-col justify-between md:justify-start shrink-0 md:min-w-50 gap-2 md:gap-0 md:space-y-2 overflow-x-auto md:overflow-x-visible border-b md:border-b-0 md:border-r border-border p-2 md:pt-2 md:pr-4 md:px-2">
         {navItems.map(({ label, ...item }) => (
           <Link
             key={item.to}
             {...item}
-            className="shrink-0 sm:w-full px-3 py-2 rounded-2xl transition-all hover:bg-surface-tint whitespace-nowrap"
+            className="shrink-0 md:w-full px-3 py-2 rounded-2xl transition-all hover:bg-surface-tint whitespace-nowrap"
             activeProps={{ className: "bg-background" }}
           >
             {label}
           </Link>
         ))}
-        <div className="shrink-0 sm:mt-auto sm:pt-2 sm:border-t sm:border-dashed sm:border-border">
+        <div className="shrink-0 md:mt-auto md:pt-2 md:border-t md:border-dashed md:border-border">
           <Show when="signed-out">
             <SignInButton>
-              <button className="shrink-0 sm:w-full px-3 py-2 rounded-2xl transition-all hover:bg-surface-tint text-left whitespace-nowrap">
+              <button className="shrink-0 md:w-full px-3 py-2 rounded-2xl transition-all hover:bg-surface-tint text-left whitespace-nowrap">
                 Sign in
               </button>
             </SignInButton>
@@ -37,12 +37,12 @@ function RouteComponent() {
           <Show when="signed-in">
             <div className="px-3 py-2 flex items-center gap-2 whitespace-nowrap">
               <UserButton />
-              <span className="hidden sm:inline text-sm">Account</span>
+              <span className="hidden md:inline text-sm">Account</span>
             </div>
           </Show>
         </div>
       </section>
-      <div className="flex-1 min-w-0 overflow-auto p-2 sm:pl-4">
+      <div className="flex-1 min-w-0 overflow-auto p-2 md:pl-4">
         <Outlet />
       </div>
     </div>

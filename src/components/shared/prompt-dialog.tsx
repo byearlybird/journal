@@ -48,7 +48,7 @@ export function PromptDialog({
     >
       {multiline ? (
         <textarea
-          className="w-full bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-base leading-relaxed font-serif field-sizing-content min-h-32 sm:min-h-48 max-h-[33vh] sm:max-h-[50vh] overflow-y-auto mb-4"
+          className="w-full bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-base leading-relaxed font-serif field-sizing-content min-h-32 md:min-h-48 max-h-[33vh] md:max-h-[50vh] overflow-y-auto mb-4"
           placeholder={placeholder}
           value={value}
           maxLength={maxLength}

@@ -43,8 +43,8 @@ export function EntryDetail() {
       >
         <Drawer.Portal>
           <Drawer.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
-          <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-end p-2">
-            <Drawer.Popup className="relative w-full rounded-2xl sm:max-w-2/3 lg:max-w-1/2 h-full bg-surface outline outline-border transition-transform duration-300 data-starting-style:translate-x-full data-ending-style:translate-x-full">
+          <Drawer.Viewport className="fixed top-safe-top bottom-safe-bottom left-safe-left right-safe-right flex items-stretch justify-end p-2">
+            <Drawer.Popup className="relative w-full rounded-2xl md:max-w-2/3 lg:max-w-1/2 h-full bg-surface outline outline-border transition-transform duration-300 data-starting-style:translate-x-full data-ending-style:translate-x-full">
               <Drawer.Content className="h-full flex flex-col">
                 {id && <EntryDetailContent id={id} onEditClick={setEditEntry} />}
               </Drawer.Content>

@@ -28,7 +28,7 @@ export function AppLayout(props: AppLayoutProps) {
 
   return (
     <>
-      <header className="sm:hidden fixed top-0 inset-x-0 h-14 flex items-center gap-2 px-2">
+      <header className="md:hidden fixed top-safe-top left-safe-left right-safe-right h-14 flex items-center gap-2 px-2">
         <div className="relative">
           <Button variant="outline" onClick={() => setDrawerOpen(true)}>
             <ListIcon className="size-5" />
@@ -49,11 +49,13 @@ export function AppLayout(props: AppLayoutProps) {
         </Button>
       </header>
 
-      <aside className="hidden sm:block fixed left-0 inset-y-0 w-44 p-2">{props.sidebar}</aside>
+      <aside className="hidden md:block fixed left-safe-left top-safe-top bottom-safe-bottom w-44 p-2">
+        {props.sidebar}
+      </aside>
 
       {/* pointer-events-none lets sidebar clicks pass through the transparent main area on mobile */}
-      <main className="pointer-events-none fixed top-14 sm:top-0 left-0 inset-y-0 right-0 px-2 pb-2 pt-1 sm:pt-2 sm:pl-[max(11rem,calc(50%-28rem))] sm:pr-[max(0.5rem,calc(50%-28rem))] flex flex-col gap-2">
-        <div className="pointer-events-auto hidden sm:flex h-9 justify-between gap-2">
+      <main className="pointer-events-none fixed top-[calc(var(--spacing-safe-top)+3.5rem)] md:top-safe-top left-safe-left right-safe-right bottom-safe-bottom px-2 pb-2 pt-1 md:pt-2 md:pl-[max(11rem,calc(50%-28rem))] md:pr-[max(0.5rem,calc(50%-28rem))] flex flex-col gap-2">
+        <div className="pointer-events-auto hidden md:flex h-9 justify-between gap-2">
           <div className="flex gap-2">
             <Input
               placeholder="Search"
@@ -74,7 +76,7 @@ export function AppLayout(props: AppLayoutProps) {
       <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen} swipeDirection="left">
         <Drawer.Portal>
           <Drawer.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
-          <Drawer.Viewport className="fixed inset-0 flex items-stretch justify-start p-2">
+          <Drawer.Viewport className="fixed top-safe-top bottom-safe-bottom left-safe-left right-safe-right flex items-stretch justify-start p-2">
             <Drawer.Popup className="w-4/5 bg-background rounded-xl outline outline-border transition-transform duration-300 data-starting-style:-translate-x-full data-ending-style:-translate-x-full">
               <Drawer.Content className="h-full p-2">{props.sidebar}</Drawer.Content>
             </Drawer.Popup>

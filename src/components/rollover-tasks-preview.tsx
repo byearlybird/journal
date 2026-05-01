@@ -26,7 +26,9 @@ export function RolloverTasksPreview({ children }: { children: ReactElement }) {
       {groups && groups.size > 0 ? (
         [...groups.entries()].map(([label, groupTasks]) => (
           <div key={label}>
-            <div className={`px-2 pt-2 pb-1 text-xs font-medium ${groupTasks[0].date < today ? "text-accent" : "text-foreground-muted"}`}>
+            <div
+              className={`px-2 pt-2 pb-1 text-xs font-medium ${groupTasks[0].date < today ? "text-accent" : "text-foreground-muted"}`}
+            >
               {label}
             </div>
             {groupTasks.map((task) => (
@@ -48,7 +50,9 @@ function RolloverTaskRow({ task, isPrior }: { task: Task; isPrior: boolean }) {
       tabIndex={0}
       className="w-full rounded-lg px-2 py-2 text-start hover:bg-surface-tint transition-colors cursor-default"
       onClick={() => openEntryDetail(task.id)}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") openEntryDetail(task.id); }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") openEntryDetail(task.id);
+      }}
     >
       <div className="flex items-center gap-1">
         <div className="text-sm text-foreground line-clamp-2 flex-1 min-w-0">{task.content}</div>

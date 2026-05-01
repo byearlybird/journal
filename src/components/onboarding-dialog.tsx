@@ -31,8 +31,8 @@ export function OnboardingDialog() {
     <Dialog.Root open={open}>
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-200" />
-        <Dialog.Viewport className="fixed inset-0 flex items-end sm:items-start justify-center sm:pt-[15vh] p-0 sm:p-4">
-          <Dialog.Popup className="flex flex-col w-full max-w-md rounded-t-2xl sm:rounded-2xl bg-surface outline outline-border p-6 min-h-2/3 sm:min-h-0 max-h-[90vh] sm:max-h-[84vh] overflow-auto data-starting-style:translate-y-4 sm:data-starting-style:translate-y-0 sm:data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:translate-y-4 sm:data-ending-style:translate-y-0 sm:data-ending-style:scale-95 data-ending-style:opacity-0 transition-all duration-200 ease-out">
+        <Dialog.Viewport className="fixed top-safe-top bottom-0 md:bottom-safe-bottom left-safe-left right-safe-right flex items-end md:items-start justify-center md:pt-[15vh] p-0 md:p-4">
+          <Dialog.Popup className="flex flex-col w-full max-w-md rounded-t-2xl md:rounded-2xl bg-surface outline outline-border p-6 pb-[calc(1.5rem+var(--spacing-safe-bottom))] md:pb-6 min-h-2/3 md:min-h-0 max-h-[90vh] md:max-h-[84vh] overflow-auto data-starting-style:translate-y-4 md:data-starting-style:translate-y-0 md:data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:translate-y-4 md:data-ending-style:translate-y-0 md:data-ending-style:scale-95 data-ending-style:opacity-0 transition-all duration-200 ease-out">
             <ProgressBar step={step} />
             {step === 1 && <WelcomeStep onNext={() => setStep(2)} />}
             {step === 2 && <ThemeStep onNext={() => setStep(3)} />}

@@ -10,23 +10,17 @@ type DialogProps = {
   children: ReactNode;
 };
 
-export function Dialog({
-  open,
-  onOpenChange,
-  title,
-  size = "default",
-  children,
-}: DialogProps) {
+export function Dialog({ open, onOpenChange, title, size = "default", children }: DialogProps) {
   return (
     <BaseDialog.Root open={open} onOpenChange={onOpenChange}>
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-200" />
-        <BaseDialog.Viewport className="fixed inset-x-1 top-1 sm:inset-0 sm:flex sm:items-start sm:justify-center sm:pt-[16vh] sm:p-4">
+        <BaseDialog.Viewport className="fixed top-[calc(0.25rem+var(--spacing-safe-top))] left-[calc(0.25rem+var(--spacing-safe-left))] right-[calc(0.25rem+var(--spacing-safe-right))] md:top-safe-top md:bottom-safe-bottom md:left-safe-left md:right-safe-right md:flex md:items-start md:justify-center md:pt-[16vh] md:p-4">
           <BaseDialog.Popup
             className={clsx(
               "w-full rounded-2xl bg-surface outline outline-border data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 transition-all duration-200 ease-out",
-              size === "default" && "sm:max-w-xl p-6",
-              size === "small" && "sm:max-w-sm p-4",
+              size === "default" && "md:max-w-xl p-6",
+              size === "small" && "md:max-w-sm p-4",
             )}
           >
             {title && (

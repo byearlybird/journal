@@ -2,7 +2,7 @@
 
 Small actions you intend to get done today. If something doesn't happen, roll it over or let it go — no guilt either way. Tasks are about intent, not obligation.
 
-> □ *Call the dentist*
+> □ _Call the dentist_
 
 ### Why log Tasks?
 

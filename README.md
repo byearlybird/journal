@@ -15,21 +15,25 @@ A minimal, end-to-end-encrypted journaling app that syncs across devices without
 ## Stack
 
 **Frontend**
+
 - React 19 + TanStack Router (file-based routing)
 - Tailwind v4, Base UI primitives, Phosphor icons
 - Nanostores for state, IndexedDB for key caching
 - SQLite in the browser via [`sqlocal`](https://github.com/DallasHoff/sqlocal) (OPFS-backed) with Kysely as the query builder
 
 **Backend** (Cloudflare)
+
 - Workers + D1 (SQLite at the edge)
 - oRPC for end-to-end-typed RPC with Zod-validated contracts
 - Clerk for authentication
 
 **Crypto**
+
 - AES-256-GCM data encryption key, wrapped by a PBKDF2-derived key (600k iterations, SHA-256)
 - Only the wrapped key ever touches the server; the unwrapped key lives as a non-extractable `CryptoKey` in IndexedDB
 
 **Tooling**
+
 - Vite 8, TypeScript (strict), oxlint + oxfmt, pnpm
 
 ## Architecture in one paragraph

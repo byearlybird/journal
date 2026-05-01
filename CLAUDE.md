@@ -82,14 +82,14 @@ Applies to all user-facing copy: in-app UI strings, the `src/docs/*.md` files, a
 ### Principles
 
 - **Plainspoken, no productivity jargon.** Avoid "optimize", "unlock", "crush", "leverage", "powerful", "boost", "supercharge". Say "small actions for today", not "high-leverage daily tasks".
-- **Permission, not pressure.** Empty states, prompts, and reminders should normalize messiness. *"Roll over anything that didn't get done"* over *"Don't fall behind!"*.
+- **Permission, not pressure.** Empty states, prompts, and reminders should normalize messiness. _"Roll over anything that didn't get done"_ over _"Don't fall behind!"_.
 - **Second person, active voice.** "You'll see…", "Try…", "Here's what's happening." Not passive, not third-person abstract.
-- **Reassuring on errors.** Diagnostic, not alarmed. *"Couldn't reach the sync server."* — no exclamation points, no capitalized warnings, no apology theatre.
+- **Reassuring on errors.** Diagnostic, not alarmed. _"Couldn't reach the sync server."_ — no exclamation points, no capitalized warnings, no apology theatre.
 - **Quietly playful, not slick.** Contractions and small asides are fine. No exclamation-heavy enthusiasm, no marketing winks, no emoji unless the user adds them.
-- **Opinionated about reflection-as-process.** The product has a worldview (see `src/docs/philosophy.md`). When explaining a feature, connect it back to *why* it exists, not just what it does.
+- **Opinionated about reflection-as-process.** The product has a worldview (see `src/docs/philosophy.md`). When explaining a feature, connect it back to _why_ it exists, not just what it does.
 - **Concrete and example-led in docs.** Lead with small scenarios over abstractions: "Say you've got a thought you want to come back to…".
 - **Short paragraphs, scannable.** One- or two-sentence paragraphs. Headings and bullets in docs. Generous whitespace.
-- **No shame, ever.** Overdue tasks, abandoned intentions, half-formed notes are normal. *"Cancel tasks that no longer feel important — that's a valid outcome."* No streaks, no nagging, no productivity guilt.
+- **No shame, ever.** Overdue tasks, abandoned intentions, half-formed notes are normal. _"Cancel tasks that no longer feel important — that's a valid outcome."_ No streaks, no nagging, no productivity guilt.
 
 ### Product vocabulary
 
@@ -106,15 +106,15 @@ Keep these terms consistent. They're the words the product already uses.
 
 ### Marketing copy
 
-Same voice, slightly more outward-facing. Lead with what the product *is for* (a quiet place to think), not a feature list. No adjective stacking, no social-proof clichés, no urgency CTAs. Frame encryption as *"your entries stay yours"*, not as a fear pitch.
+Same voice, slightly more outward-facing. Lead with what the product _is for_ (a quiet place to think), not a feature list. No adjective stacking, no social-proof clichés, no urgency CTAs. Frame encryption as _"your entries stay yours"_, not as a fear pitch.
 
 ### Do / Don't
 
-| ✅ On voice | ❌ Off voice |
-|---|---|
-| What's on your mind? | Start journaling now! |
-| No entries yet today. | You haven't journaled today — keep your streak going! |
-| Roll over anything that didn't get done. | Don't let tasks pile up. |
-| Cancel tasks that no longer feel important — that's a valid outcome. | Stay on top of your tasks. |
-| Couldn't reach the sync server. | Sync failed! Please try again. |
-| A quiet place for notes, tasks, and intentions. | The all-in-one productivity journal that helps you crush your goals. |
+| ✅ On voice                                                          | ❌ Off voice                                                         |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| What's on your mind?                                                 | Start journaling now!                                                |
+| No entries yet today.                                                | You haven't journaled today — keep your streak going!                |
+| Roll over anything that didn't get done.                             | Don't let tasks pile up.                                             |
+| Cancel tasks that no longer feel important — that's a valid outcome. | Stay on top of your tasks.                                           |
+| Couldn't reach the sync server.                                      | Sync failed! Please try again.                                       |
+| A quiet place for notes, tasks, and intentions.                      | The all-in-one productivity journal that helps you crush your goals. |

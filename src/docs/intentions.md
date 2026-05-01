@@ -2,7 +2,7 @@
 
 A broad direction for the month ahead. What matters right now? Give a name to a theme, priority, or focus — and let it guide how you show up each day.
 
-> ☆ *Be more present with the people I care about*
+> ☆ _Be more present with the people I care about_
 
 ### Why set an Intention?
 

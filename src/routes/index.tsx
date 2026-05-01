@@ -34,8 +34,8 @@ function IndexPage() {
         <PageTitle>
           {formatDate(date)}{" "}
           <span className="ms-2 font-normal text-foreground-muted text-sm">
-            <span className="sm:hidden">{formatWeekdayShort(date)}</span>
-            <span className="hidden sm:inline">{formatWeekday(date)}</span>
+            <span className="md:hidden">{formatWeekdayShort(date)}</span>
+            <span className="hidden md:inline">{formatWeekday(date)}</span>
           </span>
         </PageTitle>
       </PageHeader>

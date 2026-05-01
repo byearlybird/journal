@@ -36,12 +36,7 @@ export const dataService = {
       db
         .selectFrom("tasks")
         .leftJoin("labels", "labels.id", "tasks.label")
-        .select([
-          "tasks.content",
-          "tasks.created_at",
-          "tasks.status",
-          "labels.name as label",
-        ])
+        .select(["tasks.content", "tasks.created_at", "tasks.status", "labels.name as label"])
         .execute(),
       db.selectFrom("intentions").select(["content", "month"]).execute(),
     ]);

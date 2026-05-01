@@ -42,11 +42,15 @@ const A = ({ href, children }: ComponentProps<"a">) => {
 };
 
 const Ul = ({ children }: ComponentProps<"ul">) => (
-  <ul className="list-disc list-inside mb-4 space-y-1 text-foreground-soft leading-relaxed">{children}</ul>
+  <ul className="list-disc list-inside mb-4 space-y-1 text-foreground-soft leading-relaxed">
+    {children}
+  </ul>
 );
 
 const Ol = ({ children }: ComponentProps<"ol">) => (
-  <ol className="list-decimal list-inside mb-4 space-y-1 text-foreground-soft leading-relaxed">{children}</ol>
+  <ol className="list-decimal list-inside mb-4 space-y-1 text-foreground-soft leading-relaxed">
+    {children}
+  </ol>
 );
 
 const Li = ({ children }: ComponentProps<"li">) => <li className="ml-4">{children}</li>;

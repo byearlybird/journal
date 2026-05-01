@@ -20,8 +20,7 @@ export function MonthGroup({ month, days, onSelect }: MonthGroupProps) {
     <div className="not-first:border-t border-dashed not-first:border-border/50 not-first:mt-4 not-first:pt-4">
       <div className="sticky top-0 z-10 bg-surface p-2 flex items-baseline justify-between gap-6">
         <h2 className="text-xl font-semibold text-foreground shrink-0">
-          {monthLabel}{" "}
-          <span className="font-normal text-foreground-muted text-sm">{year}</span>
+          {monthLabel} <span className="font-normal text-foreground-muted text-sm">{year}</span>
         </h2>
         <MonthIntentionLabel month={month} />
       </div>

@@ -21,8 +21,9 @@ export function AppLayout(props: AppLayoutProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const searchTerm = useStore($searchTerm);
-  const hasPriorTasks = !!usePriorTasks()?.length;
   const today = useTodayDate();
+  const tasks = usePriorTasks();
+  const hasPriorTasks = !!tasks?.some((t) => t.date < today);
   const hasIntention = !!useMonthIntention(today.slice(0, 7));
 
   return (

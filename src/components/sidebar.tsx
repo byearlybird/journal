@@ -6,6 +6,7 @@ import {
   CircleIcon,
   SquareIcon,
   GlobeSimpleXIcon,
+  InfoIcon,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { useStore } from "@nanostores/react";
@@ -24,11 +25,12 @@ const navItems = linkOptions([
 
 function NavButton({ to, children }: { to: LinkProps["to"]; children: ReactNode }) {
   const match = useMatchRoute();
+  const isActive = match({ to, fuzzy: to !== "/" });
   return (
     <Button
       align="start"
       nativeButton={false}
-      variant={match({ to }) ? "outline" : "ghost"}
+      variant={isActive ? "outline" : "ghost"}
       render={(props) => <Link {...props} to={to} viewTransition />}
     >
       {children}
@@ -73,6 +75,10 @@ export function Sidebar() {
             Not syncing
           </p>
         )}
+        <NavButton to="/docs">
+          <InfoIcon />
+          Learn
+        </NavButton>
         <NavButton to="/settings">
           <GearIcon />
           Settings

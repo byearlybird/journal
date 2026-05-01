@@ -9,6 +9,7 @@
   --color-surface: var(--surface);
   --color-border: var(--border);
   --color-foreground: var(--foreground);
+  --color-foreground-soft: var(--foreground-soft);
   --color-foreground-muted: var(--foreground-muted);
   --color-surface-tint: color-mix(in oklab, var(--foreground) 10%, transparent);
   --color-backdrop: oklch(0 0 0 / 0.7);
@@ -55,6 +56,7 @@
   --surface: var(--color-neutral-800);
   --border: var(--color-neutral-700);
   --foreground: var(--color-neutral-200);
+  --foreground-soft: var(--color-neutral-400);
   --foreground-muted: var(--color-neutral-500);
   --danger: var(--color-red-400);
   --danger-hover: var(--color-red-500);
@@ -66,6 +68,7 @@
   --surface: var(--color-neutral-100);
   --border: var(--color-neutral-300);
   --foreground: var(--color-neutral-900);
+  --foreground-soft: var(--color-neutral-700);
   --foreground-muted: var(--color-neutral-500);
   --danger: var(--color-red-600);
   --danger-hover: var(--color-red-700);

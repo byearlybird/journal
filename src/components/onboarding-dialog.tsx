@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { SignIn, useAuth } from "@clerk/react";
 import { useStore } from "@nanostores/react";
@@ -62,7 +63,7 @@ function StepHeader({
   hero = false,
 }: {
   title: string;
-  description: string;
+  description: ReactNode;
   hero?: boolean;
 }) {
   return (
@@ -94,7 +95,14 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
       <StepHeader
         hero
         title="Welcome to Journal"
-        description="A quiet place for notes, tasks, and intentions. Let's get you set up in a few quick steps."
+        description={
+          <>
+            A quiet space for daily writing — a place to think, not a thing to manage.
+            <br />
+            <br />
+            Let's get you set up in a few quick steps.
+          </>
+        }
       />
       <div className="flex-1 flex items-center justify-center text-foreground">
         <Think aria-hidden className="size-60" />
@@ -135,7 +143,7 @@ function BackupStep({ onNext }: { onNext: () => void }) {
     <div className="flex flex-col flex-1">
       <StepHeader
         title="Your entries live on this device"
-        description="Journal keeps everything local by default. If you want to sync across devices or protect against losing your phone, you can back up to an end-to-end encrypted vault — only you can read it."
+        description="By default, your entries stay on this device. To sync across devices or keep a backup, create an account — everything's end-to-end encrypted, so only you can read it."
       />
       <Button className="w-full mt-auto" onClick={onNext}>
         Continue

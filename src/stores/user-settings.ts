@@ -9,6 +9,7 @@ export type UserSettings = {
   onboarded: boolean;
   accent: AccentColor;
   theme: Theme;
+  learnDismissed: boolean;
 };
 
 export const $userSettings = persistentAtom<UserSettings>(
@@ -17,6 +18,7 @@ export const $userSettings = persistentAtom<UserSettings>(
     onboarded: false,
     accent: "yellow",
     theme: "system",
+    learnDismissed: false,
   },
   {
     encode: JSON.stringify,

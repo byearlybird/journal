@@ -25,7 +25,7 @@ function RouteComponent() {
 
 function UnlockedView() {
   return (
-    <Section title="Vault unlocked" description="Your notes sync encrypted across devices.">
+    <Section title="Vault unlocked" description="Your entries sync encrypted across devices.">
       <Button variant="outline" onClick={() => lock()}>
         Lock vault
       </Button>
@@ -72,14 +72,14 @@ function UnlockVaultForm() {
     const result = await loadRemoteKey(password);
     setBusy(false);
     if (result.result === "error") {
-      setError("Wrong password, or the vault key couldn't be unwrapped.");
+      setError("That password didn't unlock the vault.");
     }
   }
 
   return (
     <Section
       title="Unlock vault"
-      description="Enter your vault password to decrypt and sync your notes."
+      description="Enter your vault password to decrypt and sync your entries."
     >
       <PasswordField
         value={password}
@@ -117,7 +117,7 @@ function CreateVaultForm() {
   return (
     <Section
       title="Create vault"
-      description="Choose a password to encrypt your notes. The password is never sent to the server — if you lose it, your data can't be recovered."
+      description="Choose a password to encrypt your entries. The password is never sent to the server — if you lose it, your data can't be recovered."
     >
       <PasswordField
         value={password}

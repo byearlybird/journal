@@ -72,3 +72,49 @@ Cloudflare Worker named `journal`, custom domain `journal.byearlybird.com`, D1 b
 - ESM only (no CommonJS).
 - `oxlint` enforces `typescript/no-explicit-any` and `no-unused-vars` as errors. The lint-disable comment syntax is `// oxlint-disable <rule>` (see `src/db/migrations/sync-helpers.ts`).
 - TypeScript is strict with `noUnusedLocals`, `noUnusedParameters`, `erasableSyntaxOnly`, `verbatimModuleSyntax`.
+
+## Writing voice
+
+Applies to all user-facing copy: in-app UI strings, the `src/docs/*.md` files, and any marketing or landing copy. The product already has a coherent voice — these notes codify it so it doesn't drift.
+
+**One-line summary:** a reflective companion — warm, plainspoken, permission-giving, never preachy.
+
+### Principles
+
+- **Plainspoken, no productivity jargon.** Avoid "optimize", "unlock", "crush", "leverage", "powerful", "boost", "supercharge". Say "small actions for today", not "high-leverage daily tasks".
+- **Permission, not pressure.** Empty states, prompts, and reminders should normalize messiness. *"Roll over anything that didn't get done"* over *"Don't fall behind!"*.
+- **Second person, active voice.** "You'll see…", "Try…", "Here's what's happening." Not passive, not third-person abstract.
+- **Reassuring on errors.** Diagnostic, not alarmed. *"Couldn't reach the sync server."* — no exclamation points, no capitalized warnings, no apology theatre.
+- **Quietly playful, not slick.** Contractions and small asides are fine. No exclamation-heavy enthusiasm, no marketing winks, no emoji unless the user adds them.
+- **Opinionated about reflection-as-process.** The product has a worldview (see `src/docs/philosophy.md`). When explaining a feature, connect it back to *why* it exists, not just what it does.
+- **Concrete and example-led in docs.** Lead with small scenarios over abstractions: "Say you've got a thought you want to come back to…".
+- **Short paragraphs, scannable.** One- or two-sentence paragraphs. Headings and bullets in docs. Generous whitespace.
+- **No shame, ever.** Overdue tasks, abandoned intentions, half-formed notes are normal. *"Cancel tasks that no longer feel important — that's a valid outcome."* No streaks, no nagging, no productivity guilt.
+
+### Product vocabulary
+
+Keep these terms consistent. They're the words the product already uses.
+
+- **Entries** — umbrella term for anything the user writes.
+- **Notes** — open reflections, ideas, half-thoughts. Circle icon.
+- **Tasks** — small actions for today. Square icon. States: incomplete, complete, cancelled, deferred. Avoid "todo", "to-do", "item".
+- **Intentions** — a broader monthly theme or focus. Star icon. Avoid "goal".
+- **Vault** — the encrypted container for synced data. Avoid "account data" or "cloud backup".
+- **Labels** — optional tags on entries. Avoid "categories" or "folders".
+- **Pinned** — notes that persist in the sidebar.
+- **Active** — incomplete tasks carried from prior days.
+
+### Marketing copy
+
+Same voice, slightly more outward-facing. Lead with what the product *is for* (a quiet place to think), not a feature list. No adjective stacking, no social-proof clichés, no urgency CTAs. Frame encryption as *"your entries stay yours"*, not as a fear pitch.
+
+### Do / Don't
+
+| ✅ On voice | ❌ Off voice |
+|---|---|
+| What's on your mind? | Start journaling now! |
+| No entries yet today. | You haven't journaled today — keep your streak going! |
+| Roll over anything that didn't get done. | Don't let tasks pile up. |
+| Cancel tasks that no longer feel important — that's a valid outcome. | Stay on top of your tasks. |
+| Couldn't reach the sync server. | Sync failed! Please try again. |
+| A quiet place for notes, tasks, and intentions. | The all-in-one productivity journal that helps you crush your goals. |

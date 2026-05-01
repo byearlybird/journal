@@ -10,17 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as DocsRouteImport } from './routes/docs'
 import { Route as AllEntriesRouteImport } from './routes/all-entries'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings.index'
+import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as SettingsThemeRouteImport } from './routes/settings.theme'
 import { Route as SettingsSyncRouteImport } from './routes/settings.sync'
 import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
 import { Route as SettingsDataRouteImport } from './routes/settings.data'
+import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AllEntriesRoute = AllEntriesRouteImport.update({
@@ -37,6 +45,11 @@ const SettingsIndexRoute = SettingsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => SettingsRoute,
+} as any)
+const DocsIndexRoute = DocsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DocsRoute,
 } as any)
 const SettingsThemeRoute = SettingsThemeRouteImport.update({
   id: '/theme',
@@ -58,35 +71,48 @@ const SettingsDataRoute = SettingsDataRouteImport.update({
   path: '/data',
   getParentRoute: () => SettingsRoute,
 } as any)
+const DocsSlugRoute = DocsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DocsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/all-entries': typeof AllEntriesRoute
+  '/docs': typeof DocsRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
+  '/docs/$slug': typeof DocsSlugRoute
   '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
   '/settings/theme': typeof SettingsThemeRoute
+  '/docs/': typeof DocsIndexRoute
   '/settings/': typeof SettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/all-entries': typeof AllEntriesRoute
+  '/docs/$slug': typeof DocsSlugRoute
   '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
   '/settings/theme': typeof SettingsThemeRoute
+  '/docs': typeof DocsIndexRoute
   '/settings': typeof SettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/all-entries': typeof AllEntriesRoute
+  '/docs': typeof DocsRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
+  '/docs/$slug': typeof DocsSlugRoute
   '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/sync': typeof SettingsSyncRoute
   '/settings/theme': typeof SettingsThemeRoute
+  '/docs/': typeof DocsIndexRoute
   '/settings/': typeof SettingsIndexRoute
 }
 export interface FileRouteTypes {
@@ -94,36 +120,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/all-entries'
+    | '/docs'
     | '/settings'
+    | '/docs/$slug'
     | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
     | '/settings/theme'
+    | '/docs/'
     | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/all-entries'
+    | '/docs/$slug'
     | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
     | '/settings/theme'
+    | '/docs'
     | '/settings'
   id:
     | '__root__'
     | '/'
     | '/all-entries'
+    | '/docs'
     | '/settings'
+    | '/docs/$slug'
     | '/settings/data'
     | '/settings/profile'
     | '/settings/sync'
     | '/settings/theme'
+    | '/docs/'
     | '/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AllEntriesRoute: typeof AllEntriesRoute
+  DocsRoute: typeof DocsRouteWithChildren
   SettingsRoute: typeof SettingsRouteWithChildren
 }
 
@@ -134,6 +169,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/all-entries': {
@@ -156,6 +198,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/'
       preLoaderRoute: typeof SettingsIndexRouteImport
       parentRoute: typeof SettingsRoute
+    }
+    '/docs/': {
+      id: '/docs/'
+      path: '/'
+      fullPath: '/docs/'
+      preLoaderRoute: typeof DocsIndexRouteImport
+      parentRoute: typeof DocsRoute
     }
     '/settings/theme': {
       id: '/settings/theme'
@@ -185,8 +234,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsDataRouteImport
       parentRoute: typeof SettingsRoute
     }
+    '/docs/$slug': {
+      id: '/docs/$slug'
+      path: '/$slug'
+      fullPath: '/docs/$slug'
+      preLoaderRoute: typeof DocsSlugRouteImport
+      parentRoute: typeof DocsRoute
+    }
   }
 }
+
+interface DocsRouteChildren {
+  DocsSlugRoute: typeof DocsSlugRoute
+  DocsIndexRoute: typeof DocsIndexRoute
+}
+
+const DocsRouteChildren: DocsRouteChildren = {
+  DocsSlugRoute: DocsSlugRoute,
+  DocsIndexRoute: DocsIndexRoute,
+}
+
+const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
 
 interface SettingsRouteChildren {
   SettingsDataRoute: typeof SettingsDataRoute
@@ -211,6 +279,7 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AllEntriesRoute: AllEntriesRoute,
+  DocsRoute: DocsRouteWithChildren,
   SettingsRoute: SettingsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

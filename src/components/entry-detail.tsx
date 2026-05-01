@@ -7,6 +7,7 @@ import {
   ArrowSquareRightIcon,
   CheckIcon,
   CheckSquareIcon,
+  DiamondIcon,
   DotsThreeVerticalIcon,
   PencilSimpleIcon,
   PushPinSimpleIcon,
@@ -19,11 +20,14 @@ import type { DBSchema, TaskTable } from "@/db/schema";
 import { formatLongDate, formatTime } from "@/utils/dates";
 import { notesService } from "@/services/note-service";
 import { taskService } from "@/services/task-service";
+import { moodService } from "@/services/mood-service";
 import { useDBQuery } from "@/hooks/use-db-query";
 import { useEntry } from "@/hooks/use-entry";
 import { useTodayDate } from "@/hooks/use-today-date";
 import { labelsService } from "@/services/label-service";
 import { $selectedEntryId, closeEntryDetail } from "@/stores/entry-detail";
+import { moodColor } from "@/utils/mood-color";
+import { moodLabel } from "@/utils/mood-label";
 import { Button } from "./shared/button";
 import { LabelPicker } from "./label-picker";
 
@@ -63,7 +67,7 @@ export function EntryDetail() {
         onSave={(v) => {
           if (!editEntry) return;
           if (editEntry.type === "note") notesService.updateContent(editEntry.id, v);
-          else taskService.updateContent(editEntry.id, v);
+          else if (editEntry.type === "task") taskService.updateContent(editEntry.id, v);
         }}
       />
     </>
@@ -101,7 +105,8 @@ function EntryDetailContent({
                 variant="destructive"
                 onClick={() => {
                   if (entry.type === "note") notesService.delete(entry.id);
-                  else taskService.delete(entry.id);
+                  else if (entry.type === "task") taskService.delete(entry.id);
+                  else moodService.delete(entry.id);
                   closeEntryDetail();
                 }}
               >
@@ -118,21 +123,26 @@ function EntryDetailContent({
       <div className="relative flex-1 min-h-0 flex flex-col group/content">
         <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3">
           {entry.type === "task" && entry.status && <TaskStatusRow status={entry.status} />}
+          {entry.type === "mood" && entry.value !== null && <MoodValueRow value={entry.value} />}
+          {entry.type !== "mood" && (
+            <button
+              type="button"
+              onClick={() => onEditClick(entry)}
+              className="text-left text-foreground font-serif whitespace-pre-wrap rounded-lg -mx-2 px-2 py-1 hover:bg-surface-tint transition-colors"
+            >
+              {entry.content}
+            </button>
+          )}
+        </div>
+        {entry.type !== "mood" && (
           <button
             type="button"
             onClick={() => onEditClick(entry)}
-            className="text-left text-foreground font-serif whitespace-pre-wrap rounded-lg -mx-2 px-2 py-1 hover:bg-surface-tint transition-colors"
+            className="absolute top-2 right-3 rounded-md bg-surface outline outline-border p-1 opacity-0 group-hover/content:opacity-100 hover:bg-surface-tint transition-opacity"
           >
-            {entry.content}
+            <PencilSimpleIcon className="size-4 text-foreground-muted" />
           </button>
-        </div>
-        <button
-          type="button"
-          onClick={() => onEditClick(entry)}
-          className="absolute top-2 right-3 rounded-md bg-surface outline outline-border p-1 opacity-0 group-hover/content:opacity-100 hover:bg-surface-tint transition-opacity"
-        >
-          <PencilSimpleIcon className="size-4 text-foreground-muted" />
-        </button>
+        )}
       </div>
 
       <div className="border-t border-dashed border-border p-4 flex items-center justify-between">
@@ -185,7 +195,22 @@ function EntryActions({ entry }: { entry: TimelineView }) {
     );
   }
 
+  if (entry.type === "mood") return null;
+
   return <TaskActions entry={entry} />;
+}
+
+function MoodValueRow({ value }: { value: number }) {
+  return (
+    <div className="flex gap-2 items-center text-sm text-foreground-muted mb-4">
+      <DiamondIcon
+        weight="fill"
+        className="size-4"
+        style={{ color: moodColor(value / 100) }}
+      />
+      <span>{moodLabel(value)}</span>
+    </div>
+  );
 }
 
 function TaskActions({ entry }: { entry: TimelineView }) {

@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { ToggleGroup } from "@base-ui/react/toggle-group";
 import { Toggle } from "@base-ui/react/toggle";
-import { CircleIcon, SquareIcon } from "@phosphor-icons/react";
+import { CircleIcon, DiamondIcon, SquareIcon } from "@phosphor-icons/react";
 import { clsx } from "clsx";
 import { Button } from "@/components/shared/button";
+import { Slider } from "@/components/shared/slider";
 import { LabelPicker } from "./label-picker";
 import { Dialog, DialogClose } from "./shared/dialog";
 import { notesService } from "@/services/note-service";
 import { taskService } from "@/services/task-service";
+import { moodService } from "@/services/mood-service";
+import { moodLabel } from "@/utils/mood-label";
 import { $labelFilter } from "@/stores/entry-search";
 
-type EntryType = "note" | "task";
+type EntryType = "note" | "task" | "mood";
 
 type CreateDialogProps = {
   open: boolean;
@@ -20,6 +23,7 @@ type CreateDialogProps = {
 export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
   const [content, setContent] = useState("");
   const [entryType, setEntryType] = useState<EntryType>("note");
+  const [mood, setMood] = useState(50);
   const [labelId, setLabelId] = useState<string | null>(() => $labelFilter.get()?.id ?? null);
 
   useEffect(() => {
@@ -27,19 +31,27 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
   }, [open]);
 
   async function handleSubmit() {
-    if (!content.trim()) return;
-    if (entryType === "note") {
-      await notesService.createNote(content.trim(), labelId);
+    if (entryType === "mood") {
+      await moodService.createMood(mood, labelId);
     } else {
-      await taskService.createTask(content.trim(), labelId);
+      if (!content.trim()) return;
+      if (entryType === "note") {
+        await notesService.createNote(content.trim(), labelId);
+      } else {
+        await taskService.createTask(content.trim(), labelId);
+      }
     }
     setContent("");
+    setMood(50);
     setLabelId($labelFilter.get()?.id ?? null);
     onOpenChange(false);
   }
 
   function handleOpenChange(isOpen: boolean) {
-    if (!isOpen) setContent("");
+    if (!isOpen) {
+      setContent("");
+      setMood(50);
+    }
     onOpenChange(isOpen);
   }
 
@@ -47,28 +59,39 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
     if (value.length > 0) setEntryType(value[0] as EntryType);
   }
 
+  const submitDisabled = entryType !== "mood" && !content.trim();
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <div className="-mx-2">
         <EntryTypeToggle value={entryType} onValueChange={handleTypeChange} />
       </div>
-      <textarea
-        className="w-full mt-4 mb-4 bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-base leading-relaxed min-h-32 md:min-h-48 max-h-[33vh] md:max-h-[50vh] overflow-y-auto field-sizing-content font-serif"
-        placeholder="What's on your mind?"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSubmit();
-        }}
-        autoFocus
-      />
+      {entryType === "mood" ? (
+        <div className="my-4 flex flex-col gap-2">
+          <div className="text-center text-sm text-foreground-muted h-5">
+            {moodLabel(mood)}
+          </div>
+          <Slider value={mood} onValueChange={setMood} />
+        </div>
+      ) : (
+        <textarea
+          className="w-full mt-4 mb-4 bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-base leading-relaxed min-h-32 md:min-h-48 max-h-[33vh] md:max-h-[50vh] overflow-y-auto field-sizing-content font-serif"
+          placeholder="What's on your mind?"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSubmit();
+          }}
+          autoFocus
+        />
+      )}
       <div className="flex items-center justify-between gap-2">
         <LabelPicker value={labelId} onValueChange={setLabelId} radius="outermost" />
         <div className="flex gap-2">
           <DialogClose render={(props) => <Button variant="secondary" {...props} />}>
             Cancel
           </DialogClose>
-          <Button onClick={handleSubmit} disabled={!content.trim()}>
+          <Button onClick={handleSubmit} disabled={submitDisabled}>
             Done
           </Button>
         </div>
@@ -97,6 +120,13 @@ function EntryTypeToggle({ value, onValueChange }: EntryTypeToggleProps) {
         icon={<SquareIcon className="size-4" />}
         active={value === "task"}
       />
+      <TypeToggle
+        value="mood"
+        label="Mood"
+        icon={<DiamondIcon className="size-4" />}
+        active={value === "mood"}
+        className="ms-auto"
+      />
     </ToggleGroup>
   );
 }
@@ -106,11 +136,13 @@ function TypeToggle({
   label,
   icon,
   active,
+  className,
 }: {
   value: string;
   label: string;
   icon: React.ReactNode;
   active: boolean;
+  className?: string;
 }) {
   return (
     <Toggle
@@ -118,6 +150,7 @@ function TypeToggle({
       className={clsx(
         "flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm font-medium transition-all cursor-pointer outline-none",
         active ? "bg-background text-foreground" : "text-foreground-muted hover:text-foreground",
+        className,
       )}
     >
       {icon}

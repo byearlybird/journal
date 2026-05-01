@@ -1,9 +1,10 @@
 # Entries
 
-Everything you write is an entry. There are three kinds, each suited to a different shape of thought:
+Everything you write is an entry. There are four kinds, each suited to a different shape of thought:
 
 - ○ [**Notes**](/docs/notes) — open reflections, ideas, half-thoughts.
 - □ [**Tasks**](/docs/tasks) — small actions for today.
+- ◇ [**Moods**](/docs/moods) — a quick read on how you're feeling right now.
 - ☆ [**Intentions**](/docs/intentions) — a broader theme for the month.
 
 ### Where you'll find them
@@ -25,4 +26,4 @@ Two ways, depending on how much you want to do:
 
 ### Creating one
 
-The **+** button in the top right opens a blank page. Toggle between Note and Task at any time — Intentions work a little differently and live in the sidebar prompt at the start of each month.
+The **+** button in the top right opens a blank page. Toggle between Note, Task, and Mood at any time — Intentions work a little differently and live in the sidebar prompt at the start of each month.

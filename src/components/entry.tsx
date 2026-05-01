@@ -4,11 +4,14 @@ import {
   CheckSquareIcon,
   XSquareIcon,
   ArrowSquareRightIcon,
+  DiamondIcon,
   TagSimpleIcon,
   PushPinSimpleIcon,
 } from "@phosphor-icons/react";
 import type { DBSchema, TaskTable } from "@/db/schema";
 import { formatTime } from "@/utils/dates";
+import { moodColor } from "@/utils/mood-color";
+import { moodLabel } from "@/utils/mood-label";
 import { taskService } from "@/services/task-service";
 import { notesService } from "@/services/note-service";
 import type { MouseEventHandler } from "react";
@@ -20,6 +23,7 @@ export function Entry({
   id,
   type,
   content,
+  value,
   created_at,
   status,
   pinned,
@@ -32,15 +36,18 @@ export function Entry({
       className="rounded-xl px-2 py-4 mb-4 hover:bg-surface-tint transition-all flex gap-2.5 items-start"
       onClick={onClick}
     >
-      <EntryGlyph id={id} type={type} status={status} pinned={pinned} />
+      <EntryGlyph id={id} type={type} status={status} value={value} />
       <div className="flex-1 flex flex-col gap-1.5">
         <div className="text-xs text-foreground-muted flex items-center gap-1">
           {formatTime(created_at)}
           {type === "note" && pinned === 1 && <PushPinSimpleIcon className="size-3" />}
+          {type === "mood" && value !== null && <span>· {moodLabel(value)}</span>}
         </div>
-        <div className={clsx("font-serif whitespace-pre-wrap", compact && "text-sm line-clamp-3")}>
-          {content}
-        </div>
+        {content !== null && (
+          <div className={clsx("font-serif whitespace-pre-wrap", compact && "text-sm line-clamp-3")}>
+            {content}
+          </div>
+        )}
         {label_name && (
           <div className="flex items-center gap-1 text-xs text-foreground-muted">
             <TagSimpleIcon className="size-3" />
@@ -54,15 +61,15 @@ export function Entry({
 
 function EntryGlyph(props: {
   id: string;
-  type: "task" | "note";
+  type: "note" | "task" | "mood";
   status: TaskTable["status"] | null;
-  pinned: number;
+  value: number | null;
 }) {
   const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     if (props.type === "task") {
       taskService.cycleStatus(props.id);
-    } else {
+    } else if (props.type === "note") {
       notesService.togglePin(props.id);
     }
   };
@@ -71,6 +78,12 @@ function EntryGlyph(props: {
     <button onClick={handleClick} className="rounded-lg hover:bg-surface-tint p-0.5 -mt-0.5">
       {props.type === "note" ? (
         <CircleIcon className="size-4" />
+      ) : props.type === "mood" ? (
+        <DiamondIcon
+          weight="fill"
+          className="size-4"
+          style={{ color: moodColor((props.value ?? 0) / 100) }}
+        />
       ) : props.status === "complete" ? (
         <CheckSquareIcon className="size-4 text-accent" />
       ) : props.status === "cancelled" ? (

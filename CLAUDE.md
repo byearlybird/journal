@@ -98,6 +98,7 @@ Keep these terms consistent. They're the words the product already uses.
 - **Entries** — umbrella term for anything the user writes.
 - **Notes** — open reflections, ideas, half-thoughts. Circle icon.
 - **Tasks** — small actions for today. Square icon. States: incomplete, complete, cancelled, deferred. Avoid "todo", "to-do", "item".
+- **Moods** — a quick read on how you're feeling right now. Diamond icon. Snapshots, not summaries — multiple per day is fine. Avoid "feelings log", "mood tracker".
 - **Intentions** — a broader monthly theme or focus. Star icon. Avoid "goal".
 - **Vault** — the encrypted container for synced data. Avoid "account data" or "cloud backup".
 - **Labels** — optional tags on entries. Avoid "categories" or "folders".
@@ -117,4 +118,4 @@ Same voice, slightly more outward-facing. Lead with what the product _is for_ (a
 | Roll over anything that didn't get done.                             | Don't let tasks pile up.                                             |
 | Cancel tasks that no longer feel important — that's a valid outcome. | Stay on top of your tasks.                                           |
 | Couldn't reach the sync server.                                      | Sync failed! Please try again.                                       |
-| A quiet place for notes, tasks, and intentions.                      | The all-in-one productivity journal that helps you crush your goals. |
+| A thinking space for your notes, tasks, moods, and intentions.       | The all-in-one productivity journal that helps you crush your goals. |

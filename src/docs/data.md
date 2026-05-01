@@ -14,7 +14,7 @@ Sync just pauses until you set up a new vault.
 
 ### Export
 
-From **Settings → Data**, download a JSON file containing every note, task, and intention. Save it wherever you keep important things — a backup drive, a password manager attachment, your home folder. That's your portable copy of the journal, sitting safely outside the app.
+From **Settings → Data**, download a JSON file containing every note, task, mood, and intention. Save it wherever you keep important things — a backup drive, a password manager attachment, your home folder. That's your portable copy of the journal, sitting safely outside the app.
 
 ### Coming later
 

@@ -12,4 +12,4 @@ Write like nobody's reading — because nobody is. No thought is too small, too 
 
 ### A thinking space, not a storage space.
 
-Your journal is a thinking space, not a storage space. It's where you start your day, check in, and reflect — not where you manage projects or store documentation. When a thought grows into something bigger, graduate it to another tool. Pin the note, log the task, get the project set up somewhere it can live properly. Your journal will be here for the next thought.
+Your journal is a thinking space, not a storage space. It's where you start your day, check in, and reflect — not where you manage projects or store documentation. When a thought grows into something bigger, graduate it to another tool. Pin the note, log the task, mark the mood, get the project set up somewhere it can live properly. Your journal will be here for the next thought.

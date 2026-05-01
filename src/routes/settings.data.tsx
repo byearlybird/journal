@@ -40,7 +40,7 @@ function RouteComponent() {
         <div>
           <h2 className="text-sm font-medium text-foreground">Export data</h2>
           <p className="text-sm text-foreground-muted mt-1">
-            Download a JSON file containing your notes, tasks, and intentions.
+            Download a JSON file containing your notes, tasks, moods, and intentions.
           </p>
         </div>
         <Button onClick={handleExport} disabled={busy}>

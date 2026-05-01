@@ -38,14 +38,22 @@ export type IntentionTable = SyncableRow & {
   content_edited_at: string | null;
 };
 
+export type MoodTable = SyncableRow & {
+  value: number;
+  date: string;
+  created_at: string;
+  label: string | null;
+};
+
 type LabelTable = SyncableRow & {
   name: string;
 };
 
 type TimelineView = {
   id: string;
-  type: "note" | "task";
-  content: string;
+  type: "note" | "task" | "mood";
+  content: string | null;
+  value: number | null;
   created_at: string;
   status: TaskTable["status"] | null;
   pinned: number;
@@ -65,6 +73,7 @@ export type DBSchema = {
   notes: NoteTable;
   tasks: TaskTable;
   intentions: IntentionTable;
+  moods: MoodTable;
   timeline: TimelineView;
   labels: LabelTable;
   sync_changes: SyncChanges;

@@ -10,8 +10,8 @@ export const labelsService = {
       })
       .execute();
   },
-  async setEntryLabel(type: "note" | "task", id: string, label: string | null) {
-    const table = type === "note" ? "notes" : "tasks";
+  async setEntryLabel(type: "note" | "task" | "mood", id: string, label: string | null) {
+    const table = type === "note" ? "notes" : type === "task" ? "tasks" : "moods";
     await db.updateTable(table).set({ label }).where("id", "=", id).execute();
   },
   async renameLabel(id: string, name: string) {
@@ -21,6 +21,7 @@ export const labelsService = {
     await db.transaction().execute(async (trx) => {
       await trx.updateTable("notes").set({ label: null }).where("label", "=", id).execute();
       await trx.updateTable("tasks").set({ label: null }).where("label", "=", id).execute();
+      await trx.updateTable("moods").set({ label: null }).where("label", "=", id).execute();
       await trx.deleteFrom("labels").where("id", "=", id).execute();
     });
   },

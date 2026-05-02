@@ -23,7 +23,15 @@ type TombstonePayload = {
   hlc: string;
 };
 
-type SyncPayload<T extends Selectable<SyncableRow>> = MutatePayload<T> | TombstonePayload;
+type AttachmentDeletePayload = {
+  type: "attachment_delete";
+  blobId: string;
+};
+
+type SyncPayload<T extends Selectable<SyncableRow>> =
+  | MutatePayload<T>
+  | TombstonePayload
+  | AttachmentDeletePayload;
 
 async function pullChanges(dek: CryptoKey, transport: ChangeTransport) {
   const { last_server_seq } = await db
@@ -47,6 +55,11 @@ async function pullChanges(dek: CryptoKey, transport: ChangeTransport) {
     let maxRemoteHlc = "";
 
     for (const payload of payloads) {
+      if (payload.type === "attachment_delete") {
+        await trx.deleteFrom("blobs").where("id", "=", payload.blobId).execute();
+        continue;
+      }
+
       const incomingHlc = payload.type === "mutate" ? String(payload.data.hlc) : payload.hlc;
       if (incomingHlc > maxRemoteHlc) maxRemoteHlc = incomingHlc;
 
@@ -140,6 +153,8 @@ async function pushChanges(dek: CryptoKey, transport: ChangeTransport) {
 
     if (operation === "tombstone") {
       payload = { type: "tombstone", tableName: table_name, rowId: row_id, hlc };
+    } else if (operation === "attachment_delete") {
+      payload = { type: "attachment_delete", blobId: row_id };
     } else {
       const row = await db
         .selectFrom(table_name)

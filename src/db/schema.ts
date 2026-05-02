@@ -92,7 +92,7 @@ type SyncChanges = {
   table_name: keyof DBSchema;
   row_id: string;
   hlc: string;
-  operation: "mutate" | "tombstone";
+  operation: "mutate" | "tombstone" | "attachment_delete";
 };
 
 type TombstoneTable = { row_id: string; hlc: string };

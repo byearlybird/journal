@@ -1,6 +1,34 @@
 import { db } from "@/db/client";
 import { toLocalISO } from "@/utils/dates";
 
+// Drops a blob from local storage, queues its R2 deletion, and enqueues an
+// `attachment_delete` sync_changes entry so other devices clear their local
+// cache when they pull. Without that entry, receivers would hold orphaned blob
+// rows after the moment update/tombstone arrives.
+async function disposeBlob(blobId: string, ts: string) {
+  await db
+    .insertInto("blob_deletes")
+    .values({ blob_id: blobId, enqueued_at: ts })
+    .onConflict((oc) => oc.column("blob_id").doNothing())
+    .execute();
+  await db.deleteFrom("blob_uploads").where("blob_id", "=", blobId).execute();
+  await db.deleteFrom("blobs").where("id", "=", blobId).execute();
+
+  const state = await db
+    .selectFrom("client_state")
+    .select(["hlc_wall", "hlc_count", "node_id"])
+    .executeTakeFirstOrThrow();
+  const hlc = `${String(state.hlc_wall).padStart(15, "0")}@${String(state.hlc_count).padStart(8, "0")}@${state.node_id}`;
+
+  await db
+    .insertInto("sync_changes")
+    .values({ table_name: "blobs", row_id: blobId, hlc, operation: "attachment_delete" })
+    .onConflict((oc) =>
+      oc.columns(["table_name", "row_id"]).doUpdateSet({ hlc, operation: "attachment_delete" }),
+    )
+    .execute();
+}
+
 export const momentService = {
   async createMoment(
     content: string,
@@ -62,20 +90,14 @@ export const momentService = {
       (x): x is string => typeof x === "string",
     );
 
+    await db.deleteFrom("moments").where("id", "=", id).execute();
+
     if (blobIds.length > 0) {
       const localISO = toLocalISO(new Date());
       for (const blobId of blobIds) {
-        await db
-          .insertInto("blob_deletes")
-          .values({ blob_id: blobId, enqueued_at: localISO })
-          .onConflict((oc) => oc.column("blob_id").doNothing())
-          .execute();
-        await db.deleteFrom("blob_uploads").where("blob_id", "=", blobId).execute();
-        await db.deleteFrom("blobs").where("id", "=", blobId).execute();
+        await disposeBlob(blobId, localISO);
       }
     }
-
-    await db.deleteFrom("moments").where("id", "=", id).execute();
   },
   async updateContent(id: string, content: string) {
     await db
@@ -97,22 +119,16 @@ export const momentService = {
 
     if (blobIds.length === 0) return;
 
-    const localISO = toLocalISO(new Date());
-    for (const blobId of blobIds) {
-      await db
-        .insertInto("blob_deletes")
-        .values({ blob_id: blobId, enqueued_at: localISO })
-        .onConflict((oc) => oc.column("blob_id").doNothing())
-        .execute();
-      await db.deleteFrom("blob_uploads").where("blob_id", "=", blobId).execute();
-      await db.deleteFrom("blobs").where("id", "=", blobId).execute();
-    }
-
     await db
       .updateTable("moments")
       .set({ image_blob_id: null, thumbnail_blob_id: null })
       .where("id", "=", id)
       .execute();
+
+    const localISO = toLocalISO(new Date());
+    for (const blobId of blobIds) {
+      await disposeBlob(blobId, localISO);
+    }
   },
   async attachPhoto(id: string, display: Uint8Array, thumbnail: Uint8Array) {
     const localISO = toLocalISO(new Date());

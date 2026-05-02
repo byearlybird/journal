@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Drawer } from "@base-ui/react/drawer";
 import { MenuRoot, Menu, MenuTrigger, MenuItem } from "@/components/shared/menu";
-import { PromptDialog } from "@/components/shared/prompt-dialog";
 import {
   ArrowCounterClockwiseIcon,
   ArrowSquareRightIcon,
@@ -9,7 +8,6 @@ import {
   CheckSquareIcon,
   DiamondIcon,
   DotsThreeVerticalIcon,
-  PencilSimpleIcon,
   PushPinSimpleIcon,
   SquareIcon,
   XIcon,
@@ -35,52 +33,30 @@ type TimelineView = DBSchema["timeline"];
 
 export function EntryDetail() {
   const id = useStore($selectedEntryId);
-  const [editEntry, setEditEntry] = useState<TimelineView | null>(null);
 
   return (
-    <>
-      <Drawer.Root
-        open={id !== null}
-        swipeDirection="right"
-        onOpenChange={(open) => {
-          if (!open) closeEntryDetail();
-        }}
-      >
-        <Drawer.Portal>
-          <Drawer.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
-          <Drawer.Viewport className="fixed top-safe-top bottom-safe-bottom left-safe-left right-safe-right flex items-stretch justify-end p-2">
-            <Drawer.Popup className="relative w-full rounded-2xl md:max-w-2/3 lg:max-w-1/2 h-full bg-surface outline outline-border transition-transform duration-300 data-starting-style:translate-x-full data-ending-style:translate-x-full">
-              <Drawer.Content className="h-full flex flex-col">
-                {id && <EntryDetailContent id={id} onEditClick={setEditEntry} />}
-              </Drawer.Content>
-            </Drawer.Popup>
-          </Drawer.Viewport>
-        </Drawer.Portal>
-      </Drawer.Root>
-      <PromptDialog
-        open={editEntry !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditEntry(null);
-        }}
-        multiline
-        initialValue={editEntry?.content ?? ""}
-        onSave={(v) => {
-          if (!editEntry) return;
-          if (editEntry.type === "note") notesService.updateContent(editEntry.id, v);
-          else if (editEntry.type === "task") taskService.updateContent(editEntry.id, v);
-        }}
-      />
-    </>
+    <Drawer.Root
+      open={id !== null}
+      swipeDirection="right"
+      onOpenChange={(open) => {
+        if (!open) closeEntryDetail();
+      }}
+    >
+      <Drawer.Portal>
+        <Drawer.Backdrop className="fixed inset-0 bg-backdrop data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity duration-300" />
+        <Drawer.Viewport className="fixed top-safe-top bottom-safe-bottom left-safe-left right-safe-right flex items-stretch justify-end p-2">
+          <Drawer.Popup className="relative w-full rounded-2xl md:max-w-2/3 lg:max-w-1/2 h-full bg-surface outline outline-border transition-transform duration-300 data-starting-style:translate-x-full data-ending-style:translate-x-full">
+            <Drawer.Content className="h-full flex flex-col">
+              {id && <EntryDetailContent id={id} />}
+            </Drawer.Content>
+          </Drawer.Popup>
+        </Drawer.Viewport>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }
 
-function EntryDetailContent({
-  id,
-  onEditClick,
-}: {
-  id: string;
-  onEditClick: (entry: TimelineView) => void;
-}) {
+function EntryDetailContent({ id }: { id: string }) {
   const results = useDBQuery((db) => db.selectFrom("timeline").selectAll().where("id", "=", id));
   const entry = results?.[0] ?? null;
 
@@ -120,29 +96,12 @@ function EntryDetailContent({
         </div>
       </div>
 
-      <div className="relative flex-1 min-h-0 flex flex-col group/content">
+      <div className="flex-1 min-h-0 flex flex-col">
         <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3">
           {entry.type === "task" && entry.status && <TaskStatusRow status={entry.status} />}
           {entry.type === "mood" && entry.value !== null && <MoodValueRow value={entry.value} />}
-          {entry.type !== "mood" && (
-            <button
-              type="button"
-              onClick={() => onEditClick(entry)}
-              className="text-left text-foreground font-serif whitespace-pre-wrap rounded-lg -mx-2 px-2 py-1 hover:bg-surface-tint transition-colors"
-            >
-              {entry.content}
-            </button>
-          )}
+          {entry.type !== "mood" && <EntryContentEditor key={entry.id} entry={entry} />}
         </div>
-        {entry.type !== "mood" && (
-          <button
-            type="button"
-            onClick={() => onEditClick(entry)}
-            className="absolute top-2 right-3 rounded-md bg-surface outline outline-border p-1 opacity-0 group-hover/content:opacity-100 hover:bg-surface-tint transition-opacity"
-          >
-            <PencilSimpleIcon className="size-4 text-foreground-muted" />
-          </button>
-        )}
       </div>
 
       <div className="border-t border-dashed border-border p-4 flex items-center justify-between">
@@ -152,6 +111,37 @@ function EntryDetailContent({
         </div>
       </div>
     </>
+  );
+}
+
+function EntryContentEditor({ entry }: { entry: TimelineView }) {
+  const content = entry.content ?? "";
+  const [value, setValue] = useState(content);
+  const trimmed = value.trim();
+  const dirty = trimmed.length > 0 && trimmed !== content.trim();
+
+  function save() {
+    if (!dirty) return;
+    if (entry.type === "note") notesService.updateContent(entry.id, trimmed);
+    else if (entry.type === "task") taskService.updateContent(entry.id, trimmed);
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <textarea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) save();
+        }}
+        className="w-full bg-transparent text-foreground font-serif whitespace-pre-wrap resize-none outline-none field-sizing-content rounded-lg -mx-2 px-2 py-1 hover:bg-surface-tint focus:bg-surface-tint transition-colors"
+      />
+      {dirty && (
+        <div className="flex justify-end">
+          <Button onClick={save}>Save changes</Button>
+        </div>
+      )}
+    </div>
   );
 }
 

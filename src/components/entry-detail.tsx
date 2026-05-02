@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Drawer } from "@base-ui/react/drawer";
 import { MenuRoot, Menu, MenuTrigger, MenuItem } from "@/components/shared/menu";
 import { PromptDialog } from "@/components/shared/prompt-dialog";
@@ -9,12 +9,13 @@ import {
   CheckSquareIcon,
   DiamondIcon,
   DotsThreeVerticalIcon,
-  PencilSimpleIcon,
+  ImageIcon,
   PushPinSimpleIcon,
   SquareIcon,
   XIcon,
   XSquareIcon,
 } from "@phosphor-icons/react";
+import { deriveImages } from "@/utils/image-resize";
 import { useStore } from "@nanostores/react";
 import type { DBSchema, TaskTable } from "@/db/schema";
 import { formatLongDate, formatTime } from "@/utils/dates";
@@ -24,6 +25,7 @@ import { moodService } from "@/services/mood-service";
 import { momentService } from "@/services/moment-service";
 import { useDBQuery } from "@/hooks/use-db-query";
 import { useEntry } from "@/hooks/use-entry";
+import { useBlob } from "@/hooks/use-blob";
 import { useTodayDate } from "@/hooks/use-today-date";
 import { labelsService } from "@/services/label-service";
 import { $selectedEntryId, closeEntryDetail } from "@/stores/entry-detail";
@@ -103,6 +105,11 @@ function EntryDetailContent({
               <DotsThreeVerticalIcon />
             </MenuTrigger>
             <Menu>
+              {entry.type === "moment" && entry.has_image === 1 && (
+                <MenuItem onClick={() => momentService.removePhoto(entry.id)}>
+                  Remove photo
+                </MenuItem>
+              )}
               <MenuItem
                 variant="destructive"
                 onClick={() => {
@@ -123,11 +130,12 @@ function EntryDetailContent({
         </div>
       </div>
 
-      <div className="relative flex-1 min-h-0 flex flex-col group/content">
+      <div className="flex-1 min-h-0 flex flex-col">
         <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3">
           {entry.type === "task" && entry.status && <TaskStatusRow status={entry.status} />}
           {entry.type === "mood" && entry.value !== null && <MoodValueRow value={entry.value} />}
           {entry.type === "moment" && entry.has_image === 1 && <MomentImage id={entry.id} />}
+          {entry.type === "moment" && entry.has_image === 0 && <MomentAttachPhoto id={entry.id} />}
           {entry.type !== "mood" && (
             <button
               type="button"
@@ -138,15 +146,6 @@ function EntryDetailContent({
             </button>
           )}
         </div>
-        {entry.type !== "mood" && (
-          <button
-            type="button"
-            onClick={() => onEditClick(entry)}
-            className="absolute top-2 right-3 rounded-md bg-surface outline outline-border p-1 opacity-0 group-hover/content:opacity-100 hover:bg-surface-tint transition-opacity"
-          >
-            <PencilSimpleIcon className="size-4 text-foreground-muted" />
-          </button>
-        )}
       </div>
 
       <div className="border-t border-dashed border-border p-4 flex items-center justify-between">
@@ -204,19 +203,64 @@ function EntryActions({ entry }: { entry: TimelineView }) {
   return <TaskActions entry={entry} />;
 }
 
+function MomentAttachPhoto({ id }: { id: string }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [encoding, setEncoding] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError(null);
+    setEncoding(true);
+    try {
+      const { display, thumbnail } = await deriveImages(file);
+      await momentService.attachPhoto(id, display, thumbnail);
+    } catch {
+      setError("Couldn't process that image.");
+    } finally {
+      setEncoding(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
+  return (
+    <div className="self-start">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleChange}
+      />
+      <Button
+        variant="outline"
+        radius="inner"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={encoding}
+      >
+        <ImageIcon />
+        {encoding ? "Adding..." : "Add a photo"}
+      </Button>
+      {error && <div className="mt-2 text-sm text-foreground-muted">{error}</div>}
+    </div>
+  );
+}
+
 function MomentImage({ id }: { id: string }) {
   const moment = useEntry("moment", id);
+  const bytes = useBlob(moment?.image_blob_id);
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!moment?.image) {
+    if (!bytes) {
       setUrl(null);
       return;
     }
-    const objectUrl = URL.createObjectURL(new Blob([new Uint8Array(moment.image)]));
+    const objectUrl = URL.createObjectURL(new Blob([new Uint8Array(bytes)]));
     setUrl(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [moment?.image]);
+  }, [bytes]);
 
   if (!url) return null;
   return (

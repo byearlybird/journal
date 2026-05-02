@@ -10,11 +10,7 @@ export const labelsService = {
       })
       .execute();
   },
-  async setEntryLabel(
-    type: "note" | "task" | "mood" | "moment",
-    id: string,
-    label: string | null,
-  ) {
+  async setEntryLabel(type: "note" | "task" | "mood" | "moment", id: string, label: string | null) {
     const table =
       type === "note"
         ? "notes"

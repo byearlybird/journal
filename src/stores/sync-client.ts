@@ -8,6 +8,7 @@ import {
   setUnauthed as setAPIUnauthed,
 } from "./api";
 import { syncService, type ChangeTransport } from "@/services/sync-service";
+import { blobService } from "@/services/blob-service";
 
 type SyncClientStore =
   | {
@@ -147,6 +148,12 @@ export async function sync(): Promise<
 
   try {
     await syncService.fullSync(state.dek, transport);
+    try {
+      await blobService.uploadPending(state.dek);
+      await blobService.deletePending();
+    } catch (error) {
+      console.error("Blob sync failed", error);
+    }
     return { result: "success" } as const;
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error));

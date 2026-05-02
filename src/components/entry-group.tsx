@@ -1,6 +1,6 @@
 import type { DBSchema } from "@/db/schema";
 import { formatDayWeekday } from "@/utils/dates";
-import { Entry } from "./entry";
+import { Entry } from "./entry/entry";
 
 type TimelineView = DBSchema["timeline"];
 

@@ -104,6 +104,49 @@ const handler = new RPCHandler(router, {
   ],
 });
 
+const BLOB_PATH = /^\/api\/blobs\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+const MAX_BLOB_BYTES = 25 * 1024 * 1024;
+
+async function handleBlob(
+  request: Request,
+  env: Env,
+  userId: string,
+  blobId: string,
+): Promise<Response> {
+  const key = `${userId}/${blobId}`;
+
+  if (request.method === "PUT") {
+    const lengthHeader = request.headers.get("content-length");
+    const length = lengthHeader ? Number(lengthHeader) : NaN;
+    if (!Number.isFinite(length) || length <= 0 || length > MAX_BLOB_BYTES) {
+      return new Response("Invalid Content-Length", { status: 400 });
+    }
+    if (!request.body) return new Response("Missing body", { status: 400 });
+    await env.BUCKET.put(key, request.body, {
+      httpMetadata: { contentType: "application/octet-stream" },
+    });
+    return new Response(null, { status: 204 });
+  }
+
+  if (request.method === "GET") {
+    const object = await env.BUCKET.get(key);
+    if (!object) return new Response("Not found", { status: 404 });
+    return new Response(object.body, {
+      headers: {
+        "content-type": "application/octet-stream",
+        etag: object.httpEtag,
+      },
+    });
+  }
+
+  if (request.method === "DELETE") {
+    await env.BUCKET.delete(key);
+    return new Response(null, { status: 204 });
+  }
+
+  return new Response("Method not allowed", { status: 405 });
+}
+
 export default {
   async fetch(request, env): Promise<Response> {
     const db = env.DB;
@@ -113,6 +156,12 @@ export default {
       userId = await authenticateRequest(request, env);
     } catch {
       return new Response("Unauthorized", { status: 401 });
+    }
+
+    const url = new URL(request.url);
+    const blobMatch = url.pathname.match(BLOB_PATH);
+    if (blobMatch) {
+      return handleBlob(request, env, userId, blobMatch[1]);
     }
 
     const { matched, response } = await handler.handle(request, {

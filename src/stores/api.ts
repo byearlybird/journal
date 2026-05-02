@@ -21,12 +21,25 @@ export const $api = atom<APIStore>({
   client: null,
 });
 
+let currentGetToken: (() => Promise<string | null>) | null = null;
+
 export function setAuthed(getToken: () => Promise<string | null>) {
+  currentGetToken = getToken;
   $api.set({ status: "authed", client: createAPIClient(getToken) });
 }
 
 export function setUnauthed() {
+  currentGetToken = null;
   $api.set({ status: "unauthed", client: null });
+}
+
+export async function authedFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
+  const getToken = currentGetToken;
+  if (!getToken) throw new Error("Not authenticated");
+  const token = await getToken();
+  const headers = new Headers(init?.headers);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  return fetch(input, { ...init, headers });
 }
 
 function createAPIClient(getToken: () => Promise<string | null>): APIClient {

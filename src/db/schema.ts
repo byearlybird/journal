@@ -47,12 +47,28 @@ export type MoodTable = SyncableRow & {
 
 export type MomentTable = SyncableRow & {
   content: string;
-  image: Uint8Array | null;
-  thumbnail: Uint8Array | null;
+  image_blob_id: string | null;
+  thumbnail_blob_id: string | null;
   date: string;
   created_at: string;
   content_edited_at: string | null;
   label: string | null;
+};
+
+export type BlobTable = {
+  id: string;
+  data: Uint8Array;
+  created_at: string;
+};
+
+export type BlobUploadTable = {
+  blob_id: string;
+  enqueued_at: string;
+};
+
+export type BlobDeleteTable = {
+  blob_id: string;
+  enqueued_at: string;
 };
 
 type LabelTable = SyncableRow & {
@@ -86,6 +102,9 @@ export type DBSchema = {
   intentions: IntentionTable;
   moods: MoodTable;
   moments: MomentTable;
+  blobs: BlobTable;
+  blob_uploads: BlobUploadTable;
+  blob_deletes: BlobDeleteTable;
   timeline: TimelineView;
   labels: LabelTable;
   sync_changes: SyncChanges;

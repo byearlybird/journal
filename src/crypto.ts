@@ -122,6 +122,42 @@ export async function decrypt(ciphertext: string, dek: CryptoKey): Promise<strin
   return new TextDecoder().decode(plain);
 }
 
+function toArrayBufferView(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
+  const copy = new Uint8Array(new ArrayBuffer(bytes.byteLength));
+  copy.set(bytes);
+  return copy;
+}
+
+/** Encrypt raw bytes with the DEK. Returns [12-byte IV][ciphertext] as Uint8Array. */
+export async function encryptBytes(
+  plaintext: Uint8Array,
+  dek: CryptoKey,
+): Promise<Uint8Array<ArrayBuffer>> {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ciphertext = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    dek,
+    toArrayBufferView(plaintext),
+  );
+  const ct = new Uint8Array(ciphertext);
+  const out = new Uint8Array(new ArrayBuffer(iv.length + ct.length));
+  out.set(iv, 0);
+  out.set(ct, iv.length);
+  return out;
+}
+
+/** Decrypt a payload produced by `encryptBytes`. */
+export async function decryptBytes(
+  payload: Uint8Array,
+  dek: CryptoKey,
+): Promise<Uint8Array<ArrayBuffer>> {
+  const buf = toArrayBufferView(payload);
+  const iv = buf.subarray(0, 12);
+  const data = buf.slice(12);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, dek, data);
+  return new Uint8Array(plain);
+}
+
 // ── IndexedDB caching of non-extractable CryptoKey ────────────────────────
 
 function openVaultDB(): Promise<IDBDatabase> {

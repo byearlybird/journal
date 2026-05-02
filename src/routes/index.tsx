@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useStore } from "@nanostores/react";
 import { Page, PageHeader, PageTitle } from "@/components/page-layout";
-import { Entry } from "@/components/entry";
+import { Entry } from "@/components/entry/entry";
 import { useTodayDate } from "@/hooks/use-today-date";
 import { useEntriesOnDate } from "@/hooks/use-entries-on-date";
 import { openEntryDetail } from "@/stores/entry-detail";

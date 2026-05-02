@@ -22,14 +22,6 @@ export async function createSyncTable(
     .addColumn("hlc", "text", (cb) => cb.defaultTo(null))
     .execute();
 
-  await installSyncTriggers(db, tableName);
-}
-
-/**
- * Install the three sync triggers on an existing table that already has an `hlc` column.
- * Use this after a table rename, where the table itself was created out-of-band.
- */
-export async function installSyncTriggers(db: Kysely<any>, tableName: string): Promise<void> {
   const advanceClock = `
       UPDATE client_state SET
         hlc_count = CASE

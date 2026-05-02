@@ -42,18 +42,20 @@ export const M004_moments: Migration = {
     await sql`DROP VIEW IF EXISTS timeline`.execute(db);
     await sql`
       CREATE VIEW IF NOT EXISTS timeline AS
-      SELECT n.id, 'note' AS type, n.content, NULL AS value, n.created_at, NULL AS status, n.pinned, 0 AS has_image, l.name AS label_name
+      SELECT n.id, 'note' AS type, n.content, NULL AS value, n.created_at, NULL AS status, n.pinned,
+             NULL AS image_blob_id, NULL AS thumbnail_blob_id, l.name AS label_name
       FROM notes n LEFT JOIN labels l ON l.id = n.label
       UNION ALL
-      SELECT t.id, 'task' AS type, t.content, NULL AS value, t.created_at, t.status, 0 AS pinned, 0 AS has_image, l.name AS label_name
+      SELECT t.id, 'task' AS type, t.content, NULL AS value, t.created_at, t.status, 0 AS pinned,
+             NULL AS image_blob_id, NULL AS thumbnail_blob_id, l.name AS label_name
       FROM tasks t LEFT JOIN labels l ON l.id = t.label
       UNION ALL
-      SELECT m.id, 'mood' AS type, NULL AS content, m.value, m.created_at, NULL AS status, 0 AS pinned, 0 AS has_image, l.name AS label_name
+      SELECT m.id, 'mood' AS type, NULL AS content, m.value, m.created_at, NULL AS status, 0 AS pinned,
+             NULL AS image_blob_id, NULL AS thumbnail_blob_id, l.name AS label_name
       FROM moods m LEFT JOIN labels l ON l.id = m.label
       UNION ALL
       SELECT mo.id, 'moment' AS type, mo.content, NULL AS value, mo.created_at, NULL AS status, 0 AS pinned,
-             CASE WHEN mo.image_blob_id IS NULL THEN 0 ELSE 1 END AS has_image,
-             l.name AS label_name
+             mo.image_blob_id, mo.thumbnail_blob_id, l.name AS label_name
       FROM moments mo LEFT JOIN labels l ON l.id = mo.label
     `.execute(db);
   },

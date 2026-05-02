@@ -105,7 +105,7 @@ function EntryDetailContent({
               <DotsThreeVerticalIcon />
             </MenuTrigger>
             <Menu>
-              {entry.type === "moment" && entry.has_image === 1 && (
+              {entry.type === "moment" && entry.image_blob_id !== null && (
                 <MenuItem onClick={() => momentService.removePhoto(entry.id)}>
                   Remove photo
                 </MenuItem>
@@ -134,8 +134,12 @@ function EntryDetailContent({
         <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3">
           {entry.type === "task" && entry.status && <TaskStatusRow status={entry.status} />}
           {entry.type === "mood" && entry.value !== null && <MoodValueRow value={entry.value} />}
-          {entry.type === "moment" && entry.has_image === 1 && <MomentImage id={entry.id} />}
-          {entry.type === "moment" && entry.has_image === 0 && <MomentAttachPhoto id={entry.id} />}
+          {entry.type === "moment" && entry.image_blob_id !== null && (
+            <MomentImage blobId={entry.image_blob_id} />
+          )}
+          {entry.type === "moment" && entry.image_blob_id === null && (
+            <MomentAttachPhoto id={entry.id} />
+          )}
           {entry.type !== "mood" && (
             <button
               type="button"
@@ -247,9 +251,8 @@ function MomentAttachPhoto({ id }: { id: string }) {
   );
 }
 
-function MomentImage({ id }: { id: string }) {
-  const moment = useEntry("moment", id);
-  const url = useBlobUrl(moment?.image_blob_id);
+function MomentImage({ blobId }: { blobId: string }) {
+  const url = useBlobUrl(blobId);
 
   if (!url) return null;
   return (

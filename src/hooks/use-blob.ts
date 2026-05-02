@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useStore } from "@nanostores/react";
 import type { Selectable } from "kysely";
 import type { BlobTable } from "@/db/schema";
 import { $dek } from "@/stores/dek";
@@ -6,6 +7,7 @@ import { blobService } from "@/services/blob-service";
 import { useDBQuery } from "./use-db-query";
 
 export function useBlob(id: string | null | undefined): Uint8Array | null {
+  const dek = useStore($dek);
   const rows = useDBQuery((db) =>
     db
       .selectFrom("blobs")
@@ -16,13 +18,14 @@ export function useBlob(id: string | null | undefined): Uint8Array | null {
 
   const loaded = rows !== undefined;
   const present = loaded && rows.length > 0;
+  const dekReady = dek.status === "ready";
 
   useEffect(() => {
-    if (!id || !loaded || present) return;
-    const dek = $dek.get();
-    if (dek.status !== "ready") return;
-    blobService.fetchAndCache(id, dek.dek).catch(() => {});
-  }, [id, loaded, present]);
+    if (!id || !loaded || present || !dekReady) return;
+    const current = $dek.get();
+    if (current.status !== "ready") return;
+    blobService.fetchAndCache(id, current.dek).catch(() => {});
+  }, [id, loaded, present, dekReady]);
 
   if (!id) return null;
   return rows?.[0]?.data ?? null;

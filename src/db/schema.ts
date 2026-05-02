@@ -83,7 +83,8 @@ type TimelineView = {
   created_at: string;
   status: TaskTable["status"] | null;
   pinned: number;
-  has_image: number;
+  image_blob_id: string | null;
+  thumbnail_blob_id: string | null;
   label_name: string | null;
 };
 

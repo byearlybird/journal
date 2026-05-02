@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Drawer } from "@base-ui/react/drawer";
 import { MenuRoot, Menu, MenuTrigger, MenuItem } from "@/components/shared/menu";
 import { PromptDialog } from "@/components/shared/prompt-dialog";
@@ -21,6 +21,7 @@ import { formatLongDate, formatTime } from "@/utils/dates";
 import { notesService } from "@/services/note-service";
 import { taskService } from "@/services/task-service";
 import { moodService } from "@/services/mood-service";
+import { momentService } from "@/services/moment-service";
 import { useDBQuery } from "@/hooks/use-db-query";
 import { useEntry } from "@/hooks/use-entry";
 import { useTodayDate } from "@/hooks/use-today-date";
@@ -68,6 +69,7 @@ export function EntryDetail() {
           if (!editEntry) return;
           if (editEntry.type === "note") notesService.updateContent(editEntry.id, v);
           else if (editEntry.type === "task") taskService.updateContent(editEntry.id, v);
+          else if (editEntry.type === "moment") momentService.updateContent(editEntry.id, v);
         }}
       />
     </>
@@ -106,6 +108,7 @@ function EntryDetailContent({
                 onClick={() => {
                   if (entry.type === "note") notesService.delete(entry.id);
                   else if (entry.type === "task") taskService.delete(entry.id);
+                  else if (entry.type === "moment") momentService.delete(entry.id);
                   else moodService.delete(entry.id);
                   closeEntryDetail();
                 }}
@@ -124,6 +127,7 @@ function EntryDetailContent({
         <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3">
           {entry.type === "task" && entry.status && <TaskStatusRow status={entry.status} />}
           {entry.type === "mood" && entry.value !== null && <MoodValueRow value={entry.value} />}
+          {entry.type === "moment" && entry.has_image === 1 && <MomentImage id={entry.id} />}
           {entry.type !== "mood" && (
             <button
               type="button"
@@ -195,9 +199,27 @@ function EntryActions({ entry }: { entry: TimelineView }) {
     );
   }
 
-  if (entry.type === "mood") return null;
+  if (entry.type === "mood" || entry.type === "moment") return null;
 
   return <TaskActions entry={entry} />;
+}
+
+function MomentImage({ id }: { id: string }) {
+  const moment = useEntry("moment", id);
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!moment?.image) {
+      setUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(new Blob([new Uint8Array(moment.image)]));
+    setUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [moment?.image]);
+
+  if (!url) return null;
+  return <img src={url} alt="" className="max-h-96 rounded-lg border border-border self-start" />;
 }
 
 function MoodValueRow({ value }: { value: number }) {

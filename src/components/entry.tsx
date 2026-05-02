@@ -5,8 +5,10 @@ import {
   XSquareIcon,
   ArrowSquareRightIcon,
   DiamondIcon,
+  ImageIcon,
   TagSimpleIcon,
   PushPinSimpleIcon,
+  TriangleIcon,
 } from "@phosphor-icons/react";
 import type { DBSchema, TaskTable } from "@/db/schema";
 import { formatTime } from "@/utils/dates";
@@ -14,7 +16,9 @@ import { moodColor } from "@/utils/mood-color";
 import { moodLabel } from "@/utils/mood-label";
 import { taskService } from "@/services/task-service";
 import { notesService } from "@/services/note-service";
+import { useEntry } from "@/hooks/use-entry";
 import type { MouseEventHandler } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 type TimelineView = DBSchema["timeline"];
@@ -27,6 +31,7 @@ export function Entry({
   created_at,
   status,
   pinned,
+  has_image,
   label_name,
   onClick,
   compact = false,
@@ -41,11 +46,22 @@ export function Entry({
         <div className="text-xs text-foreground-muted flex items-center gap-1">
           {formatTime(created_at)}
           {type === "note" && pinned === 1 && <PushPinSimpleIcon className="size-3" />}
+          {type === "moment" && has_image === 1 && <ImageIcon className="size-3" />}
           {type === "mood" && value !== null && <span>· {moodLabel(value)}</span>}
         </div>
-        {content !== null && (
-          <div className={clsx("font-serif whitespace-pre-wrap", compact && "text-sm line-clamp-3")}>
-            {content}
+        {(content || (type === "moment" && has_image === 1)) && (
+          <div className="flex gap-3 items-start">
+            {content !== null && content !== "" && (
+              <div
+                className={clsx(
+                  "flex-1 font-serif whitespace-pre-wrap",
+                  compact && "text-sm line-clamp-3",
+                )}
+              >
+                {content}
+              </div>
+            )}
+            {type === "moment" && has_image === 1 && <MomentThumbnail id={id} />}
           </div>
         )}
         {label_name && (
@@ -59,9 +75,33 @@ export function Entry({
   );
 }
 
+function MomentThumbnail({ id }: { id: string }) {
+  const moment = useEntry("moment", id);
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!moment?.image) {
+      setUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(new Blob([new Uint8Array(moment.image)]));
+    setUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [moment?.image]);
+
+  if (!url) return null;
+  return (
+    <img
+      src={url}
+      alt=""
+      className="size-24 object-cover rounded-lg border border-border shrink-0"
+    />
+  );
+}
+
 function EntryGlyph(props: {
   id: string;
-  type: "note" | "task" | "mood";
+  type: "note" | "task" | "mood" | "moment";
   status: TaskTable["status"] | null;
   value: number | null;
 }) {
@@ -84,6 +124,8 @@ function EntryGlyph(props: {
           className="size-4"
           style={{ color: moodColor((props.value ?? 0) / 100) }}
         />
+      ) : props.type === "moment" ? (
+        <TriangleIcon className="size-4" />
       ) : props.status === "complete" ? (
         <CheckSquareIcon className="size-4 text-accent" />
       ) : props.status === "cancelled" ? (

@@ -1,7 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ToggleGroup } from "@base-ui/react/toggle-group";
 import { Toggle } from "@base-ui/react/toggle";
-import { CircleIcon, DiamondIcon, SquareIcon } from "@phosphor-icons/react";
+import {
+  CircleIcon,
+  DiamondIcon,
+  ImageIcon,
+  SquareIcon,
+  TriangleIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import { clsx } from "clsx";
 import { Button } from "@/components/shared/button";
 import { Slider } from "@/components/shared/slider";
@@ -10,10 +17,11 @@ import { Dialog, DialogClose } from "./shared/dialog";
 import { notesService } from "@/services/note-service";
 import { taskService } from "@/services/task-service";
 import { moodService } from "@/services/mood-service";
+import { momentService } from "@/services/moment-service";
 import { moodLabel } from "@/utils/mood-label";
 import { $labelFilter } from "@/stores/entry-search";
 
-type EntryType = "note" | "task" | "mood";
+type EntryType = "note" | "task" | "mood" | "moment";
 
 type CreateDialogProps = {
   open: boolean;
@@ -25,14 +33,43 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
   const [entryType, setEntryType] = useState<EntryType>("note");
   const [mood, setMood] = useState(50);
   const [labelId, setLabelId] = useState<string | null>(() => $labelFilter.get()?.id ?? null);
+  const [imageBytes, setImageBytes] = useState<Uint8Array | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) setLabelId($labelFilter.get()?.id ?? null);
   }, [open]);
 
+  useEffect(() => {
+    return () => {
+      if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+    };
+  }, [imagePreviewUrl]);
+
+  function clearImage() {
+    setImageBytes(null);
+    setImagePreviewUrl(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const buffer = await file.arrayBuffer();
+    setImageBytes(new Uint8Array(buffer));
+    setImagePreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+  }
+
   async function handleSubmit() {
     if (entryType === "mood") {
       await moodService.createMood(mood, labelId);
+    } else if (entryType === "moment") {
+      if (!content.trim() && !imageBytes) return;
+      await momentService.createMoment(content.trim(), imageBytes, labelId);
     } else {
       if (!content.trim()) return;
       if (entryType === "note") {
@@ -43,6 +80,7 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
     }
     setContent("");
     setMood(50);
+    clearImage();
     setLabelId($labelFilter.get()?.id ?? null);
     onOpenChange(false);
   }
@@ -51,6 +89,7 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
     if (!isOpen) {
       setContent("");
       setMood(50);
+      clearImage();
     }
     onOpenChange(isOpen);
   }
@@ -59,7 +98,12 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
     if (value.length > 0) setEntryType(value[0] as EntryType);
   }
 
-  const submitDisabled = entryType !== "mood" && !content.trim();
+  const submitDisabled =
+    entryType === "mood"
+      ? false
+      : entryType === "moment"
+        ? !content.trim() && !imageBytes
+        : !content.trim();
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -74,16 +118,55 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
           <Slider value={mood} onValueChange={setMood} />
         </div>
       ) : (
-        <textarea
-          className="w-full mt-4 mb-4 bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-base leading-relaxed min-h-32 md:min-h-48 max-h-[33vh] md:max-h-[50vh] overflow-y-auto field-sizing-content font-serif"
-          placeholder="What's on your mind?"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSubmit();
-          }}
-          autoFocus
-        />
+        <>
+          <textarea
+            className="w-full mt-4 mb-2 bg-transparent text-foreground placeholder:text-foreground-muted resize-none outline-none text-base leading-relaxed min-h-32 md:min-h-48 max-h-[33vh] md:max-h-[50vh] overflow-y-auto field-sizing-content font-serif"
+            placeholder="What's on your mind?"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSubmit();
+            }}
+            autoFocus
+          />
+          {entryType === "moment" && (
+            <div className="mb-4">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+              {imagePreviewUrl ? (
+                <div className="relative inline-block">
+                  <img
+                    src={imagePreviewUrl}
+                    alt=""
+                    className="max-h-40 rounded-lg border border-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={clearImage}
+                    className="absolute -top-2 -right-2 rounded-full bg-background border border-border p-1 hover:bg-surface-tint cursor-pointer"
+                    aria-label="Remove image"
+                  >
+                    <XIcon className="size-3" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-1.5 text-sm text-foreground-muted hover:text-foreground cursor-pointer"
+                >
+                  <ImageIcon className="size-4" />
+                  Add an image
+                </button>
+              )}
+            </div>
+          )}
+        </>
       )}
       <div className="flex items-center justify-between gap-2">
         <LabelPicker value={labelId} onValueChange={setLabelId} radius="outermost" />
@@ -119,6 +202,12 @@ function EntryTypeToggle({ value, onValueChange }: EntryTypeToggleProps) {
         label="Task"
         icon={<SquareIcon className="size-4" />}
         active={value === "task"}
+      />
+      <TypeToggle
+        value="moment"
+        label="Moment"
+        icon={<TriangleIcon className="size-4" />}
+        active={value === "moment"}
       />
       <TypeToggle
         value="mood"

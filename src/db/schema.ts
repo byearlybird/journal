@@ -45,18 +45,28 @@ export type MoodTable = SyncableRow & {
   label: string | null;
 };
 
+export type MomentTable = SyncableRow & {
+  content: string;
+  image: Uint8Array | null;
+  date: string;
+  created_at: string;
+  content_edited_at: string | null;
+  label: string | null;
+};
+
 type LabelTable = SyncableRow & {
   name: string;
 };
 
 type TimelineView = {
   id: string;
-  type: "note" | "task" | "mood";
+  type: "note" | "task" | "mood" | "moment";
   content: string | null;
   value: number | null;
   created_at: string;
   status: TaskTable["status"] | null;
   pinned: number;
+  has_image: number;
   label_name: string | null;
 };
 
@@ -74,6 +84,7 @@ export type DBSchema = {
   tasks: TaskTable;
   intentions: IntentionTable;
   moods: MoodTable;
+  moments: MomentTable;
   timeline: TimelineView;
   labels: LabelTable;
   sync_changes: SyncChanges;

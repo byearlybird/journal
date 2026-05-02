@@ -217,10 +217,7 @@ function TaskActions({ entry }: { entry: TimelineView }) {
   if (entry.status === "incomplete") {
     return (
       <>
-        <Button
-          variant="outline"
-          onClick={() => taskService.setStatus(entry.id, "cancelled")}
-        >
+        <Button variant="outline" onClick={() => taskService.setStatus(entry.id, "cancelled")}>
           <XIcon />
           Cancel
         </Button>
@@ -230,10 +227,7 @@ function TaskActions({ entry }: { entry: TimelineView }) {
             Defer
           </Button>
         )}
-        <Button
-          variant="outline"
-          onClick={() => taskService.setStatus(entry.id, "complete")}
-        >
+        <Button variant="outline" onClick={() => taskService.setStatus(entry.id, "complete")}>
           <CheckIcon />
           Complete
         </Button>
@@ -243,10 +237,7 @@ function TaskActions({ entry }: { entry: TimelineView }) {
 
   if (entry.status === "complete" || entry.status === "cancelled") {
     return (
-      <Button
-        variant="outline"
-        onClick={() => taskService.setStatus(entry.id, "incomplete")}
-      >
+      <Button variant="outline" onClick={() => taskService.setStatus(entry.id, "incomplete")}>
         <ArrowCounterClockwiseIcon />
         Reopen
       </Button>

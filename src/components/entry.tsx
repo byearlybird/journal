@@ -44,7 +44,9 @@ export function Entry({
           {type === "mood" && value !== null && <span>· {moodLabel(value)}</span>}
         </div>
         {content !== null && (
-          <div className={clsx("font-serif whitespace-pre-wrap", compact && "text-sm line-clamp-3")}>
+          <div
+            className={clsx("font-serif whitespace-pre-wrap", compact && "text-sm line-clamp-3")}
+          >
             {content}
           </div>
         )}

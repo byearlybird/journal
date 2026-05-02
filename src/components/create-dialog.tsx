@@ -68,9 +68,7 @@ export function CreateDialog({ open, onOpenChange }: CreateDialogProps) {
       </div>
       {entryType === "mood" ? (
         <div className="my-4 flex flex-col gap-2">
-          <div className="text-center text-sm text-foreground-muted h-5">
-            {moodLabel(mood)}
-          </div>
+          <div className="text-center text-sm text-foreground-muted h-5">{moodLabel(mood)}</div>
           <Slider value={mood} onValueChange={setMood} />
         </div>
       ) : (

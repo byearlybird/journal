@@ -11,11 +11,7 @@ export function MenuTrigger({
   children: ReactNode;
   variant?: "ghost" | "outline";
 }) {
-  return (
-    <BaseMenu.Trigger render={<Button variant={variant} />}>
-      {children}
-    </BaseMenu.Trigger>
-  );
+  return <BaseMenu.Trigger render={<Button variant={variant} />}>{children}</BaseMenu.Trigger>;
 }
 
 export function Menu({ children }: { children: ReactNode }) {

@@ -1,21 +1,43 @@
 import { sql } from "kysely";
 import type { Kysely, Migration } from "kysely";
+import { createSyncTable } from "./sync-helpers";
 
 export const M004_moments: Migration = {
   // oxlint-disable-next-line typescript/no-explicit-any
   async up(db: Kysely<any>) {
     await db.schema
-      .createTable("moments")
+      .createTable("blobs")
       .ifNotExists()
       .addColumn("id", "text", (cb) => cb.primaryKey())
-      .addColumn("content", "text", (cb) => cb.notNull())
-      .addColumn("image", "blob")
-      .addColumn("date", "text", (cb) => cb.notNull())
+      .addColumn("data", "blob", (cb) => cb.notNull())
       .addColumn("created_at", "text", (cb) => cb.notNull())
-      .addColumn("content_edited_at", "text", (cb) => cb.defaultTo(null))
-      .addColumn("label", "text", (cb) => cb.defaultTo(null))
-      .addColumn("hlc", "text", (cb) => cb.defaultTo(null))
       .execute();
+
+    await db.schema
+      .createTable("blob_uploads")
+      .ifNotExists()
+      .addColumn("blob_id", "text", (cb) => cb.primaryKey())
+      .addColumn("enqueued_at", "text", (cb) => cb.notNull())
+      .execute();
+
+    await db.schema
+      .createTable("blob_deletes")
+      .ifNotExists()
+      .addColumn("blob_id", "text", (cb) => cb.primaryKey())
+      .addColumn("enqueued_at", "text", (cb) => cb.notNull())
+      .execute();
+
+    await createSyncTable(db, "moments", (t) =>
+      t
+        .addColumn("id", "text", (cb) => cb.primaryKey())
+        .addColumn("content", "text", (cb) => cb.notNull())
+        .addColumn("image_blob_id", "text", (cb) => cb.defaultTo(null))
+        .addColumn("thumbnail_blob_id", "text", (cb) => cb.defaultTo(null))
+        .addColumn("date", "text", (cb) => cb.notNull())
+        .addColumn("created_at", "text", (cb) => cb.notNull())
+        .addColumn("content_edited_at", "text", (cb) => cb.defaultTo(null))
+        .addColumn("label", "text", (cb) => cb.defaultTo(null)),
+    );
 
     await sql`DROP VIEW IF EXISTS timeline`.execute(db);
     await sql`
@@ -30,7 +52,7 @@ export const M004_moments: Migration = {
       FROM moods m LEFT JOIN labels l ON l.id = m.label
       UNION ALL
       SELECT mo.id, 'moment' AS type, mo.content, NULL AS value, mo.created_at, NULL AS status, 0 AS pinned,
-             CASE WHEN mo.image IS NULL THEN 0 ELSE 1 END AS has_image,
+             CASE WHEN mo.image_blob_id IS NULL THEN 0 ELSE 1 END AS has_image,
              l.name AS label_name
       FROM moments mo LEFT JOIN labels l ON l.id = mo.label
     `.execute(db);

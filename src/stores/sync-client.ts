@@ -147,12 +147,26 @@ export async function sync(): Promise<
   };
 
   try {
-    await syncService.fullSync(state.dek, transport);
+    await syncService.pull(state.dek, transport);
+
+    // Upload blobs before pushing the change rows that reference them, so other
+    // devices never pull a row pointing at a blob that isn't in R2 yet. If any
+    // upload fails, skip push entirely — the next sync will retry.
     try {
       await blobService.uploadPending(state.dek);
+    } catch (error) {
+      console.error("Blob upload failed; skipping push", error);
+      return { result: "success" } as const;
+    }
+
+    await syncService.push(state.dek, transport);
+
+    // Delete blobs after push so receivers see the nulled-out reference before
+    // the underlying object disappears from R2.
+    try {
       await blobService.deletePending();
     } catch (error) {
-      console.error("Blob sync failed", error);
+      console.error("Blob delete failed", error);
     }
     return { result: "success" } as const;
   } catch (error) {

@@ -1,8 +1,7 @@
 import { TriangleIcon } from "@phosphor-icons/react";
-import { useBlob } from "@/hooks/use-blob";
+import { useBlobUrl } from "@/hooks/use-blob";
 import { useEntry } from "@/hooks/use-entry";
 import { formatTime } from "@/utils/dates";
-import { useEffect, useState } from "react";
 import { EntryShell, EntryGlyphButton, type EntryProps } from "./entry";
 
 export function MomentEntry({
@@ -33,19 +32,7 @@ export function MomentEntry({
 
 function MomentThumbnail({ id }: { id: string }) {
   const moment = useEntry("moment", id);
-  const blobId = moment?.thumbnail_blob_id ?? moment?.image_blob_id ?? null;
-  const bytes = useBlob(blobId);
-  const [url, setUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!bytes) {
-      setUrl(null);
-      return;
-    }
-    const objectUrl = URL.createObjectURL(new Blob([new Uint8Array(bytes)]));
-    setUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [bytes]);
+  const url = useBlobUrl(moment?.thumbnail_blob_id ?? moment?.image_blob_id);
 
   if (!url) return null;
   return (

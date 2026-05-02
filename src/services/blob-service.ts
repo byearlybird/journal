@@ -8,6 +8,7 @@ const inflightFetches = new Map<string, Promise<void>>();
 export const blobService = {
   async uploadPending(dek: CryptoKey): Promise<void> {
     const pending = await db.selectFrom("blob_uploads").select("blob_id").execute();
+    const failures: string[] = [];
 
     for (const { blob_id } of pending) {
       const row = await db
@@ -32,11 +33,15 @@ export const blobService = {
       });
 
       if (!res.ok) {
-        console.error(`Failed to upload blob ${blob_id}: ${res.status}`);
+        failures.push(`${blob_id}: ${res.status}`);
         continue;
       }
 
       await db.deleteFrom("blob_uploads").where("blob_id", "=", blob_id).execute();
+    }
+
+    if (failures.length > 0) {
+      throw new Error(`Failed to upload ${failures.length} blob(s): ${failures.join(", ")}`);
     }
   },
 

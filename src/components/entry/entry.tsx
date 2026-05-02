@@ -77,9 +77,12 @@ export function EntryGlyphButton({
   onClick?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }) {
+  if (!onClick) {
+    return <span className="self-start p-0.5 -mt-0.5">{children}</span>;
+  }
   const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    onClick?.(e);
+    onClick(e);
   };
   return (
     <button

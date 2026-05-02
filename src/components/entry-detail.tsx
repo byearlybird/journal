@@ -225,11 +225,7 @@ function MomentImage({ id }: { id: string }) {
 function MoodValueRow({ value }: { value: number }) {
   return (
     <div className="flex gap-2 items-center text-sm text-foreground-muted mb-4">
-      <DiamondIcon
-        weight="fill"
-        className="size-4"
-        style={{ color: moodColor(value / 100) }}
-      />
+      <DiamondIcon className="size-4" style={{ color: moodColor(value / 100) }} />
       <span>{moodLabel(value)}</span>
     </div>
   );

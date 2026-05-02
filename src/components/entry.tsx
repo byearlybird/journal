@@ -119,11 +119,7 @@ function EntryGlyph(props: {
       {props.type === "note" ? (
         <CircleIcon className="size-4" />
       ) : props.type === "mood" ? (
-        <DiamondIcon
-          weight="fill"
-          className="size-4"
-          style={{ color: moodColor((props.value ?? 0) / 100) }}
-        />
+        <DiamondIcon className="size-4" style={{ color: moodColor((props.value ?? 0) / 100) }} />
       ) : props.type === "moment" ? (
         <TriangleIcon className="size-4" />
       ) : props.status === "complete" ? (

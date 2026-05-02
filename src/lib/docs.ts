@@ -31,10 +31,10 @@ export type Doc = {
 export const docs: Doc[] = [
   { slug: "philosophy", title: "Philosophy", Icon: CompassIcon, content: philosophy },
   { slug: "entries", title: "Entries", Icon: NotebookIcon, content: entries },
+  { slug: "intentions", title: "Intentions", Icon: StarIcon, content: intentions },
   { slug: "notes", title: "Notes", Icon: CircleIcon, content: notes },
   { slug: "tasks", title: "Tasks", Icon: SquareIcon, content: tasks },
   { slug: "moods", title: "Moods", Icon: DiamondIcon, content: moods },
-  { slug: "intentions", title: "Intentions", Icon: StarIcon, content: intentions },
   { slug: "labels", title: "Labels", Icon: TagSimpleIcon, content: labels },
   { slug: "data", title: "Data", Icon: DatabaseIcon, content: data },
   { slug: "contact", title: "Contact", Icon: EnvelopeIcon, content: contact },

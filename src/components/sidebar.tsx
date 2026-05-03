@@ -1,12 +1,11 @@
 import { Link, linkOptions, useMatchRoute, type LinkProps } from "@tanstack/react-router";
 import {
-  SunHorizonIcon,
-  ListBulletsIcon,
   GearIcon,
   CircleIcon,
   SquareIcon,
   GlobeSimpleXIcon,
   InfoIcon,
+  BookOpenIcon,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { useStore } from "@nanostores/react";
@@ -18,10 +17,7 @@ import { usePriorTasks } from "@/hooks/use-prior-tasks";
 import { useTodayDate } from "@/hooks/use-today-date";
 import { $syncState } from "@/stores/sync-client";
 
-const navItems = linkOptions([
-  { to: "/", label: "Today", Icon: SunHorizonIcon },
-  { to: "/all-entries", label: "All entries", Icon: ListBulletsIcon },
-]);
+const navItems = linkOptions([{ to: "/", label: "Journal", Icon: BookOpenIcon }]);
 
 function NavButton({ to, children }: { to: LinkProps["to"]; children: ReactNode }) {
   const match = useMatchRoute();

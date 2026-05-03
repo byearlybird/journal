@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as DocsRouteImport } from './routes/docs'
-import { Route as AllEntriesRouteImport } from './routes/all-entries'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings.index'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
@@ -29,11 +28,6 @@ const SettingsRoute = SettingsRouteImport.update({
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
   path: '/docs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AllEntriesRoute = AllEntriesRouteImport.update({
-  id: '/all-entries',
-  path: '/all-entries',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -79,7 +73,6 @@ const DocsSlugRoute = DocsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/all-entries': typeof AllEntriesRoute
   '/docs': typeof DocsRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
   '/docs/$slug': typeof DocsSlugRoute
@@ -92,7 +85,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/all-entries': typeof AllEntriesRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/settings/data': typeof SettingsDataRoute
   '/settings/profile': typeof SettingsProfileRoute
@@ -104,7 +96,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/all-entries': typeof AllEntriesRoute
   '/docs': typeof DocsRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
   '/docs/$slug': typeof DocsSlugRoute
@@ -119,7 +110,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/all-entries'
     | '/docs'
     | '/settings'
     | '/docs/$slug'
@@ -132,7 +122,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/all-entries'
     | '/docs/$slug'
     | '/settings/data'
     | '/settings/profile'
@@ -143,7 +132,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/all-entries'
     | '/docs'
     | '/settings'
     | '/docs/$slug'
@@ -157,7 +145,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AllEntriesRoute: typeof AllEntriesRoute
   DocsRoute: typeof DocsRouteWithChildren
   SettingsRoute: typeof SettingsRouteWithChildren
 }
@@ -176,13 +163,6 @@ declare module '@tanstack/react-router' {
       path: '/docs'
       fullPath: '/docs'
       preLoaderRoute: typeof DocsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/all-entries': {
-      id: '/all-entries'
-      path: '/all-entries'
-      fullPath: '/all-entries'
-      preLoaderRoute: typeof AllEntriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -278,7 +258,6 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AllEntriesRoute: AllEntriesRoute,
   DocsRoute: DocsRouteWithChildren,
   SettingsRoute: SettingsRouteWithChildren,
 }
